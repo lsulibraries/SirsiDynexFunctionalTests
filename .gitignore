@@ -104,3 +104,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# other random files
+jupyter_for_requests/trash.html
