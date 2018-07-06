@@ -17,7 +17,7 @@
             </div>
             <div class="limiter-wrapper">
               <label for="restrictionDropDown" class="element-invisible">Select Search parameters</label>
-              <select name="rt" id="restrictionDropDown" title="Select Search Field">
+              <select name="rt" id="fieldDropDown" title="Select Search Field">
                 <option value>keywords anywhere</option>
                 <option value="false|||AUTHOR|||Author">author</option>
                 <option value="false|||TITLE|||Title">title</option>
@@ -26,13 +26,14 @@
               </select>
               <label for="query_type" class="element-invisible">Select query type</label>
               <input type="hidden" name="lm" value="" />
-              <select name="qf" id="restrictionDropDown" class="dropDown" title="Select Search Format">
+              <select name="qf" id="formatDropDown" class="dropDown" title="Select Search Format">
                 <option value="">All Formats</option>
                 <option value="FORMAT	Format	MUSIC	Music">Music Score</option>
                 <option value="FORMAT	Format	MUSICSNDREC	Music Sound Recording">Music Sound Recording</option>
-                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Audio disc</option>
+                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Compact disc</option>
                 <option value="FORMAT	Format	SOUNDCASS	Audio cassette">Audio Cassette</option>
                 <option value="FORMAT	Format	BOOK	Books">Book</option>
+                <option value="FORMAT	Format	VIDEODISC	Video disc">DVD</option>
                 <option value="FORMAT	Format	SOUNDREC	Sound recording">LP (Sound Recording)</option>
                 <option value="FORMAT	Format	VIDEOCASS	Video cassette">Videocassette</option>
               </select>

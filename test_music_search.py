@@ -11,8 +11,14 @@ import pytest
 
 @pytest.fixture
 def load_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
+    driver.delete_all_cookies()
     driver.get('https://www.lib.lsu.edu/music/search-dev')
+
 
     def fin():
         print('teardown driver')
@@ -48,7 +54,7 @@ def test_page_loads(load_driver):
     driver = load_driver
     assert 'Music Search' in driver.title
 
-##########################################################################################
+#########################################################################################
 
 
 def test_author_dropdown(load_driver):
@@ -74,7 +80,7 @@ def test_periodical_title_dropdown(load_driver):
     first_result_title = "Volunteer on-going language learning manual : beyond hello."
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
-###########################################################################################
+#########################################################################################
 
 
 def test_music_score_dropdown(load_driver):
@@ -113,13 +119,13 @@ def test_lp_dropdown(load_driver):
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
 
-def test_lp_dropdown(load_driver):
-    formatname, searchstring = 'DVD', 'Virtuoso'
-    first_result_title = "Virtuoso cello encores"
+def test_dvd_dropdown(load_driver):
+    formatname, searchstring = 'DVD', 'hello'
+    first_result_title = "Hello Louisiana a musical travel film"
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
 
-##########################################################################################
+#########################################################################################
 
 
 def test_author_plus_music_score_dropdown(load_driver):

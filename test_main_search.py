@@ -15,7 +15,7 @@ def load_driver(request):
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.cache.offline.enable", False)
-    profile.set_preference("network.http.use-cache", False) 
+    profile.set_preference("network.http.use-cache", False)
     driver = webdriver.Firefox(profile)
     driver.delete_all_cookies()
     driver.get('https://www.lib.lsu.edu/dev/search')
@@ -32,9 +32,10 @@ def load_driver(request):
     return driver
 
 
-# def test_page_loads(load_driver):
-#     driver = load_driver
-#     assert 'Search Box update' in driver.title
+def test_page_loads(load_driver):
+    driver = load_driver
+    assert 'Search Box update' in driver.title
+
 
 def test_author_dropdown(load_driver):
     driver = load_driver
@@ -46,7 +47,7 @@ def test_author_dropdown(load_driver):
     input.clear()
     input.send_keys('hello')
     input.send_keys(Keys.ENTER)
-    
+
     wait = WebDriverWait(driver, 20)
     results_title_1 = wait.until(
         EC.presence_of_element_located((By.ID, "detailLink0"))
@@ -54,47 +55,49 @@ def test_author_dropdown(load_driver):
     assert results_title_1.get_attribute('title') == "Contes extraordinaires."
 
 
-# def test_title_dropdown(load_driver):
-#     driver = load_driver
-#     field = Select(driver.find_element_by_id('fieldDropDown'))
-#     field.select_by_visible_text('title')
-#     input = driver.find_element_by_id('q')
-#     input.clear()
-#     input.send_keys('hello')
-#     input.send_keys(Keys.ENTER)
-    
-#     wait = WebDriverWait(driver, 10)
-#     results_title_1 = wait.until(
-#         EC.presence_of_element_located((By.ID, "detailLink0"))
-#     )
-#     assert results_title_1.get_attribute('title') == "Hello, Dolly."
+def test_title_dropdown(load_driver):
+    driver = load_driver
+    field = Select(driver.find_element_by_id('fieldDropDown'))
+    field.select_by_visible_text('title')
+    input = driver.find_element_by_id('q')
+    input.clear()
+    input.send_keys('hello')
+    input.send_keys(Keys.ENTER)
 
-# def test_subject_dropdown(load_driver):
-#     driver = load_driver
-#     field = Select(driver.find_element_by_id('fieldDropDown'))
-#     field.select_by_visible_text('subject')
-#     input = driver.find_element_by_id('q')
-#     input.clear()
-#     input.send_keys('hello')
-#     input.send_keys(Keys.ENTER)
-    
-#     wait = WebDriverWait(driver, 10)
-#     results_title_1 = wait.until(
-#         EC.presence_of_element_located((By.ID, "detailLink0"))
-#     )
-#     assert results_title_1.get_attribute('title') == "Ernest Hello : vie, oeuvre, mission"
+    wait = WebDriverWait(driver, 10)
+    results_title_1 = wait.until(
+        EC.presence_of_element_located((By.ID, "detailLink0"))
+    )
+    assert results_title_1.get_attribute('title') == "Hello, Dolly."
 
-# def test_periodical_title_dropdown(load_driver):
-#     driver = load_driver
-#     field = Select(driver.find_element_by_id('fieldDropDown'))
-#     field.select_by_visible_text('periodical title')
-#     input = driver.find_element_by_id('q')
-#     input.clear()
-#     input.send_keys('hello')
-#     input.send_keys(Keys.ENTER)
-    
-#     wait = WebDriverWait(driver, 10)
-#     results_title_1 = wait.until(
-#         EC.presence_of_element_located((By.ID, "detailLink0"))
-#     )
-#     assert results_title_1.get_attribute('title') == "Volunteer on-going language learning manual : beyond hello."
+
+def test_subject_dropdown(load_driver):
+    driver = load_driver
+    field = Select(driver.find_element_by_id('fieldDropDown'))
+    field.select_by_visible_text('subject')
+    input = driver.find_element_by_id('q')
+    input.clear()
+    input.send_keys('hello')
+    input.send_keys(Keys.ENTER)
+
+    wait = WebDriverWait(driver, 10)
+    results_title_1 = wait.until(
+        EC.presence_of_element_located((By.ID, "detailLink0"))
+    )
+    assert results_title_1.get_attribute('title') == "Ernest Hello : vie, oeuvre, mission"
+
+
+def test_periodical_title_dropdown(load_driver):
+    driver = load_driver
+    field = Select(driver.find_element_by_id('fieldDropDown'))
+    field.select_by_visible_text('periodical title')
+    input = driver.find_element_by_id('q')
+    input.clear()
+    input.send_keys('hello')
+    input.send_keys(Keys.ENTER)
+
+    wait = WebDriverWait(driver, 10)
+    results_title_1 = wait.until(
+        EC.presence_of_element_located((By.ID, "detailLink0"))
+    )
+    assert results_title_1.get_attribute('title') == "Volunteer on-going language learning manual : beyond hello."
