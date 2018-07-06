@@ -99,7 +99,7 @@ var buildIlliadRequest = function() {
     var requestType = 'loan';
     var oslISXN = oslISBN;
   }
-  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/illiad/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
+  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
   return illiadUrl;
 }
 
@@ -120,15 +120,6 @@ var detailViewIconReplace = function() {
   }
 }
 
-var searchViewIconReplace = function() {
-  var format_containerDiv = document.getElementsByClassName('format_container');
-  for (var i = 0; i < format_containerDiv.length; i++) {
-    var formatTypeDiv = format_containerDiv[i].firstElementChild;
-    var iconText = formatTypeDiv.getAttribute('title');
-    formatTypeDiv.textContent = iconText;
-  }
-}
-
 var resultsViewIconReplace = function() {
   $J('.format_container .formatType')
      .each(function(i, elem) {
@@ -139,7 +130,7 @@ var resultsViewIconReplace = function() {
 
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-      .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue");
+     .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue");
 }
 
 var changeToAccessThisItem = function() {
@@ -170,7 +161,6 @@ var hideMissingDetailBookImage = function() {
           mutationObserver.disconnect();
           $J('.detail_cover_art').parent().css('display', '');
           $J('.detail_biblio').css('width', '');
-          
         }
       });
     });
