@@ -1,0 +1,151 @@
+<div id="tabbedsearchbox">
+  <div id="TabbedPanels1" class="TabbedPanels">
+    <ul class="TabbedPanelsTabGroup">
+      <li class="TabbedPanelsTab">Catalog</li>
+      <li class="TabbedPanelsTab">Discovery</li>
+      <li class="TabbedPanelsTab">Music Databases</li>
+    </ul>
+    <div class="TabbedPanelsContentGroup">
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CATALOG TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <div class="catalogsearch">
+        <div class="TabbedPanelsContent">
+          <form name="searchform" method="post" action="https://lsu.louislibraries.org/uhtbin/cgisirsi/X/0/0/123/">
+            <div class="search-wrapper">
+              <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
+              <input type="text" name="searchdata1" id="searchdata1" maxlength="255" />
+              <input type="submit" value="Search" />
+            </div>
+            <!-- close search wrapper -->
+            <div class="limiter-wrapper">
+              <label for="srchfield1" class="element-invisible">Select Search parameters</label>
+              <select name="srchfield1" id="srchfield1" onchange="javascript:browseswitch();">
+                <option value="GENERAL^SUBJECT^GENERAL^^keywords anywhere"> keywords anywhere</option>
+                <option value="AU^AUTHOR^AUTHORS^Author Processing^author"> author</option>
+                <option value="TI^TITLE^TITLES^Title Processing^title"> title</option>
+                <option value="SU^SUBJECT^SUBJECTS^^subject"> subject</option>
+                <option value="PER^PERTITLE^TITLES^Title Processing^periodical title"> periodical title</option>
+              </select>
+              <label for="query_type" class="element-invisible">Select query type</label>
+              <select name="query_type" id="query_type">
+                <option value="search" id="keyword">Keyword</option>
+                <option value="browse" id="browse">Browse</option>
+                <option value="exact" id="exact">Exact</option>
+              </select>
+              <!--</div> <!-- close limiter wrapper    
+
+<div class="limiter-wrapper">-->
+              <label for="item_1cat" class="element-invisible">Search for:</label>
+              <select name="item_1cat" id="item_1cat">
+                <option value="ANY" selected="selected">All formats</option>
+                <option value="SCORE">Music Score</option>
+                <option value="AUDIO-CD">Audio CD</option>
+                <option value="AUDIO-CASS">Audio Cassette</option>
+                <option value="BOOK">Book</option>
+                <option value="LP">LP (Sound recording)</option>
+                <option>DVD</option>
+                <option value="VIDEO-CASS">Videocassette</option>
+              </select>
+            </div>
+            <!-- close limiter wrapper -->
+            <div class="limiter-wrapper">
+              <label for="library">In:</label>
+              <select name="library" id="library">
+                <option selected="selected" value="ALL">Anywhere</option>
+                <option value="MUSIC">Carter Music Resources Center, 202 Middleton</option>
+              </select>
+            </div>
+            <!-- close limiter wrapper -->
+            <p class="advanced" colspan="2"><a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/x/SIRSI/0/57/60/70/X?user_id=WEBSERVER">Advanced Search</a></p>
+          </form>
+        </div>
+        <!-- close TabbedPanelsContent -->
+      </div>
+      <!-- close catalogsearch -->
+      <div class="TabbedPanelsContent" style="display:none;">
+        <!-- EBSCOhost Custom Search Box Begins -->
+        <script src="https://support.ebsco.com/eit/scripts/ebscohostsearch.js" type="text/javascript"></script>
+        <form id="ebscohostCustomSearchBox" action="" onsubmit="return ebscoHostSearchGo(this);" method="post">
+          <input id="ebscohostwindow" name="ebscohostwindow" type="hidden" value="1" />
+          <input id="ebscohosturl" name="ebscohosturl" type="hidden" value="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&amp;site=eds-live&amp;scope=site&amp;type=0&amp;custid=s8491974&amp;groupid=main&amp;profid=eds-main&mode=bool&amp;lang=en&amp;authtype=ip,guest" />
+          <input id="ebscohostsearchsrc" name="ebscohostsearchsrc" type="hidden" value="db" />
+          <input id="ebscohostsearchmode" name="ebscohostsearchmode" type="hidden" value="+" />
+          <input id="ebscohostkeywords" name="ebscohostkeywords" type="hidden" value="" />
+          <div class="search-wrapper">
+            <label for="ebscohostsearchtext" class="element-invisible">Enter Search Terms</label>
+            <input id="ebscohostsearchtext" name="ebscohostsearchtext" />
+            <input type="submit" value="Search" class="ebscohost-search-button" />
+          </div>
+          <!-- close search wrapper div -->
+          <div class="limiter-wrapper">
+            <div class="search-options-col1">
+              <h3>Search By:</h3>
+              <label class="label" for="guidedField_0">
+                <input class="radio" type="radio" name="searchFieldSelector" id="guidedField_0" value="" checked="checked" /> Keyword
+              </label>
+              <label class="label" for="guidedField_1">
+                <input class="radio" type="radio" name="searchFieldSelector" id="guidedField_1" value="TI" /> Title
+              </label>
+              <label class="label" for="guidedField_2">
+                <input class="radio" type="radio" name="searchFieldSelector" id="guidedField_2" value="AU" /> Author
+              </label>
+            </div>
+            <!-- search-options-col1 -->
+            <div class="search-options-col2">
+              <h3>Limit To:</h3>
+              <label for="chkFullText">
+                <input type="checkbox" id="chkFullText" name="chkFullText" /> Full Text</label>
+              <label for="chkLibraryCollection">
+                <input type="checkbox" id="chkLibraryCollection" name="chkLibraryCollection" /> Available in Library Collection</label>
+              <label for="chkPeerReviewed">
+                <input type="checkbox" id="chkPeerReviewed" name="chkPeerReviewed" checked="checked" /> Peer Reviewed</label>
+              <div class="limiter-wrapper" style="display:none;">
+                <label for="chkCatalogOnly">
+                  <input type="checkbox" id="chkCatalogOnly" name="chkCatalogOnly" /> Catalog Only</label>
+              </div>
+              <!-- search-options-col2 -->
+            </div>
+            <!-- close limiter wrapper div -->
+          </div>
+        </form>
+        <!-- EBSCOhost Custom Search Box Ends -->
+      </div>
+      <!-- close TabbedPanelsContent div -->
+      <div class="TabbedPanelsContent">
+        <div class="searchboxwrapper">
+          <div class="cols50-50">
+            <div class="linkbox">
+              <ul>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500139">Classical Scores Library </a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=14080040">Index to Printed Music</a></li>
+                <li><a href="http://libezp.lib.lsu.edu/login?url=http://metopera.org/ondemand/index.aspx">MET Opera on Demand</a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500232">Music Index</a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500307">Naxos Music Library</a></li>
+                <li><a href="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?authtype=ip,uid&profile=ehost&defaultdb=ipm">Index to Printed Music</a></li>
+              </ul>
+            </div>
+            <!-- close cols50-50 div -->
+          </div>
+          <!-- close linkbox div -->
+          <div class="cols50-50">
+            <div class="linkbox">
+              <ul>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500331">Oxford Music Online</a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500233">RILM Abstracts of Music Literature </a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500249">RIPM-Retrospective Index</a></li>
+                <li><a href="http://guides.lib.lsu.edu/go.php?c=12500250">RISM Series A/II: Music Manuscripts after 1600</a></li>
+              </ul>
+            </div>
+            <!-- close cols50-50 div -->
+          </div>
+          <!-- close linkbox div -->
+        </div>
+        <!-- close searchboxwrapper div -->
+      </div>
+      <!-- close TabbedPanelsContent div -->
+    </div>
+    <!-- close TabbedPanelsContentGroup -->
+  </div>
+  <!-- close TabbedPanels -->
+</div>
+<!-- close tabbedsearchbox -->
+<script src="/sites/all/themes/libtheme/js/TabbedPanel.js"></script>

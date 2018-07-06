@@ -1,0 +1,195 @@
+<div id="tabbedsearchbox">
+  <div id="TabbedPanels1" class="TabbedPanels">
+    <ul class="TabbedPanelsTabGroup">
+      <li class="TabbedPanelsTab">Discovery</li>
+      <li class="TabbedPanelsTab">Catalog</li>
+      <li class="TabbedPanelsTab">Databases</li>
+      <li class="TabbedPanelsTab">E-Journals</li>
+    </ul>
+    <div class="TabbedPanelsContentGroup">
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Discover TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <div class="TabbedPanelsContent">
+        <!-- EBSCOhost Custom Search Box Begins -->
+        <div id="discovery">
+          <!-- START EDS -->
+          <script src="https://support.ebscohost.com/eit/scripts/ebscohostsearch.js"></script>
+          <script src="/sites/all/themes/libtheme/js/discoversearch_v2.js"></script>
+          <a id="searchbox"></a>
+          <form method="post" onSubmit="checkCheckboxes(this); return ebscoHostSearchGo(this);" action="placeholder">
+            <input type="hidden" value="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&amp;site=eds-live&amp;scope=site&amp;type=0&amp;mode=and&amp;lang=en" name="ebscohosturl" id="ebscohosturl" />
+            <input type="hidden" value="db" name="ebscohostsearchsrc" id="ebscohostsearchsrc" />
+            <input type="hidden" value="+AND+" name="ebscohostsearchmode" id="ebscohostsearchmode" />
+            <input type="hidden" value="" name="ebscohostkeywords" id="ebscohostkeywords" />
+            <label for="q" class="element-invisible">Search Discovery</label>
+            <div class="search-wrapper">
+              <input type="text" placeholder="Enter search terms..." name="ebscohostsearchtext" id="q" />
+              <input name="Search" type="submit" value="Search" />
+            </div>
+            <!-- close search-wrapper -->
+            <div class="limiter-wrapper">
+              <div class="search-options-col1">
+                <h3>Search By:</h3>
+                <label for="guidedField_0">
+                  <input type="radio" checked="checked" value="" id="guidedField_0" name="searchFieldSelector" class="radio" />Keyword </label>
+                <label for="guidedField_2">
+                  <input type="radio" value="AU" id="guidedField_2" name="searchFieldSelector" class="radio" />Author </label>
+                <label for="guidedField_1">
+                  <input type="radio" value="TI" id="guidedField_1" name="searchFieldSelector" class="radio" />Title </label>
+              </div>
+              <!-- close search-options -->
+              <div class="search-options-col2">
+                <h3>Limit To:</h3>
+                <label for="physical">
+                  <input type="radio" id="physical" name="limiterSelector" />Print Books</label>
+                <label for="ebooks">
+                  <input type="radio" id="ebooks" name="limiterSelector" />E-books</label>
+                <label for="chkPeerReviewed">
+                  <input class="limiter" type="radio" id="chkPeerReviewed" name="limiterSelector" />Peer Reviewed Articles</label>
+              </div>
+              <!-- close search-options -->
+            </div>
+            <!-- close limiter-wrapper -->
+            <p class="advanced">
+              <a href="https://search.ebscohost.com/login.aspx?authtype=ip,guest&amp;custid=s8491974&amp;groupid=main&amp;profid=eds-main">Advanced Search </a>
+              <a href="http://libezp.lib.lsu.edu/login?url=http://lsulibraries.worldcat.org/" target="_blank">WorldCat</a>
+              <a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/0/0/0/57/36/73/X/BLASTOFF?user_id=WEBSERVER" target="_blank">Course Reserves</a>
+            </p>
+            <p class="mobilelinks">
+              <a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/0/0/0/38/X/POWER_SEARCH"><i class="fa fa-book" aria-hidden="true"></i> Search the Catalog</a>
+              <a href="https://guides.lib.lsu.edu/az.php" target="_blank"><i class="fa fa-database" aria-hidden="true"></i> Search Databases</a>
+            </p>
+          </form>
+        </div>
+      </div>
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CATALOG TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <div class="TabbedPanelsContent" style="display:none;">
+        <div class="catalogtab">
+          <form name="searchform" method="get" action="https://lsu.ent.sirsi.net/client/en_US/lsu/search/results">
+            <input type="hidden" name="user_id" value="WEBSERVER" />
+            <div class="search-wrapper">
+              <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
+              <input type="text" name="qu" id="searchdata1" maxlength="255" />
+              <input type="submit" value="Search" />
+            </div>
+            <!-- close search-wrapper -->
+            <div class="limiter-wrapper">
+              <label for="srchfield1" class="element-invisible">Select a Search Type</label>
+              <select name="rt" id="srchfield1" title="Select Search Field">
+                <option value>keywords anywhere</option>
+                <option value="false|||AUTHOR|||Author">Author</option>
+                <option value="false|||TITLE|||Title">Title</option>
+                <option value="false|||SUBJECT|||Subject">Subject</option>
+                <option value="false|||C_PERIODICAL_TITLE|||Periodical Title">Periodical title</option>
+              </select>
+              <label for="library" class="element-invisible">Select a Library</label>
+              <select name="library" id="library">
+                <option value="ALL">All Libraries</option>
+                <option value="MIDL-MAIN">Middleton Library</option>
+                <option value="SPEC_COLL">Special Collections</option>
+                <option value="DOCS_MICRO">Government Documents/Microforms</option>
+                <option value="MUSIC">Music Resources</option>
+                <option value="CIC">Cartographic Information Center</option>
+                <option value="NONLIBRARY">Collections at LSU but not in LSU Libraries</option>
+                <option value="VETMED">Veterinary Medicine Library</option>
+              </select>
+            </div>
+            <!-- close limiter-wrapper -->
+            <p class="advanced">
+              <a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/X/0/0/57/38/X/POWER_SEARCH?user_id=WEBSERVER">Advanced Search</a>
+            </p>
+            <p class="beta">
+              LSU Libraries is preparing a new Library Catalog; try it here:
+              <br />
+              <a href="https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue">Advanced Search &nbsp;&nbsp;(Beta)</a>
+            </p>
+          </form>
+        </div>
+        <!--close catalogtab-->
+      </div>
+      <!--close TabbedPanelsContent-->
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ARTICLES TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <div class="TabbedPanelsContent" style="display:none;">
+        <div class="databasestab">
+          <h3>Search by Database Name</h3>
+          <script>
+          springshare_widget_config_1436990136213 = {};
+          </script>
+          <div id="s-lg-widget-1436990136213"></div>
+          <script>
+          ! function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0],
+              p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s);
+              js.id = id;
+              js.src = p + "://lgapi.libapps.com/widgets.php?site_id=5512&widget_type=7&widget_embed_type=1&output_format=1&search_box_type=2&placeholder_text=e.g.%2C+Web+of+Science%2C+JSTOR&button_text=Search&widget_height=&widget_width=250&config_id=1436990136213";
+              fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "s-lg-widget-script-1436990136213");
+          </script>
+          <div class="databasesbrowse">
+            <h3>Browse Databases</h3>
+            <a href="http://guides.lib.lsu.edu/az.php?a=a">A</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=b">B</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=c">C</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=d">D</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=e">E</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=f">F</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=g">G</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=h">H</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=i">I</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=j">J</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=k">K</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=l">L</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=m">M</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=n">N</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=o">O</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=p">P</a>
+            <span class="db-select-letter">Q</span>
+            <a href="http://guides.lib.lsu.edu/az.php?a=r">R</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=s">S</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=t">T</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=u">U</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=v">V</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=w">W</a>
+            <span class="db-select-letter">X</span>
+            <span class="db-select-letter">Y</span>
+            <a href="http://guides.lib.lsu.edu/az.php?a=z">Z</a>
+            <a href="http://guides.lib.lsu.edu/az.php?a=pound">#</a>
+          </div>
+          <!-- close databasesbrowse -->
+          <div class="databaseslink">
+            <a href="https://guides.lib.lsu.edu/az.php?t=11403">Frequently Used Databases</a> | <a href="https://guides.lib.lsu.edu/az.php">All Databases</a> | <a href="/services/copyright/terms">Terms & Conditions</a>
+          </div>
+          <!-- close databaseslink -->
+        </div>
+        <!--close databases tab -->
+      </div>
+      <!--TabbedPanelsContent -->
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  ejournals tab ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <div class="TabbedPanelsContent">
+        <div id="ejournalstab">
+          <!-- START EJOURNALS SCRIPT -->
+          <script src="https://support.ebscohost.com.libezp.lib.lsu.edu/eit/scripts/ebscohostsearch.js"></script>
+          <form method="post" onsubmit="return ebscoHostSearchGo(this);" action="placeholder">
+            <div>
+              <input value="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&amp;site=eds-live&amp;scope=site&amp;type=44&amp;db=edspub&amp;mode=bool&amp;authtype=ip,uid" name="ebscohosturl" type="hidden">
+              <label for="q-ejs" class="element-invisible">Search E-Journals</label>
+            </div>
+            <div class="search-wrapper">
+              <input placeholder="Enter search terms..." name="ebscohostsearchtext" type="text" id="q-ejs">
+              <input name="Search" value="Search" type="submit">
+            </div>
+            <!-- close search-wrapper -->
+          </form>
+        </div>
+        <!--/#search-->
+        <p class="advanced">
+          <a href="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?authtype=ip,uid&profile=pfi">Browse by Discipline</a>
+          <a href="/services/copyright/terms">Terms & Conditions</a>
+        </p>
+        <p class="mobilelinks">
+          <a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/0/0/0/38/X/POWER_SEARCH">Search the Catalog</a>
+          <a href="http://guides.lib.lsu.edu/az.php" target="_blank">Search Databases</a>
+        </p>
+      </div>
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ END OF TAB CONTENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    </div>
+  </div>
+</div>
+<script src="/sites/all/themes/libtheme/js/TabbedPanel.js"></script>
