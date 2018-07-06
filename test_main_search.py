@@ -32,72 +32,115 @@ def load_driver(request):
     return driver
 
 
+def run_search_query(driver, fieldname=None, searchstring=None, location=None, first_result_title=None):
+    if fieldname:
+        field = Select(driver.find_element_by_id('srchfield1'))
+        field.select_by_visible_text(fieldname)
+    if location:
+        box = Select(driver.find_element_by_id('library'))
+        box.select_by_visible_text(location)
+    input = driver.find_element_by_id('searchdata1')
+    input.clear()
+    if searchstring:
+        input.send_keys(searchstring)
+    input.send_keys(Keys.ENTER)
+    wait = WebDriverWait(driver, 10)
+    results_1 = wait.until(
+        EC.presence_of_element_located((By.ID, "detailLink0"))
+    )
+    assert results_1.get_attribute('title') == first_result_title
+
+##################################################################################################################
+
+
 def test_page_loads(load_driver):
     driver = load_driver
     assert 'Search Box update' in driver.title
 
+###################################################################################################################
+
 
 def test_author_dropdown(load_driver):
     driver = load_driver
-    field = Select(driver.find_element_by_id('srchfield1'))
-    field.select_by_visible_text('Author')
-    # format = Select(driver.find_element_by_id('formatDropDown'))
-    # format.select_by_visible_text('Book')
-    input = driver.find_element_by_id('searchdata1')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-
-    wait = WebDriverWait(driver, 20)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Contes extraordinaires."
+    fieldname, searchstring = 'Author', 'hello'
+    first_result_title = "Contes extraordinaires."
+    run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_title_dropdown(load_driver):
     driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('title')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Hello, Dolly."
+    fieldname, searchstring = 'Title', 'hello'
+    first_result_title = "Hello, Dolly."
+    run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_subject_dropdown(load_driver):
     driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('subject')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Ernest Hello : vie, oeuvre, mission"
+    fieldname, searchstring = 'Subject', 'hello'
+    first_result_title = "Ernest Hello : vie, oeuvre, mission"
+    run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_periodical_title_dropdown(load_driver):
     driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('periodical title')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
+    fieldname, searchstring = 'Periodical title', 'hello'
+    first_result_title = "Volunteer on-going language learning manual : beyond hello."
+    run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Volunteer on-going language learning manual : beyond hello."
+####################################################################################################################
+
+
+def test_all_locations(load_driver):
+    driver = load_driver
+    location, searchstring = 'All Libraries', 'reactivation'
+    first_result_title = 'Continental reactivation and reworking'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_middleton_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Middleton Library', 'contraption'
+    first_result_title = 'The grand contraption : the world as myth, number and chance'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_special_collections_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Special Collections', 'goals'
+    first_result_title = 'Strategic goals'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_government_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Government Documents/Microforms', 'if'
+    first_result_title = 'What If'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_music_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Music Resources', 'if'
+    first_result_title = '... if He please (1954).'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_cartographic_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Cartographic Information Center', 'of'
+    first_result_title = 'Yearbook of agriculture'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_nonLSU_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Collections at LSU but not in LSU Libraries', 'of'
+    first_result_title = 'Advocate of dialoge'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_veterinary_location(load_driver):
+    driver = load_driver
+    location, searchstring = 'Veterinary Medicine Library', 'of'
+    first_result_title = 'Journal of andrology'
+    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
