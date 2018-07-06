@@ -22,69 +22,115 @@ def load_driver(request):
     return driver
 
 
+def run_search_query(driver, fieldname=None, formatname=None, searchstring=None, location=None, first_result_title=None):
+    if fieldname:
+        field = Select(driver.find_element_by_id('fieldDropDown'))
+        field.select_by_visible_text(fieldname)
+    if formatname:
+        format = Select(driver.find_element_by_id('formatDropDown'))
+        format.select_by_visible_text(formatname)
+    if location:
+        box = Select(driver.find_element_by_id('library'))
+        box.select_by_visible_text(location)
+    input = driver.find_element_by_id('q')
+    input.clear()
+    if searchstring:
+        input.send_keys(searchstring)
+    input.send_keys(Keys.ENTER)
+    wait = WebDriverWait(driver, 10)
+    results_1 = wait.until(
+        EC.presence_of_element_located((By.ID, "detailLink0"))
+    )
+    assert results_1.get_attribute('title') == first_result_title
+
+
 def test_page_loads(load_driver):
     driver = load_driver
     assert 'Music Search' in driver.title
 
+##########################################################################################
+
+
 def test_author_dropdown(load_driver):
-    driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('author')
-    # format = Select(driver.find_element_by_id('formatDropDown'))
-    # format.select_by_visible_text('Book')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-    
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Contes extraordinaires."
+    fieldname, searchstring = 'author', 'hello'
+    first_result_title = "Contes extraordinaires."
+    run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_title_dropdown(load_driver):
-    driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('title')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-    
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Hello, Dolly."
+    fieldname, searchstring = 'title', 'hello'
+    first_result_title = "Hello, Dolly."
+    run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
+
 
 def test_subject_dropdown(load_driver):
-    driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('subject')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-    
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Ernest Hello : vie, oeuvre, mission"
+    fieldname, searchstring = 'subject', 'hello'
+    first_result_title = "Ernest Hello : vie, oeuvre, mission"
+    run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
+
 
 def test_periodical_title_dropdown(load_driver):
-    driver = load_driver
-    field = Select(driver.find_element_by_id('fieldDropDown'))
-    field.select_by_visible_text('periodical title')
-    input = driver.find_element_by_id('q')
-    input.clear()
-    input.send_keys('hello')
-    input.send_keys(Keys.ENTER)
-    
-    wait = WebDriverWait(driver, 10)
-    results_title_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_title_1.get_attribute('title') == "Volunteer on-going language learning manual : beyond hello."
+    fieldname, searchstring = 'periodical title', 'hello'
+    first_result_title = "Volunteer on-going language learning manual : beyond hello."
+    run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
+
+###########################################################################################
+
+
+def test_music_score_dropdown(load_driver):
+    formatname, searchstring = 'Music Score', 'hello'
+    first_result_title = "Hello, Dolly! A musical comedy."
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_music_sound_recording_dropdown(load_driver):
+    formatname, searchstring = 'Music Sound Recording', 'hello'
+    first_result_title = "Quatuor pour la fin du temps. (Quartet for the end of time)"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_audio_disc_dropdown(load_driver):
+    formatname, searchstring = 'Audio disc', 'hello'
+    first_result_title = "Hello again"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_audio_cassette_dropdown(load_driver):
+    formatname, searchstring = 'Audio Cassette', 'hello'
+    first_result_title = "Strings, keyboard and harp"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_book_dropdown(load_driver):
+    formatname, searchstring = 'Book', 'hello'
+    first_result_title = "Hello, Dolly."
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_lp_dropdown(load_driver):
+    formatname, searchstring = 'LP (Sound Recording)', 'Virtuoso'
+    first_result_title = "Virtuoso cello encores"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+def test_lp_dropdown(load_driver):
+    formatname, searchstring = 'DVD', 'Virtuoso'
+    first_result_title = "Virtuoso cello encores"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+##########################################################################################
+
+
+def test_author_plus_music_score_dropdown(load_driver):
+    fieldname, formatname, searchstring = 'author', 'Music Score', 'Devienne'
+    first_result_title = "Les visitandines : comédie mêlée d'ariettes"
+    run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+
+
+###########################################################################################
+
+def test_author_plus_audio_disc_plus_carter_location(load_driver):
+    fieldname, formatname, location, searchstring = 'author', 'Audio disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
+    first_result_title = "Prélude et fugue en ut mineur ; Prélude et fugue en sol majeur ; Prélude et fugue en ré mineur ; Andante varié en ré majeur ; Sonate no 1 ; Sonate no 3 ; Sonate no 6"
+    run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, location=location, first_result_title=first_result_title)
