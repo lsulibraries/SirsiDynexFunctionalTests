@@ -20,6 +20,7 @@ var doDetailViewTasks = function() {
   ILLIfCheckedOut();
   createCitationButton();
   prepOpenAccordions();
+  linkAvailableOnlineCallNumber();
 }
 
 var doResultsViewTasks = function() {
@@ -135,7 +136,7 @@ var customSearchLink = function() {
 
 var changeToAccessThisItem = function() {
   $J('a')
-     .each( function(i, elem) {
+     .each(function(i, elem) {
        if ($J(elem).text() == $J(elem).attr('href')) {
          $J(elem).text('Access This Item');
     }
@@ -189,6 +190,32 @@ var openAccordions = function() {
        .css("visibility", "visible")
        .css("display", "block");
   });
+}
+
+
+var linkAvailableOnlineCallNumber = function() {
+    hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+    if (!hrefElectronicAccess) {
+        return;
+    }
+    $J('td.detailItemsTable_CALLNUMBER')
+       .each(function(i, elem) {
+           elem.innerHTML = '';
+           new_div = $J('<div>');
+           new_p = $J('<p>', {
+              text: 'Available Online',
+           });
+           new_href = $J('<a>', {
+              text: 'Access this item',
+              title: 'Access this item',
+              href: hrefElectronicAccess,
+              });
+           new_div.append(new_p);
+           new_div.append(new_href);
+           new_div.appendTo(elem);
+           // new_div.append(new_p);
+           // new_div.append(new_href);
+       })
 }
 
 /* Default entrypoints */
