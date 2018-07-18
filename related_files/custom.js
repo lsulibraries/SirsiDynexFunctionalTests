@@ -21,6 +21,7 @@ var doDetailViewTasks = function() {
   createCitationButton();
   prepOpenAccordions();
   linkAvailableOnlineCallNumber();
+  replaceAvailableStatus();
 }
 
 var doResultsViewTasks = function() {
@@ -213,10 +214,13 @@ var linkAvailableOnlineCallNumber = function() {
            new_div.append(new_p);
            new_div.append(new_href);
            new_div.appendTo(elem);
-           // new_div.append(new_p);
-           // new_div.append(new_href);
        })
 }
+
+var replaceAvailableStatus = function() {
+    $J(".detailItemTable_th:contains('Status')").text('Current Location')
+}
+
 
 /* Default entrypoints */
 /*
