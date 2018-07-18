@@ -26,7 +26,9 @@ var doDetailViewTasks = function() {
 
 var doResultsViewTasks = function() {
   changeToAccessThisItem();
-  resultsViewIconReplace();    
+  resultsViewIconReplace();
+  lsuHasUrlSwap();
+  hideAvailableOnlineCallNumber();
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -199,7 +201,7 @@ var linkAvailableOnlineCallNumber = function() {
     if (!hrefElectronicAccess) {
         return;
     }
-    $J('td.detailItemsTable_CALLNUMBER')
+    $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
        .each(function(i, elem) {
            elem.innerHTML = '';
            new_div = $J('<div>');
@@ -221,6 +223,19 @@ var replaceAvailableStatus = function() {
     $J(".detailItemTable_th:contains('Status')").text('Current Location')
 }
 
+var lsuHasUrlSwap = function() {
+  while ($J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').length) {
+    $J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').text(function() {
+      return $J(this).text()
+         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.INDEX>', 'Index:')
+         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
+    });
+  }
+}
+
+var hideAvailableOnlineCallNumber = function() {
+  $J('.displayElementText.PREFERRED_CALLNUMBER:contains("AVAILABLE ONLINE")').parent().empty();
+}
 
 /* Default entrypoints */
 /*
