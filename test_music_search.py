@@ -76,7 +76,7 @@ def test_subject_dropdown(load_driver):
 
 
 def test_periodical_title_dropdown(load_driver):
-    fieldname, searchstring = 'periodical title', 'hello'
+    fieldname, searchstring = 'Journal Title', 'hello'
     first_result_title = "Volunteer on-going language learning manual : beyond hello."
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -96,7 +96,7 @@ def test_music_sound_recording_dropdown(load_driver):
 
 
 def test_audio_disc_dropdown(load_driver):
-    formatname, searchstring = 'Audio disc', 'hello'
+    formatname, searchstring = 'Compact disc', 'hello'
     first_result_title = "Hello again"
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -137,6 +137,6 @@ def test_author_plus_music_score_dropdown(load_driver):
 ###########################################################################################
 
 def test_author_plus_audio_disc_plus_carter_location(load_driver):
-    fieldname, formatname, location, searchstring = 'author', 'Audio disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
-    first_result_title = "Prélude et fugue en ut mineur ; Prélude et fugue en sol majeur ; Prélude et fugue en ré mineur ; Andante varié en ré majeur ; Sonate no 1 ; Sonate no 3 ; Sonate no 6"
+    fieldname, formatname, location, searchstring = 'author', 'Compact disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
+    first_result_title = "Vier geistliche kantaten"
     run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, location=location, first_result_title=first_result_title)

@@ -83,7 +83,7 @@ def test_subject_dropdown(load_driver):
 
 def test_periodical_title_dropdown(load_driver):
     driver = load_driver
-    fieldname, searchstring = 'Periodical title', 'hello'
+    fieldname, searchstring = 'Journal title', 'hello'
     first_result_title = "Volunteer on-going language learning manual : beyond hello."
     run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -107,7 +107,7 @@ def test_middleton_location(load_driver):
 def test_special_collections_location(load_driver):
     driver = load_driver
     location, searchstring = 'Special Collections', 'goals'
-    first_result_title = 'Strategic goals'
+    first_result_title = 'Fitness goals'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
