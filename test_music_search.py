@@ -19,7 +19,6 @@ def load_driver(request):
     driver.delete_all_cookies()
     driver.get('https://www.lib.lsu.edu/music/search-dev')
 
-
     def fin():
         print('teardown driver')
         driver.close()
@@ -54,30 +53,30 @@ def test_page_loads(load_driver):
     driver = load_driver
     assert 'Music Search' in driver.title
 
-#########################################################################################
+########################################################################################
 
 
 def test_author_dropdown(load_driver):
-    fieldname, searchstring = 'author', 'hello'
+    fieldname, searchstring = 'Author', 'hello'
     first_result_title = "Contes extraordinaires."
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_title_dropdown(load_driver):
-    fieldname, searchstring = 'title', 'hello'
+    fieldname, searchstring = 'Title', 'hello'
     first_result_title = "Hello, Dolly."
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_subject_dropdown(load_driver):
-    fieldname, searchstring = 'subject', 'hello'
+    fieldname, searchstring = 'Subject', 'hello'
     first_result_title = "Ernest Hello : vie, oeuvre, mission"
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_periodical_title_dropdown(load_driver):
     fieldname, searchstring = 'Journal Title', 'hello'
-    first_result_title = "Volunteer on-going language learning manual : beyond hello."
+    first_result_title = "Highlights Hello"
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 #########################################################################################
@@ -96,7 +95,7 @@ def test_music_sound_recording_dropdown(load_driver):
 
 
 def test_audio_disc_dropdown(load_driver):
-    formatname, searchstring = 'Compact disc', 'hello'
+    formatname, searchstring = 'Compact Disc', 'hello'
     first_result_title = "Hello again"
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -129,7 +128,7 @@ def test_dvd_dropdown(load_driver):
 
 
 def test_author_plus_music_score_dropdown(load_driver):
-    fieldname, formatname, searchstring = 'author', 'Music Score', 'Devienne'
+    fieldname, formatname, searchstring = 'Author', 'Music Score', 'Devienne'
     first_result_title = "Les visitandines : comédie mêlée d'ariettes"
     run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -137,6 +136,6 @@ def test_author_plus_music_score_dropdown(load_driver):
 ###########################################################################################
 
 def test_author_plus_audio_disc_plus_carter_location(load_driver):
-    fieldname, formatname, location, searchstring = 'author', 'Compact disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
+    fieldname, formatname, location, searchstring = 'Author', 'Compact Disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
     first_result_title = "Vier geistliche kantaten"
     run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, location=location, first_result_title=first_result_title)
