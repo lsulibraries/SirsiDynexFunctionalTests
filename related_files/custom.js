@@ -16,7 +16,7 @@ var doGenericTasks = function() {
 var doDetailViewTasks = function() {
   detailViewIconReplace();
   changeToAccessThisItem();
-  hideMissingDetailBookImage()
+  hideMissingDetailBookImage();
   ILLIfCheckedOut();
   createCitationButton();
   prepOpenAccordions();
@@ -26,7 +26,10 @@ var doDetailViewTasks = function() {
 
 var doResultsViewTasks = function() {
   changeToAccessThisItem();
-  resultsViewIconReplace();    
+  resultsViewIconReplace();
+  lsuHasUrlSwap();
+  hideAvailableOnlineCallNumber();
+  classifyElecAccessLinks();
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -199,7 +202,7 @@ var linkAvailableOnlineCallNumber = function() {
     if (!hrefElectronicAccess) {
         return;
     }
-    $J('td.detailItemsTable_CALLNUMBER')
+    $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
        .each(function(i, elem) {
            elem.innerHTML = '';
            new_div = $J('<div>');
@@ -221,6 +224,51 @@ var replaceAvailableStatus = function() {
     $J(".detailItemTable_th:contains('Status')").text('Current Location')
 }
 
+var lsuHasUrlSwap = function() {
+  while ($J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').length) {
+    $J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').text(function() {
+      return $J(this).text()
+         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.INDEX>', 'Index:')
+         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
+    });
+  }
+}
+
+var hideAvailableOnlineCallNumber = function() {
+  $J('.displayElementText.PREFERRED_CALLNUMBER:contains("AVAILABLE ONLINE")').parent().empty();
+}
+
+var classifyElecAccessLinks = function() {
+  var accessLinks = $J('.displayElementText.ELECTRONIC_ACCESS');
+  $J(accessLinks).each(function() {
+    var acceptableFormats = ['Electronic Resources', 'Audio disc'];
+    var itemFormat = findFormatForElecAccessDiv(this);
+    // if (!acceptableFormats.includes(itemFormat)) {
+    //   return;
+    // }
+    var hasText = doesElecAccessLinkHaveText(this);
+    if (!hasText) {
+      $J(this).addClass('access_button');
+    }
+  })
+}
+
+var findFormatForElecAccessDiv = function(elem) {
+  var grandparentDiv = $J(elem).closest('span.thumb_hidden');
+  var format = $J(grandparentDiv).siblings().find('.formatType').text();
+  return format;
+}
+
+var doesElecAccessLinkHaveText = function(elem) {
+  // console.log($J(elem).contents()[0]);
+  var firstChildNode = $J(elem).contents()[0]
+  var firstChildNodeType = firstChildNode.nodeType;
+  var firstChildNodeText = firstChildNode.nodeValue;
+  if ((firstChildNodeType == '3') && (firstChildNodeText.trim().length == 0)) {
+    return false;
+  }
+  return true;
+}
 
 /* Default entrypoints */
 /*
