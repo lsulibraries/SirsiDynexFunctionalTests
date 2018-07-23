@@ -270,6 +270,7 @@ var doesElecAccessLinkHaveText = function(elem) {
   return true;
 }
 
+
 /* Default entrypoints */
 /*
 Use these two functions to call your custom functions.

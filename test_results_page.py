@@ -33,7 +33,7 @@ def load_access_page(request):
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    driver.delete_all_cookies()
     driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=Plaetner%2C+J%C3%B8rgen.&te=SD_LSU&rt=false%7C%7C%7CAUTHOR%7C%7C%7CAuthor')
 
     def fin():
@@ -42,6 +42,7 @@ def load_access_page(request):
 
     request.addfinalizer(fin)
     return driver
+
 
 def test_page_loads(load_driver):
     driver = load_driver

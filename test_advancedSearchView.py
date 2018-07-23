@@ -11,7 +11,7 @@ def load_driver(request):
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    driver.delete_all_cookies()
     driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0|||1|||0|||true')
 
     def fin():

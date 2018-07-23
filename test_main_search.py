@@ -50,7 +50,7 @@ def run_search_query(driver, fieldname=None, searchstring=None, location=None, f
     )
     assert results_1.get_attribute('title') == first_result_title
 
-##################################################################################################################
+#################################################################################################################
 
 
 def test_page_loads(load_driver):
@@ -83,8 +83,8 @@ def test_subject_dropdown(load_driver):
 
 def test_periodical_title_dropdown(load_driver):
     driver = load_driver
-    fieldname, searchstring = 'Periodical title', 'hello'
-    first_result_title = "Volunteer on-going language learning manual : beyond hello."
+    fieldname, searchstring = 'Journal Title', 'asdf'
+    first_result_title = "ASDA Group, Ltd. SWOT Analysis"
     run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 ####################################################################################################################
@@ -99,22 +99,22 @@ def test_all_locations(load_driver):
 
 def test_middleton_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Middleton Library', 'contraption'
-    first_result_title = 'The grand contraption : the world as myth, number and chance'
+    location, searchstring = 'Middleton Library', 'asdf'
+    first_result_title = 'Real time modeling, simulation and control of dynamical systems'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_special_collections_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Special Collections', 'goals'
-    first_result_title = 'Strategic goals'
+    location, searchstring = 'Special Collections', 'asdf'
+    first_result_title = 'The Impact of Modifying the Jones Act on US Coastal Shipping'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
 def test_government_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Government Documents/Microforms', 'if'
-    first_result_title = 'What If'
+    location, searchstring = 'Government Documents/Microforms', 'asdf'
+    first_result_title = 'Announcement'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -141,6 +141,6 @@ def test_nonLSU_location(load_driver):
 
 def test_veterinary_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Veterinary Medicine Library', 'of'
-    first_result_title = 'Journal of andrology'
+    location, searchstring = 'Veterinary Medicine Library', 'asdf'
+    first_result_title = 'AO principles of equine osteosynthesis'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
