@@ -12,7 +12,7 @@ $J(document).ready(function() {
 });
 
 var doGenericTasks = function() {
-  customSearchLink();    
+  customSearchLink();
 }
 
 var doDetailViewTasks = function() {
