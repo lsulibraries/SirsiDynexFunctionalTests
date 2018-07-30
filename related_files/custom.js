@@ -6,6 +6,8 @@ $J(document).ready(function() {
     doResultsViewTasks();
   } else if ($J('.customAdvancedSearch').length) {
     doAdvancedSearchViewTasks();
+  } else if ($J('#myAccount').length) {
+    doAccountPageTasks();
   }
 });
 
@@ -16,7 +18,7 @@ var doGenericTasks = function() {
 var doDetailViewTasks = function() {
   detailViewIconReplace();
   changeToAccessThisItem();
-  hideMissingDetailBookImage()
+  hideMissingDetailBookImage();
   ILLIfCheckedOut();
   createCitationButton();
   prepOpenAccordions();
@@ -29,10 +31,17 @@ var doResultsViewTasks = function() {
   resultsViewIconReplace();
   lsuHasUrlSwap();
   hideAvailableOnlineCallNumber();
+  classifyElecAccessLinks();
 }
 
 var doAdvancedSearchViewTasks = function() {
   hideBasicSearch();    
+}
+
+var doAccountPageTasks = function() {
+    changeSMSText();
+    changeSMSPopupLabel();
+    changeSMSPopupTitle();
 }
 
 /*
@@ -235,6 +244,50 @@ var lsuHasUrlSwap = function() {
 
 var hideAvailableOnlineCallNumber = function() {
   $J('.displayElementText.PREFERRED_CALLNUMBER:contains("AVAILABLE ONLINE")').parent().empty();
+}
+
+var classifyElecAccessLinks = function() {
+  var accessLinks = $J('.displayElementText.ELECTRONIC_ACCESS');
+  $J(accessLinks).each(function() {
+    var acceptableFormats = ['Electronic Resources', 'Audio disc'];
+    var itemFormat = findFormatForElecAccessDiv(this);
+    // if (!acceptableFormats.includes(itemFormat)) {
+    //   return;
+    // }
+    var hasText = doesElecAccessLinkHaveText(this);
+    if (!hasText) {
+      $J(this).addClass('access_button');
+    }
+  })
+}
+
+var findFormatForElecAccessDiv = function(elem) {
+  var grandparentDiv = $J(elem).closest('span.thumb_hidden');
+  var format = $J(grandparentDiv).siblings().find('.formatType').text();
+  return format;
+}
+
+var doesElecAccessLinkHaveText = function(elem) {
+  // console.log($J(elem).contents()[0]);
+  var firstChildNode = $J(elem).contents()[0]
+  var firstChildNodeType = firstChildNode.nodeType;
+  var firstChildNodeText = firstChildNode.nodeValue;
+  if ((firstChildNodeType == '3') && (firstChildNodeText.trim().length == 0)) {
+    return false;
+  }
+  return true;
+}
+
+var changeSMSText = function() {
+  $J('a:contains("SMS Notifications")').text('Text Notifications');
+}
+
+var changeSMSPopupLabel = function() {
+    $J('#smsPhoneNameDiv label').text('Name This Notification');
+}
+
+var changeSMSPopupTitle = function() {
+    $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
 }
 
 /* Default entrypoints */
