@@ -24,6 +24,7 @@ var doDetailViewTasks = function() {
   prepOpenAccordions();
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
+  renameItemHoldsColumn();
 }
 
 var doResultsViewTasks = function() {
@@ -35,13 +36,13 @@ var doResultsViewTasks = function() {
 }
 
 var doAdvancedSearchViewTasks = function() {
-  hideBasicSearch();    
+  hideBasicSearch();
 }
 
 var doAccountPageTasks = function() {
-    changeSMSText();
-    changeSMSPopupLabel();
-    changeSMSPopupTitle();
+  changeSMSText();
+  changeSMSPopupLabel();
+  changeSMSPopupTitle();
 }
 
 /*
@@ -53,24 +54,24 @@ var createCitationButton = function() {
   var oclcISBN = $J('#detail0_ISBN .ISBN_value').text();
   var oclcISSN = $J('#detail0_ISSN .ISSN_value').text();
   if (oclcNUM || oclcISBN || oclcISSN) {
-    var newButton = $J('<input>', {'class': 'button', title: 'Citation', value: 'Citation', type: 'button'})
+    var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
       .click(function() {
         citationPopup(oclcNUM, oclcISBN, oclcISSN);
-        });
-    var newDiv = $J('<div>', {id: 'CitationButton'});
+      });
+    var newDiv = $J('<div>', { id: 'CitationButton' });
     $J('#detailActionsdetail0').append(newDiv.append(newButton));
   }
 }
 
 var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
   if (oclcNUM != '') {
-    var myURL = 'http://www.worldcat.org/oclc/'+ oclcNUM + '?page=citation';
+    var myURL = 'http://www.worldcat.org/oclc/' + oclcNUM + '?page=citation';
   } else if (oclcISBN != '') {
-    oclcISBN2 = oclcISBN.substr(0,13);
-    var myURL = 'http://www.worldcat.org/isbn/'+ oclcISBN2 + '?page=citation';
+    oclcISBN2 = oclcISBN.substr(0, 13);
+    var myURL = 'http://www.worldcat.org/isbn/' + oclcISBN2 + '?page=citation';
   } else if (oclcISSN != '') {
-    oclcISSN2 = oclcISSN.substr(0,8);
-    var myURL = 'http://www.worldcat.org/issn/'+ oclcISSN2 + '?page=citation';
+    oclcISSN2 = oclcISSN.substr(0, 8);
+    var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
   }
   window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
 }
@@ -91,8 +92,8 @@ var addLinkILL = function(itemId, illiadUrl) {
   if (dueElem.siblings('.illiadLink').length) {
     return;
   }
-  var illiadNode = $J('<div>', {class: 'illiadLink'}).appendTo(dueElem);
-  var illiadHref = $J('<a>', {href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan'}).appendTo(illiadNode);
+  var illiadNode = $J('<div>', { class: 'illiadLink' }).appendTo(dueElem);
+  var illiadHref = $J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan' }).appendTo(illiadNode);
 }
 
 var buildIlliadRequest = function() {
@@ -135,24 +136,24 @@ var detailViewIconReplace = function() {
 
 var resultsViewIconReplace = function() {
   $J('.format_container .formatType')
-     .each(function(i, elem) {
-       var iconText = $J(elem).attr('title');
-       $J(elem).text(iconText);
-  })
+    .each(function(i, elem) {
+      var iconText = $J(elem).attr('title');
+      $J(elem).text(iconText);
+    })
 }
 
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-     .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue");
+    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue");
 }
 
 var changeToAccessThisItem = function() {
   $J('a')
-     .each(function(i, elem) {
-       if ($J(elem).text() == $J(elem).attr('href')) {
-         $J(elem).text('Access This Item');
-    }
-  })
+    .each(function(i, elem) {
+      if ($J(elem).text() == $J(elem).attr('href')) {
+        $J(elem).text('Access This Item');
+      }
+    })
 }
 
 var hideBasicSearch = function() {
@@ -177,67 +178,83 @@ var hideMissingDetailBookImage = function() {
         }
       });
     });
-    mutationObserver.observe($J('#detailCover0').get(0), {attributes: true});
+    mutationObserver.observe($J('#detailCover0').get(0), { attributes: true });
   }
 }
 
 
 var prepOpenAccordions = function() {
-  setTimeout("openAccordions();",200);
+  setTimeout("openAccordions();", 200);
 }
 
 var openAccordions = function() {
-  $J('h3.ui-accordion-header').each(function(i, elem){
+  $J('h3.ui-accordion-header').each(function(i, elem) {
     $J(elem)
-       .removeClass("ui-corner-all")
-       .addClass("ui-corner-top")
-       .attr("aria-expanded", "true")
-       .attr("aria-selected", "true")
-       .find('span.ui-icon')
-           .removeClass("ui-icon-triangle-1-e")
-           .addClass("ui-icon-triangle-1-s");
+      .removeClass("ui-corner-all")
+      .addClass("ui-corner-top")
+      .attr("aria-expanded", "true")
+      .attr("aria-selected", "true")
+      .find('span.ui-icon')
+      .removeClass("ui-icon-triangle-1-e")
+      .addClass("ui-icon-triangle-1-s");
   });
-  $J('div.ui-accordion-content').each(function(i, elem){
+  $J('div.ui-accordion-content').each(function(i, elem) {
     $J(elem)
-       .css("visibility", "visible")
-       .css("display", "block");
+      .css("visibility", "visible")
+      .css("display", "block");
   });
 }
 
 
 var linkAvailableOnlineCallNumber = function() {
-    hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-    if (!hrefElectronicAccess) {
-        return;
-    }
-    $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
-       .each(function(i, elem) {
-           elem.innerHTML = '';
-           new_div = $J('<div>');
-           new_p = $J('<p>', {
-              text: 'Available Online',
-           });
-           new_href = $J('<a>', {
-              text: 'Access this item',
-              title: 'Access this item',
-              href: hrefElectronicAccess,
-              });
-           new_div.append(new_p);
-           new_div.append(new_href);
-           new_div.appendTo(elem);
-       })
+  hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+  if (!hrefElectronicAccess) {
+    return;
+  }
+  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
+    .each(function(i, elem) {
+      elem.innerHTML = '';
+      new_div = $J('<div>');
+      new_p = $J('<p>', {
+        text: 'Available Online',
+      });
+      new_href = $J('<a>', {
+        text: 'Access this item',
+        title: 'Access this item',
+        href: hrefElectronicAccess,
+      });
+      new_div.append(new_p);
+      new_div.append(new_href);
+      new_div.appendTo(elem);
+    })
 }
 
 var replaceAvailableStatus = function() {
-    $J(".detailItemTable_th:contains('Status')").text('Current Location')
+  $J(".detailItemTable_th:contains('Status')").text('Current Location')
+}
+
+var renameItemHoldsColumn = function() {
+  $J('.detailItemTable_th:contains("Item Holds")').text('Request Item');
+  changeNamesAfterAjaxComplete();
+}
+
+var changeNamesAfterAjaxComplete = function () {
+  $J( document ).bind("ajaxComplete", function(){
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').each(function(iter, elem) {
+      var childDiv = $J(elem).children(":first-child");
+      if ($J(childDiv).text() == 'Reserve This Copy') {
+        $J(childDiv).text('Place Hold');
+      }
+    })
+  })
 }
 
 var lsuHasUrlSwap = function() {
   while ($J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').length) {
     $J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').text(function() {
       return $J(this).text()
-         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.INDEX>', 'Index:')
-         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
+        .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.INDEX>', 'Index:')
+        .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
     });
   }
 }
@@ -251,9 +268,6 @@ var classifyElecAccessLinks = function() {
   $J(accessLinks).each(function() {
     var acceptableFormats = ['Electronic Resources', 'Audio disc'];
     var itemFormat = findFormatForElecAccessDiv(this);
-    // if (!acceptableFormats.includes(itemFormat)) {
-    //   return;
-    // }
     var hasText = doesElecAccessLinkHaveText(this);
     if (!hasText) {
       $J(this).addClass('access_button');
@@ -268,7 +282,6 @@ var findFormatForElecAccessDiv = function(elem) {
 }
 
 var doesElecAccessLinkHaveText = function(elem) {
-  // console.log($J(elem).contents()[0]);
   var firstChildNode = $J(elem).contents()[0]
   var firstChildNodeType = firstChildNode.nodeType;
   var firstChildNodeText = firstChildNode.nodeValue;
@@ -283,11 +296,11 @@ var changeSMSText = function() {
 }
 
 var changeSMSPopupLabel = function() {
-    $J('#smsPhoneNameDiv label').text('Name This Notification');
+  $J('#smsPhoneNameDiv label').text('Name This Notification');
 }
 
 var changeSMSPopupTitle = function() {
-    $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
+  $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
 }
 
 /* Default entrypoints */
