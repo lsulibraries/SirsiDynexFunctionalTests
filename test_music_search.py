@@ -135,7 +135,7 @@ def test_author_plus_music_score_dropdown(load_driver):
 
 ###########################################################################################
 
-def test_author_plus_audio_disc_plus_carter_location(load_driver):
-    fieldname, formatname, location, searchstring = 'Author', 'Compact Disc', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
-    first_result_title = "Vier geistliche kantaten"
+def test_author_plus_music_score_plus_carter_location(load_driver):
+    fieldname, formatname, location, searchstring = 'Author', 'Music Score', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'
+    first_result_title = "Leipziger Ausgabe der Werke Felix Mendelssohn Bartholdys."
     run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, location=location, first_result_title=first_result_title)

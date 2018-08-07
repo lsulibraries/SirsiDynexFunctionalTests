@@ -100,7 +100,7 @@ def test_all_locations(load_driver):
 def test_middleton_location(load_driver):
     driver = load_driver
     location, searchstring = 'Middleton Library', 'asdf'
-    first_result_title = 'Real time modeling, simulation and control of dynamical systems'
+    first_result_title = 'Textbook of penile cancer'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -114,7 +114,7 @@ def test_special_collections_location(load_driver):
 def test_government_location(load_driver):
     driver = load_driver
     location, searchstring = 'Government Documents/Microforms', 'asdf'
-    first_result_title = 'Announcement'
+    first_result_title = 'PHS, ATSDR Federal Register cites'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 

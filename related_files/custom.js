@@ -25,6 +25,8 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
+  // mergeHoldingAvailableTables();
+  mergeHoldingAvailableTablesReverse();
 }
 
 var doResultsViewTasks = function() {
@@ -301,6 +303,41 @@ var changeSMSPopupLabel = function() {
 
 var changeSMSPopupTitle = function() {
   $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
+}
+
+var mergeHoldingAvailableTables = function() {
+  var availTable = $J('#detailItemsDiv0');
+  var holdingsTable = $J('#detailHoldingsDiv0');
+  var LSUHasColumn = $J(holdingsTable.find('.detailItemsTable_HOLDING'));
+  var LSUHasHeader = LSUHasColumn.slice(0,1);
+  var LSUHasRows = LSUHasColumn.slice(1);
+  availTable.find('thead').find('.detailItemsTable_ITYPE').after($J(LSUHasHeader[0]));
+  for (var i=0; i < LSUHasRows.length; i++) {
+    availTable.find('tbody').find('.detailItemsTable_ITYPE')[i].after(LSUHasRows[i]);
+  }
+}
+
+var mergeHoldingAvailableTablesReverse = function() {
+  if (!$J('.detailItemsTable_LIBRARY:contains("Special Collections")').length) {
+    return false;
+  }
+  var availTable = $J('#detailItemsDiv0');
+  var holdingsTable = $J('#detailHoldingsDiv0');
+  var callNumColumn = $J(availTable.find('.detailItemsTable_CALLNUMBER'));
+  var LSUHasColumn = $J(holdingsTable.find('.detailItemsTable_HOLDING'));
+  var callNumHeader = callNumColumn.slice(0,1);
+  var callNumRows = callNumColumn.slice(1);
+  holdingsTable.find('thead').find('.detailItemsTable_HOLDING').before($J(callNumHeader[0]).clone(true));
+  var maxLength = (callNumColumn.length > LSUHasColumn.length) ? callNumColumn.length : LSUHasColumn.length;
+  for (var i=0; i < maxLength-1; i++) {
+    if (callNumRows[i] && LSUHasColumn[i+1]) {
+      var clonedElem = callNumRows[i].clone(true);
+      holdingsTable.find('tbody').find('.detailItemsTable_HOLDING')[i].before(clonedElem);
+    } else {
+      var emptyElem = $J("<td>", {id: "foo", "class": "detailItemsTable_CALLNUMBER"});  
+        holdingsTable.find('tbody').find('.detailItemsTable_HOLDING')[i].before(emptyElem[0]);
+    }
+  }
 }
 
 /* Default entrypoints */
