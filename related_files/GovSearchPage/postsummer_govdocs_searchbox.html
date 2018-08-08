@@ -3,7 +3,7 @@
     <ul class="TabbedPanelsTabGroup">
       <li class="TabbedPanelsTab">Catalog</li>
       <li class="TabbedPanelsTab">Discovery</li>
-      <li class="TabbedPanelsTab">Music Databases</li>
+      <li class="TabbedPanelsTab">Suggested Databases</li>
     </ul>
     <div class="TabbedPanelsContentGroup">
       <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CATALOG TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -12,7 +12,7 @@
           <form method="get" id="searchForm" action="https://lsu.ent.sirsi.net/client/en_US/lsu/search/results">
             <div class="search-wrapper">
               <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
-              <input type="text" name="searchdata1" id="searchdata1" maxlength="255" />
+              <input type="text" name="qu" id="searchdata1" maxlength="255" />
               <input type="submit" value="Search" />
             </div>
             <div class="limiter-wrapper">
@@ -28,21 +28,21 @@
               <input type="hidden" name="lm" value="" />
               <select name="qf" id="formatDropDown" class="dropDown" title="Select Search Format">
                 <option value="">All Formats</option>
-                <option value="FORMAT	Format	MUSIC	Music">Music Score</option>
-                <option value="FORMAT	Format	MUSICSNDREC	Music Sound Recording">Music Sound Recording</option>
-                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Compact disc</option>
-                <option value="FORMAT	Format	SOUNDCASS	Audio cassette">Audio Cassette</option>
                 <option value="FORMAT	Format	BOOK	Books">Book</option>
-                <option value="FORMAT	Format	VIDEODISC	Video disc">DVD</option>
+                <option value="FORMAT	Format	MAP	Map">Map</option>
+                <option value="FORMAT	Format	MICROFORM	Microform">Microform</option>
+                <option value="FORMAT	Format	NEWSPAPER	Newspaper">Newspaper</option>
+                <option value="FORMAT	Format	SOUNDCASS	Audio cassette">Audio Cassette</option>
                 <option value="FORMAT	Format	SOUNDREC	Sound recording">LP (Sound Recording)</option>
+                <option value="FORMAT	Format	VIDEODISC	Video disc">DVD</option>
                 <option value="FORMAT	Format	VIDEOCASS	Video cassette">Videocassette</option>
               </select>
             </div>
             <div class="limiter-wrapper">
               <label for="library">In:</label>
               <select name="qf" id="library">
-                <option selected="selected" value="">Anywhere</option>
-                <option value="LIBRARY	Library	21:MUSIC	Carter Music Resources Center, 202 Middleton">Carter Music Resources Center, 202 Middleton</option>
+                <option value="LIBRARY	Library	21:DOCS_MICRO	Government Documents/Microforms, 53 Middleton" selected="selected">Government Documents & Microforms</option>
+                <option value="">Anywhere</option>
               </select>
             </div>
             <p class="advanced" colspan="2">
@@ -54,7 +54,7 @@
       <!-- close catalogsearch -->
       <div class="TabbedPanelsContent" style="display:none;">
         <!-- EBSCOhost Custom Search Box Begins -->
-        <script src="https://support.ebsco.com/eit/scripts/ebscohostsearch.js" type="text/javascript"></script>
+        <script src="https://support.ebscohost.com/eit/scripts/ebscohostsearch.js"></script>
         <form id="ebscohostCustomSearchBox" action="" onsubmit="return ebscoHostSearchGo(this);" method="post">
           <input id="ebscohostwindow" name="ebscohostwindow" type="hidden" value="1" />
           <input id="ebscohosturl" name="ebscohosturl" type="hidden" value="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&amp;site=eds-live&amp;scope=site&amp;type=0&amp;custid=s8491974&amp;groupid=main&amp;profid=eds-main&mode=bool&amp;lang=en&amp;authtype=ip,guest" />

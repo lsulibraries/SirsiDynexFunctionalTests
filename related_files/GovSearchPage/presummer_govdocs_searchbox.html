@@ -3,58 +3,74 @@
     <ul class="TabbedPanelsTabGroup">
       <li class="TabbedPanelsTab">Catalog</li>
       <li class="TabbedPanelsTab">Discovery</li>
-      <li class="TabbedPanelsTab">Music Databases</li>
+      <li class="TabbedPanelsTab">Suggested Databases</li>
     </ul>
     <div class="TabbedPanelsContentGroup">
       <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CATALOG TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
       <div class="catalogsearch">
         <div class="TabbedPanelsContent">
-          <form method="get" id="searchForm" action="https://lsu.ent.sirsi.net/client/en_US/lsu/search/results">
+          <form name="searchform" method="post" action="https://lsu.louislibraries.org/uhtbin/cgisirsi/X/0/0/123/">
             <div class="search-wrapper">
               <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
               <input type="text" name="searchdata1" id="searchdata1" maxlength="255" />
               <input type="submit" value="Search" />
             </div>
+            <!-- close search wrapper -->
             <div class="limiter-wrapper">
-              <label for="restrictionDropDown" class="element-invisible">Select Search parameters</label>
-              <select name="rt" id="fieldDropDown" title="Select Search Field">
-                <option value>keywords anywhere</option>
-                <option value="false|||AUTHOR|||Author">author</option>
-                <option value="false|||TITLE|||Title">title</option>
-                <option value="false|||SUBJECT|||Subject">subject</option>
-                <option value="false|||C_PERIODICAL_TITLE|||Periodical Title">periodical title</option>
+              <label for="srchfield1" class="element-invisible">Select Search parameters</label>
+              <select name="srchfield1" id="srchfield1" onchange="javascript:browseswitch();">
+                <option value="GENERAL^SUBJECT^GENERAL^^keywords anywhere"> keywords anywhere</option>
+                <option value="AU^AUTHOR^AUTHORS^Author Processing^author"> author</option>
+                <option value="TI^TITLE^TITLES^Title Processing^title"> title</option>
+                <option value="SU^SUBJECT^SUBJECTS^^subject"> subject</option>
+                <option value="PER^PERTITLE^TITLES^Title Processing^periodical title"> periodical title</option>
               </select>
               <label for="query_type" class="element-invisible">Select query type</label>
-              <input type="hidden" name="lm" value="" />
-              <select name="qf" id="formatDropDown" class="dropDown" title="Select Search Format">
-                <option value="">All Formats</option>
-                <option value="FORMAT	Format	MUSIC	Music">Music Score</option>
-                <option value="FORMAT	Format	MUSICSNDREC	Music Sound Recording">Music Sound Recording</option>
-                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Compact disc</option>
-                <option value="FORMAT	Format	SOUNDCASS	Audio cassette">Audio Cassette</option>
-                <option value="FORMAT	Format	BOOK	Books">Book</option>
-                <option value="FORMAT	Format	VIDEODISC	Video disc">DVD</option>
-                <option value="FORMAT	Format	SOUNDREC	Sound recording">LP (Sound Recording)</option>
-                <option value="FORMAT	Format	VIDEOCASS	Video cassette">Videocassette</option>
+              <select name="query_type" id="query_type">
+                <option value="search" id="keyword">Keyword</option>
+                <option value="browse" id="browse">Browse</option>
+                <option value="exact" id="exact">Exact</option>
+              </select>
+              <!--</div> <!-- close limiter wrapper    
+
+<div class="limiter-wrapper">-->
+              <label for="item_1cat" class="element-invisible">Search for:</label>
+              <select name="item_1cat" id="item_1cat">
+                <option value="ANY" selected="selected">All formats</option>
+                <option value="BOOK">Book</option>
+                <option value="BOOK-DOC">Book - Government Document</option>
+                <option value="MAP">Map</option>
+                <option value="MICROCARD">Microcard</option>
+                <option value="MICROFICHE">Microfiche</option>
+                <option value="MICROFILM">Microfilm</option>
+                <option value="NEWSPAPER">Newspaper</option>
+                <option value="PAMPHLET">Pamphlet</option>
+                <option value="POSTCARD">Postcard</option>
+                <option value="POSTER">Poster</option>
+                <option value="AUDIO-CASS">Audio Cassette</option>
+                <option value="LP">LP (Sound recording)</option>
+                <option>DVD</option>
+                <option value="VIDEO-CASS">Videocassette</option>
               </select>
             </div>
+            <!-- close limiter wrapper -->
             <div class="limiter-wrapper">
               <label for="library">In:</label>
-              <select name="qf" id="library">
-                <option selected="selected" value="">Anywhere</option>
-                <option value="LIBRARY	Library	21:MUSIC	Carter Music Resources Center, 202 Middleton">Carter Music Resources Center, 202 Middleton</option>
+              <select name="library" id="library">
+                <option value="DOCS_MICRO" selected="selected">Government Documents & Microforms</option>
+                <option value="ALL">Anywhere</option>
               </select>
             </div>
-            <p class="advanced" colspan="2">
-              <a href="https://lsu.ent.sirsi.net/client/en_US/lsu/search/advanced">Advanced Search</a>
-            </p>
+            <!-- close limiter wrapper -->
+            <p class="advanced" colspan="2"><a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/x/SIRSI/0/57/60/70/X?user_id=WEBSERVER">Advanced Search</a></p>
           </form>
         </div>
+        <!-- close TabbedPanelsContent -->
       </div>
       <!-- close catalogsearch -->
       <div class="TabbedPanelsContent" style="display:none;">
         <!-- EBSCOhost Custom Search Box Begins -->
-        <script src="https://support.ebsco.com/eit/scripts/ebscohostsearch.js" type="text/javascript"></script>
+        <script src="http://support.ebsco.com/eit/scripts/ebscohostsearch.js" type="text/javascript"></script>
         <form id="ebscohostCustomSearchBox" action="" onsubmit="return ebscoHostSearchGo(this);" method="post">
           <input id="ebscohostwindow" name="ebscohostwindow" type="hidden" value="1" />
           <input id="ebscohosturl" name="ebscohosturl" type="hidden" value="http://libezp.lib.lsu.edu/login?url=http://search.ebscohost.com/login.aspx?direct=true&amp;site=eds-live&amp;scope=site&amp;type=0&amp;custid=s8491974&amp;groupid=main&amp;profid=eds-main&mode=bool&amp;lang=en&amp;authtype=ip,guest" />
@@ -66,6 +82,7 @@
             <input id="ebscohostsearchtext" name="ebscohostsearchtext" />
             <input type="submit" value="Search" class="ebscohost-search-button" />
           </div>
+          <!-- close search wrapper div -->
           <div class="limiter-wrapper">
             <div class="search-options-col1">
               <h3>Search By:</h3>
