@@ -33,6 +33,7 @@ var doResultsViewTasks = function() {
   lsuHasUrlSwap();
   hideAvailableOnlineCallNumber();
   classifyElecAccessLinks();
+  // removeSomePubDates();
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -238,8 +239,8 @@ var renameItemHoldsColumn = function() {
   changeNamesAfterAjaxComplete();
 }
 
-var changeNamesAfterAjaxComplete = function () {
-  $J( document ).bind("ajaxComplete", function(){
+var changeNamesAfterAjaxComplete = function() {
+  $J(document).bind("ajaxComplete", function() {
     $J('.asyncFieldSD_ITEM_HOLD_LINK').each(function(iter, elem) {
       var childDiv = $J(elem).children(":first-child");
       if ($J(childDiv).text() == 'Reserve This Copy') {
@@ -303,6 +304,14 @@ var changeSMSPopupTitle = function() {
   $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
 }
 
+var removeSomePubDates = function() {
+  // $J('.format_container .formatType:contains("Electronic Resources"), .format_container .formatType:contains("Print Journal") ')
+  $J('.format_container .formatType:contains("Electronic Resources")')
+    .closest('.results_bio ')
+    .find('.PUBDATE_RANGE')
+    .closest('.displayElementWrapper')
+    .remove();
+}
 
 /* Default entrypoints */
 /*
@@ -312,6 +321,37 @@ Use these two functions to call your custom functions.
 Any code you want run, point to it from one of these two.
 */
 
-function customJavaScript() {}
+function customJavaScript() {
+  setTimeout("addContinueSearchLink();", 100);
+}
+
+function addContinueSearchLink() {
+  var language = com_sirsi_ent_page.localeCode;
+  if (language === "fr_CA" || language === "fr_FR") {
+    var continueText = 'Continuer la recherche dans: ';
+    //Update quicksearch buttons
+    jQuery('.quicksearch_display_button a').each(function() {
+      var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTFRE");
+      var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTFRE");
+      jQuery(this).attr('href', newLang);
+    });
+  } else if (language === "es_ES" || language === "es_CH") {
+    var continueText = 'Continuar la búsqueda en: ';
+    //Update quicksearch buttons
+    jQuery('.quicksearch_display_button a').each(function() {
+      var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTSPA");
+      var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTSPA");
+      jQuery(this).attr('href', newLang);
+    });
+  } else {
+    var continueText = 'Continue the search in: ';
+    //Update quicksearch buttons
+    jQuery('.quicksearch_display_button a').each(function() {
+      var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTENG");
+      var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTENG");
+      jQuery(this).attr('href', newLang);
+    });
+  }
+}
 
 function customDetailJavaScript() {}

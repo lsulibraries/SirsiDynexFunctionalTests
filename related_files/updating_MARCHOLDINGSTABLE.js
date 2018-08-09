@@ -72,11 +72,17 @@ function goDetailMARCHoldings(rId) {
                 var entryId = this.entryID;
                 
                 if (entryId === '852') {
-                 var holdingLocationText = this.text;
-                 holdingLocation = holdingLocationText.split('--')[0];
-                 holdingLocationDesc = locationMap[holdingLocation];
-                 holdingShelfMark = holdingLocationText.split('--')[1];
-                 
+                    var holdingLocationText = this.text;
+                    holdingLocation = holdingLocationText.split('--')[0];
+                    holdingLocationDesc = locationMap[holdingLocation];
+                    holdingShelfMark = holdingLocationText.split('--')[1];
+                    if (holdingShelfMark.length) {
+                        holdingShelfMark.trim();
+                    }
+                    holdingAddend = holdingLocationText.split('--')[2];
+                 if (holdingAddend.length){
+                    holdingAddend = holdingAddend.trim().replace('Note:', '');
+                    }
                  }
 
                  if (entryId === '866') {
@@ -97,7 +103,7 @@ function goDetailMARCHoldings(rId) {
 
                 });
                 
-                htmlHoldingOutput += '<tr class="detailItemsTableRow"><td>' + holdingLibDesc + '</td><td>' + holdingLocationDesc + '</td><td>' + holdingShelfMark + '</td><td>' + textualHoldings + textualHoldingsEnumeration + textualHoldingsSupplemental + textualHoldingsIndexes +'</td></tr>';
+                htmlHoldingOutput += '<tr class="detailItemsTableRow"><td>' + holdingLibDesc + '</td><td>' + holdingLocationDesc + '</td><td><p>' + holdingShelfMark + '</p><p>' + holdingAddend + '</p></td><td>' + textualHoldings + textualHoldingsEnumeration + textualHoldingsSupplemental + textualHoldingsIndexes +'</td></tr>';
              
              //empty the variables
              textualHoldings = '';
