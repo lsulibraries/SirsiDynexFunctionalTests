@@ -58,7 +58,7 @@ function goDetailMARCHoldings(rId) {
 
             if (holdingsInfo) {
 
-              var htmlHoldingOutput = '<thead><tr><th class="detailItemsTable_LIBRARY"><div class="detailItemTable_th">Library</div><span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span></th><th class="detailItemsTable_LOCATION"><div class="detailItemTable_th">Shelf Location</div><span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span></th><th class="detailItemsTable_CALLNUMBER"><div class="detailItemTable_th">Call Number</div><span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span></th><th class="detailItemsTable_HOLDING"><div class="detailItemTable_th">LSU Has:</div><span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span></th></tr></thead><tbody>'
+              var htmlHoldingOutput = '<thead><tr><th class="detailItemsTable_LIBRARY"><div class="detailItemTable_th">Library</div></th><th class="detailItemsTable_LOCATION"><div class="detailItemTable_th">Shelf Location</div></th><th class="detailItemsTable_CALLNUMBER"><div class="detailItemTable_th">Call Number</div></th><th class="detailItemsTable_HOLDING"><div class="detailItemTable_th">LSU Has:</div></th></tr></thead><tbody>'
 
               
               $J.each(holdingsInfo, function(holdingIndex, holding){
@@ -135,8 +135,8 @@ function goDetailMARCHoldings(rId) {
             /* 
              go_go_gadget_sorttable() and sorttable.init({hitnum}) were found in DetailStack.js line 69-70.  And are crucial for adding sorting functionality.
              */
-             go_go_gadget_sorttable();
-             sorttable.init(0);
+             // go_go_gadget_sorttable();
+             // sorttable.init(0);
         }
 
           
