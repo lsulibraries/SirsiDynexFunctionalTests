@@ -45,7 +45,7 @@ function goDetailMARCHoldings(rId) {
 
     var numRows = 0;
 
-	var hitNum = rId.split('detail')[1];
+    var hitNum = rId.split('detail')[1];
         var catKey = $J('#'+rId+'_DOC_ID .DOC_ID_value').text().split(':')[1];
         var attachTarget = jQuery('#detail_accordion'+hitNum+ ' h3:contains("Holdings")').next();
         var wsURL = baseWsURL + 'rest/standard/lookupTitleInfo?clientID=' + clientID + '&titleID=' + catKey + '&includeMarcHoldings=true&marcEntryFilter=ALL&json=true&callback=?';
@@ -76,12 +76,16 @@ function goDetailMARCHoldings(rId) {
                     holdingLocation = holdingLocationText.split('--')[0];
                     holdingLocationDesc = locationMap[holdingLocation];
                     holdingShelfMark = holdingLocationText.split('--')[1];
-                    if (holdingShelfMark.length) {
+                    if (holdingShelfMark && holdingShelfMark.length) {
                         holdingShelfMark.trim();
+                    } else {
+                        holdingShelfMark = '';
                     }
                     holdingAddend = holdingLocationText.split('--')[2];
-                 if (holdingAddend.length){
-                    holdingAddend = holdingAddend.trim().replace('Note:', '');
+                    if (holdingAddend && holdingAddend.length){
+                       holdingAddend = holdingAddend.trim().replace('Note:', '');
+                    } else {
+                        holdingAddend = '';
                     }
                  }
 
@@ -114,7 +118,7 @@ function goDetailMARCHoldings(rId) {
              });
              
              htmlHoldingOutput += '</tbody><tfoot></tfoot>'
-              
+
              } // end if holdingsInfo
              else {
              htmlHoldingOutput = '';
@@ -128,7 +132,11 @@ function goDetailMARCHoldings(rId) {
 
         if (htmlHoldingOutput !== '') {
             $J(attachTarget).find('#detailItemTable0').html(htmlHoldingOutput);
-            
+            /* 
+             go_go_gadget_sorttable() and sorttable.init({hitnum}) were found in DetailStack.js line 69-70.  And are crucial for adding sorting functionality.
+             */
+             go_go_gadget_sorttable();
+             sorttable.init(0);
         }
 
           
