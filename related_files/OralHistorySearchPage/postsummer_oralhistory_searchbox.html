@@ -1,0 +1,42 @@
+<div id="tabbedsearchbox">
+  <div id="TabbedPanels1" class="TabbedPanels">
+    <ul class="TabbedPanelsTabGroup">
+      <li class="TabbedPanelsTab">Catalog</li>
+    </ul>
+    <div class="TabbedPanelsContentGroup">
+      <!-- ~~~~CATALOG TAB ~~~~-->
+      <div class="catalogsearch">
+        <div class="TabbedPanelsContent">
+          <form method="get" id="searchForm" action="https://lsu.ent.sirsi.net/client/en_US/lsu/search/results">
+            <input type="hidden" name="qf" id="library" value="LIBRARY	Library	21:SPEC_COLL	Special Collections" />
+            <input type="hidden" name="qf" id="location" value="LOCATION	Shelf Location	21:LLMVC	Louisiana and Lower Mississippi Valley Collections" />
+            <input type="hidden" name="qf" id="format" value="ITYPE	Type	21:ARCH-MSS	Archive/Manuscript" />
+            <div class="search-wrapper">
+              <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
+              <input id="q" title="Search For:" maxlength="256" name="qu" value="" type="text" accesskey="s" />
+              <input value="Search" id="searchButton" class="button" title="Search" type="submit" />
+            </div>
+            <div class="limiter-wrapper">
+              <label for="restrictionDropDown" class="element-invisible">Select Search parameters</label>
+              <select name="rt" id="fieldDropDown" title="Select Search Field">
+                <option value>keywords anywhere</option>
+                <option value="false|||AUTHOR|||Author">Author</option>
+                <option value="false|||TITLE|||Title">Title</option>
+                <option value="false|||SUBJECT|||Subject">Subject</option>
+                <option value="false|||C_PERIODICAL_TITLE|||Journal Title">Journal Title</option>
+              </select>
+            </div>
+            <!-- close limiter wrapper -->
+            <p class="advanced"><a href="https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true">Advanced Search</a></p>
+          </form>
+        </div>
+        <!-- close TabbedPanelsContent -->
+      </div>
+      <!-- close catalogsearch -->
+    </div>
+    <!-- close TabbedPanelsContentGroup -->
+  </div>
+  <!-- close TabbedPanels -->
+</div>
+<!-- close tabbedsearchbox -->
+<script src="/sites/all/themes/libtheme/js/TabbedPanel.js"></script>

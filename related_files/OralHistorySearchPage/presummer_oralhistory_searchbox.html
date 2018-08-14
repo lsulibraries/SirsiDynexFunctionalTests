@@ -1,0 +1,62 @@
+<div id="tabbedsearchbox">
+    <div id="TabbedPanels1" class="TabbedPanels">
+        <ul class="TabbedPanelsTabGroup">
+           <li class="TabbedPanelsTab">Catalog</li>
+        </ul>
+    
+<div class="TabbedPanelsContentGroup">
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CATALOG TAB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->        
+<div class="catalogsearch">
+        
+
+<div class="TabbedPanelsContent">
+                       
+<form name="searchform" method="post" action="https://lsu.louislibraries.org/uhtbin/cgisirsi/X/0/0/123/">
+<input type="hidden" name="library" value="SPEC_COLL" />
+<input type="hidden" name="location" value="LLMVC" />
+<input type="hidden" name="format" value="MANUSCRPT" />
+<div class="search-wrapper">
+
+     
+<label for="searchdata1" class="element-invisible">Enter Search Terms</label> 
+<input type="text" name="searchdata1" id="searchdata1" maxlength="255" />
+<input type="submit" value="Search" />
+</div><!-- close search wrapper -->  
+
+<div class="limiter-wrapper">   
+ 
+     <label for="srchfield1" class="element-invisible">Select Search parameters</label> 
+    <select name="srchfield1" id="srchfield1" onchange="javascript:browseswitch();">
+      <option value="GENERAL^SUBJECT^GENERAL^^keywords anywhere">  keywords anywhere</option>
+      <option value="AU^AUTHOR^AUTHORS^Author Processing^author"> author</option>
+      <option value="TI^TITLE^TITLES^Title Processing^title"> title</option>
+      <option value="SU^SUBJECT^SUBJECTS^^subject"> subject</option>
+      <option value="PER^PERTITLE^TITLES^Title Processing^periodical title"> periodical title</option>
+      </select>
+ 
+     <label for="query_type" class="element-invisible">Select query type</label>  
+      <select name="query_type" id="query_type">
+      <option value="search" id="keyword" >Keyword</option>
+      <option value="browse" id="browse" >Browse</option>
+      <option value="exact" id="exact" >Exact</option>
+    </select>
+   
+
+</div> <!-- close limiter wrapper -->
+
+<p class="advanced"><a href="https://lsu.louislibraries.org/uhtbin/cgisirsi/x/SIRSI/0/57/60/70/X?user_id=WEBSERVER">Advanced Search</a></p>  
+
+
+</form>  
+
+</div> <!-- close TabbedPanelsContent -->
+</div> <!-- close catalogsearch -->
+
+
+
+</div> <!-- close TabbedPanelsContentGroup -->
+</div> <!-- close TabbedPanels -->
+</div> <!-- close tabbedsearchbox -->
+
+<script src="/sites/all/themes/libtheme/js/TabbedPanel.js"></script>
