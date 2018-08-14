@@ -17,7 +17,7 @@ def load_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     driver.delete_all_cookies()
-    driver.get('https://www.lib.lsu.edu/music/search-dev')
+    driver.get('https://www.lib.lsu.edu/collections/music')
 
     def fin():
         print('teardown driver')
@@ -51,7 +51,7 @@ def run_search_query(driver, fieldname=None, formatname=None, searchstring=None,
 
 def test_page_loads(load_driver):
     driver = load_driver
-    assert 'Music Search' in driver.title
+    assert 'Music Resources' in driver.title
 
 ########################################################################################
 
