@@ -145,7 +145,7 @@ var resultsViewIconReplace = function() {
 
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0%7C%7C%7C1%7C%7C%7C0%7C%7C%7Ctrue");
+    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true");
 }
 
 var changeToAccessThisItem = function() {

@@ -12,7 +12,7 @@ def load_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     driver.delete_all_cookies()
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=ADVANCED+SEARCH0|||1|||0|||true')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true')
 
     def fin():
         print('teardown driver')
@@ -24,7 +24,7 @@ def load_driver(request):
 
 def test_page_loads(load_driver):
     driver = load_driver
-    assert 'Advanced Search' in driver.title
+    assert 'More Search Options' in driver.title
 
 
 def test_hideBasicSearch(load_driver):

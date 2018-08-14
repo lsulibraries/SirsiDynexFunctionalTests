@@ -12,17 +12,17 @@
           <form method="get" id="searchForm" action="https://lsu.ent.sirsi.net/client/en_US/lsu/search/results">
             <div class="search-wrapper">
               <label for="searchdata1" class="element-invisible">Enter Search Terms</label>
-              <input type="text" name="searchdata1" id="searchdata1" maxlength="255" />
-              <input type="submit" value="Search" />
+              <input id="q" title="Search For:" maxlength="256" name="qu" value="" type="text" accesskey="s" />
+              <input value="Search" id="searchButton" class="button" title="Search" type="submit" />
             </div>
             <div class="limiter-wrapper">
               <label for="restrictionDropDown" class="element-invisible">Select Search parameters</label>
               <select name="rt" id="fieldDropDown" title="Select Search Field">
                 <option value>keywords anywhere</option>
-                <option value="false|||AUTHOR|||Author">author</option>
-                <option value="false|||TITLE|||Title">title</option>
-                <option value="false|||SUBJECT|||Subject">subject</option>
-                <option value="false|||C_PERIODICAL_TITLE|||Periodical Title">periodical title</option>
+                <option value="false|||AUTHOR|||Author">Author</option>
+                <option value="false|||TITLE|||Title">Title</option>
+                <option value="false|||SUBJECT|||Subject">Subject</option>
+                <option value="false|||C_PERIODICAL_TITLE|||Journal Title">Journal Title</option>
               </select>
               <label for="query_type" class="element-invisible">Select query type</label>
               <input type="hidden" name="lm" value="" />
@@ -30,7 +30,7 @@
                 <option value="">All Formats</option>
                 <option value="FORMAT	Format	MUSIC	Music">Music Score</option>
                 <option value="FORMAT	Format	MUSICSNDREC	Music Sound Recording">Music Sound Recording</option>
-                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Compact disc</option>
+                <option value="FORMAT	Format	SOUNDDISC	Audio disc">Compact Disc</option>
                 <option value="FORMAT	Format	SOUNDCASS	Audio cassette">Audio Cassette</option>
                 <option value="FORMAT	Format	BOOK	Books">Book</option>
                 <option value="FORMAT	Format	VIDEODISC	Video disc">DVD</option>
@@ -46,7 +46,7 @@
               </select>
             </div>
             <p class="advanced" colspan="2">
-              <a href="https://lsu.ent.sirsi.net/client/en_US/lsu/search/advanced">Advanced Search</a>
+              <a href="https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true">Advanced Search</a>
             </p>
           </form>
         </div>
