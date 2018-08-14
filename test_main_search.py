@@ -18,7 +18,7 @@ def load_driver(request):
     profile.set_preference("network.http.use-cache", False)
     driver = webdriver.Firefox(profile)
     driver.delete_all_cookies()
-    driver.get('https://www.lib.lsu.edu/dev/search')
+    driver.get('https://www.lib.lsu.edu/?')
 
     def fin():
         print('teardown driver')
@@ -50,14 +50,42 @@ def run_search_query(driver, fieldname=None, searchstring=None, location=None, f
     )
     assert results_1.get_attribute('title') == first_result_title
 
-#################################################################################################################
+
+def get_first_page_results_locations(driver, location=None, searchstring=None, expected_results_location=None):
+    if location:
+        box = Select(driver.find_element_by_id('library'))
+        box.select_by_visible_text(location)
+    input = driver.find_element_by_id('searchdata1')
+    input.clear()
+    if searchstring:
+        input.send_keys(searchstring)
+    input.send_keys(Keys.ENTER)
+    wait = WebDriverWait(driver, 10)
+    location_divs = wait.until(
+        EC.presence_of_element_located((By.CLASS_NAME, "LIBRARY"))
+    )
+    location_divs = driver.find_elements_by_class_name('LIBRARY')
+    filtered_location_divs = [i for i in location_divs if 'displayElementText' in i.get_property('classList')['value']]
+    count_dict = {'totals': 0, 'site': dict()}
+    for div in filtered_location_divs:
+        count_dict['totals'] += 1
+        subtexts = {i for i in div.text.split('\n')}
+        for subtext in subtexts:
+            if count_dict['site'].get(subtext):
+                count_dict['site'][subtext] += 1
+            else:
+                count_dict['site'][subtext] = 1
+    assert count_dict['site'][expected_results_location] == count_dict['totals']
+
+
+################################################################################################################
 
 
 def test_page_loads(load_driver):
     driver = load_driver
-    assert 'Search Box update' in driver.title
+    assert 'LSU Libraries' in driver.title
 
-###################################################################################################################
+##################################################################################################################
 
 
 def test_author_dropdown(load_driver):
@@ -87,7 +115,7 @@ def test_periodical_title_dropdown(load_driver):
     first_result_title = "ASDA Group, Ltd. SWOT Analysis"
     run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
-####################################################################################################################
+###################################################################################################################
 
 
 def test_all_locations(load_driver):
@@ -100,7 +128,7 @@ def test_all_locations(load_driver):
 def test_middleton_location(load_driver):
     driver = load_driver
     location, searchstring = 'Middleton Library', 'asdf'
-    first_result_title = 'Textbook of penile cancer'
+    first_result_title = 'Wiley 2016 interpretation and applications of International Financial Reporting Standards'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -134,7 +162,7 @@ def test_cartographic_location(load_driver):
 
 def test_nonLSU_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Collections at LSU but not in LSU Libraries', 'of'
+    location, searchstring = 'Other Collections', 'of'
     first_result_title = 'Advocate of dialoge'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
@@ -144,3 +172,56 @@ def test_veterinary_location(load_driver):
     location, searchstring = 'Veterinary Medicine Library', 'asdf'
     first_result_title = 'AO principles of equine osteosynthesis'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
+
+
+##################################################################################################################
+#  Test by returned location text
+
+
+def test_for_middleton_location(load_driver):
+    driver = load_driver
+    location = 'Middleton Library'
+    expected_results_location = 'Middleton Library (Main Collection)'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_special_collections_location(load_driver):
+    driver = load_driver
+    location = 'Special Collections'
+    expected_results_location = 'Special Collections, Hill Memorial Library'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_government_location(load_driver):
+    driver = load_driver
+    location = 'Government Documents/Microforms'
+    expected_results_location = 'Government Documents/Microforms, 53 Middleton'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_music_location(load_driver):
+    driver = load_driver
+    location = 'Music Resources'
+    expected_results_location = 'Carter Music Resources Center, 202 Middleton'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_cartographic_location(load_driver):
+    driver = load_driver
+    location = 'Cartographic Information Center'
+    expected_results_location = 'Cartographic Information Center, 313 Howe-Russell'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_nonLSU_location(load_driver):
+    driver = load_driver
+    location = 'Other Collections'
+    expected_results_location = 'Collections at LSU but not in LSU Libraries - Check Location'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
+
+
+def test_for_veterinary_location(load_driver):
+    driver = load_driver
+    location = 'Veterinary Medicine Library'
+    expected_results_location = 'Veterinary Medicine Library, 1117 Vet. Med. Bldg.'
+    get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
