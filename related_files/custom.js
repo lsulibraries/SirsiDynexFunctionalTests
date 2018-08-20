@@ -13,6 +13,7 @@ $J(document).ready(function() {
 
 var doGenericTasks = function() {
   customSearchLink();
+  tempChangeHeaderHref();
 }
 
 var doDetailViewTasks = function() {
@@ -30,8 +31,8 @@ var doDetailViewTasks = function() {
 var doResultsViewTasks = function() {
   changeToAccessThisItem();
   resultsViewIconReplace();
-  lsuHasUrlSwap();
-  hideAvailableOnlineCallNumber();
+  // lsuHasUrlSwap();  # LSUHas: field no longer used. 
+  // hideAvailableOnlineCallNumber(); # Preferred Call Number no longer used.
   classifyElecAccessLinks();
   // removeSomePubDates();
 }
@@ -145,13 +146,14 @@ var resultsViewIconReplace = function() {
 
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true");
+    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true")
+    .text('More Search Options');
 }
 
 var changeToAccessThisItem = function() {
   $J('a')
     .each(function(i, elem) {
-      if ($J(elem).text() == $J(elem).attr('href')) {
+      if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
         $J(elem).text('Access This Item');
       }
     })
@@ -305,13 +307,17 @@ var changeSMSPopupTitle = function() {
 }
 
 var removeSomePubDates = function() {
-  // $J('.format_container .formatType:contains("Electronic Resources"), .format_container .formatType:contains("Print Journal") ')
   $J('.format_container .formatType:contains("Electronic Resources")')
     .closest('.results_bio ')
     .find('.PUBDATE_RANGE')
     .closest('.displayElementWrapper')
     .remove();
 }
+
+var tempChangeHeaderHref = function() {
+  $J('.header-mid').find('a').attr('href', 'https://www.lib.lsu.edu/')
+}
+
 
 /* Default entrypoints */
 /*
@@ -322,36 +328,36 @@ Any code you want run, point to it from one of these two.
 */
 
 function customJavaScript() {
-  setTimeout("addContinueSearchLink();", 100);
-}
+//   setTimeout("addContinueSearchLink();", 100);
+// }
 
-function addContinueSearchLink() {
-  var language = com_sirsi_ent_page.localeCode;
-  if (language === "fr_CA" || language === "fr_FR") {
-    var continueText = 'Continuer la recherche dans: ';
-    //Update quicksearch buttons
-    jQuery('.quicksearch_display_button a').each(function() {
-      var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTFRE");
-      var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTFRE");
-      jQuery(this).attr('href', newLang);
-    });
-  } else if (language === "es_ES" || language === "es_CH") {
-    var continueText = 'Continuar la búsqueda en: ';
-    //Update quicksearch buttons
-    jQuery('.quicksearch_display_button a').each(function() {
-      var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTSPA");
-      var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTSPA");
-      jQuery(this).attr('href', newLang);
-    });
-  } else {
-    var continueText = 'Continue the search in: ';
-    //Update quicksearch buttons
-    jQuery('.quicksearch_display_button a').each(function() {
-      var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTENG");
-      var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTENG");
-      jQuery(this).attr('href', newLang);
-    });
-  }
+// function addContinueSearchLink() {
+//   var language = com_sirsi_ent_page.localeCode;
+//   if (language === "fr_CA" || language === "fr_FR") {
+//     var continueText = 'Continuer la recherche dans: ';
+//     //Update quicksearch buttons
+//     jQuery('.quicksearch_display_button a').each(function() {
+//       var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTFRE");
+//       var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTFRE");
+//       jQuery(this).attr('href', newLang);
+//     });
+//   } else if (language === "es_ES" || language === "es_CH") {
+//     var continueText = 'Continuar la búsqueda en: ';
+//     //Update quicksearch buttons
+//     jQuery('.quicksearch_display_button a').each(function() {
+//       var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTSPA");
+//       var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTSPA");
+//       jQuery(this).attr('href', newLang);
+//     });
+//   } else {
+//     var continueText = 'Continue the search in: ';
+//     //Update quicksearch buttons
+//     jQuery('.quicksearch_display_button a').each(function() {
+//       var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTENG");
+//       var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTENG");
+//       jQuery(this).attr('href', newLang);
+//     });
+//   }
 }
 
 function customDetailJavaScript() {}
