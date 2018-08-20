@@ -18,7 +18,7 @@ var doGenericTasks = function() {
 
 var doDetailViewTasks = function() {
   detailViewIconReplace();
-  changeToAccessThisItem();
+  detailChangeToAccessThisItem();
   hideMissingDetailBookImage();
   ILLIfCheckedOut();
   createCitationButton();
@@ -29,7 +29,7 @@ var doDetailViewTasks = function() {
 }
 
 var doResultsViewTasks = function() {
-  changeToAccessThisItem();
+  resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
   // lsuHasUrlSwap();  # LSUHas: field no longer used. 
@@ -150,8 +150,18 @@ var customSearchLink = function() {
     .text('More Search Options');
 }
 
-var changeToAccessThisItem = function() {
+var resultsChangeToAccessThisItem = function() {
   $J('.ELECTRONIC_ACCESS').children()
+    .each(function(i, elem) {
+      if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
+        $J(elem).text('Access This Item');
+      }
+    })
+}
+
+var detailChangeToAccessThisItem = function() {
+  $J('.ELECTRONIC_ACCESS_label')
+    .next()
     .each(function(i, elem) {
       if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
         $J(elem).text('Access This Item');
