@@ -127,8 +127,8 @@ def test_all_locations(load_driver):
 
 def test_middleton_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Middleton Library', 'asdf'
-    first_result_title = 'Wiley 2016 interpretation and applications of International Financial Reporting Standards'
+    location, searchstring = 'Middleton Library', 'mew'
+    first_result_title = 'Charlotte Mew and her friends'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -141,8 +141,8 @@ def test_special_collections_location(load_driver):
 
 def test_government_location(load_driver):
     driver = load_driver
-    location, searchstring = 'Government Documents/Microforms', 'asdf'
-    first_result_title = 'PHS, ATSDR Federal Register cites'
+    location, searchstring = 'Government Documents/Microforms', 'register'
+    first_result_title = 'Federal register.'
     run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -181,35 +181,35 @@ def test_veterinary_location(load_driver):
 def test_for_middleton_location(load_driver):
     driver = load_driver
     location = 'Middleton Library'
-    expected_results_location = 'Middleton Library (Main Collection)'
+    expected_results_location = 'Middleton Library'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
 def test_for_special_collections_location(load_driver):
     driver = load_driver
     location = 'Special Collections'
-    expected_results_location = 'Special Collections, Hill Memorial Library'
+    expected_results_location = 'Special Collections'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
 def test_for_government_location(load_driver):
     driver = load_driver
     location = 'Government Documents/Microforms'
-    expected_results_location = 'Government Documents/Microforms, 53 Middleton'
+    expected_results_location = 'Government Documents/Microforms'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
 def test_for_music_location(load_driver):
     driver = load_driver
     location = 'Music Resources'
-    expected_results_location = 'Carter Music Resources Center, 202 Middleton'
+    expected_results_location = 'Carter Music Resources Center'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
 def test_for_cartographic_location(load_driver):
     driver = load_driver
     location = 'Cartographic Information Center'
-    expected_results_location = 'Cartographic Information Center, 313 Howe-Russell'
+    expected_results_location = 'Cartographic Information Center'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
@@ -223,5 +223,5 @@ def test_for_nonLSU_location(load_driver):
 def test_for_veterinary_location(load_driver):
     driver = load_driver
     location = 'Veterinary Medicine Library'
-    expected_results_location = 'Veterinary Medicine Library, 1117 Vet. Med. Bldg.'
+    expected_results_location = 'Veterinary Medicine Library'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
