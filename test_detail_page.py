@@ -8,7 +8,7 @@ import pytest
 
 
 @pytest.fixture
-def load_driver(request):
+def load_hello_driver(request):
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
@@ -25,41 +25,73 @@ def load_driver(request):
     return driver
 
 
+@pytest.fixture
+def load_observing_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
+    driver = webdriver.Firefox()
+    # driver.delete_all_cookies()
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
+
+    def fin():
+        print('teardown driver')
+        driver.close()
+
+    request.addfinalizer(fin)
+    return driver
+
+
 ################################################################################
 
 
-def test_detailViewIconReplace(load_driver):
-    driver = load_driver
+def test_detailViewIconReplace(load_hello_driver):
+    driver = load_hello_driver
     format_text = driver.find_elements_by_class_name('formatType')[0].text
     assert len(format_text) > 0
 
 
-# def test_detailChangeToAccessThisItem(load_driver):
-#     driver = load_driver
-#     format_text = driver.find_elements_by_class_name('formatType')[0].text
-#     assert len(format_text) > 0
+def test_detailChangeToAccessThisItem(load_hello_driver):
+    driver = load_hello_driver
+    elect_access_link = driver.find_element_by_xpath("//a[@class='detail_access_link']")
+    assert elect_access_link.text == 'Access This Item'
 
 
-
-# def test_customSearchLinkText(load_driver):
-#     driver = load_driver
-#     more_search_options_link = driver.find_element_by_xpath('//*[@title="Advanced Search"]')
-#     assert more_search_options_link.text == "More Search Options"
-
-
-# def test_customSearchLinkWorks(load_driver):
-#     driver = load_driver
-#     more_search_options_link = driver.find_element_by_xpath('//*[@title="Advanced Search"]')
-#     more_search_options_link.click()
-#     wait = WebDriverWait(driver, 10)
-#     wait.until(EC.presence_of_element_located((By.CLASS_NAME, "advancedSearchField")))
-#     assert "More Search Options" in driver.title
+def test_hideMissingDetailBookImage(load_hello_driver):
+    driver = load_hello_driver
+    missing_cover_art = driver.find_element_by_id('detailCover0')
+    parent_div = missing_cover_art.find_element_by_xpath('..')
+    assert '/client/assets/4.5.1/ctx/images/no_image.png' in missing_cover_art.get_attribute('src') and parent_div.get_attribute('style') == 'display: none;'
 
 
-# def test_tempChangeHeaderHref(load_driver):
-#     driver = load_driver
-#     lsu_logo = driver.find_element_by_class_name('header-mid')
-#     lsu_logo.click()
-#     wait = WebDriverWait(driver, 10)
-#     wait.until(EC.presence_of_element_located((By.CLASS_NAME, "motto")))
-#     assert "LSU Libraries" in driver.title
+def test_ILLIfCheckedOut(load_observing_driver):
+    driver = load_observing_driver
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'asyncFieldSD_ITEM_STATUS')))
+    item_status_div = driver.find_element_by_class_name('asyncFieldSD_ITEM_STATUS')
+    illiad_link = driver.find_element_by_xpath('//*[@class="illiadLinkUrl"]').get_attribute('href')
+    assert "Due " in item_status_div.text
+    assert len(illiad_link) > 0
+
+
+def test_prepOpenAccordions(load_observing_driver):
+    driver = load_observing_driver
+    accordian_h3s = driver.find_elements_by_class_name('ui-accordion-header')
+    assert len(accordian_h3s) == 3
+    for accordian_h3 in accordian_h3s:
+        assert accordian_h3.get_attribute('aria-expanded') == 'true'
+        assert accordian_h3.get_attribute('aria-selected') == 'true'
+        assert "ui-corner-top" in accordian_h3.get_attribute('class')
+
+
+def test_linkAvailableOnlineCallNumber(load_hello_driver):
+    driver = load_hello_driver
+    avaiable_access_link = driver.find_elements_by_xpath("//*[@title='Access this item']")
+    assert avaiable_access_link[0].text == "Access this item"
+
+
+def test_replaceAvailableStatus(load_hello_driver):
+    driver = load_hello_driver
+    available_header = driver.find_element_by_xpath("//*[@class='detailItemsTable_SD_ITEM_STATUS']")
+    assert available_header.text == 'Current Location'

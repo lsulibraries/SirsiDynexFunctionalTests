@@ -165,6 +165,7 @@ var detailChangeToAccessThisItem = function() {
     .each(function(i, elem) {
       if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
         $J(elem).text('Access This Item');
+        $J(elem).addClass('detail_access_link');
       }
     })
 }
@@ -195,7 +196,6 @@ var hideMissingDetailBookImage = function() {
   }
 }
 
-
 var prepOpenAccordions = function() {
   setTimeout("openAccordions();", 200);
 }
@@ -217,7 +217,6 @@ var openAccordions = function() {
       .css("display", "block");
   });
 }
-
 
 var linkAvailableOnlineCallNumber = function() {
   hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
