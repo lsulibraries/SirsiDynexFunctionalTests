@@ -13,7 +13,6 @@ $J(document).ready(function() {
 
 var doGenericTasks = function() {
   customSearchLink();
-  tempChangeHeaderHref();
 }
 
 var doDetailViewTasks = function() {
@@ -323,10 +322,6 @@ var removeSomePubDates = function() {
     .find('.PUBDATE_RANGE')
     .closest('.displayElementWrapper')
     .remove();
-}
-
-var tempChangeHeaderHref = function() {
-  $J('.header-mid').find('a').attr('href', 'https://www.lib.lsu.edu/')
 }
 
 
