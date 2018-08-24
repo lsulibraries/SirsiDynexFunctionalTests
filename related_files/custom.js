@@ -8,6 +8,8 @@ $J(document).ready(function() {
     doAdvancedSearchViewTasks();
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
+  } else if (jQuery('.framedPage').length) {
+    console.log('only should show on iframe pages');
   }
 });
 
@@ -32,9 +34,6 @@ var doResultsViewTasks = function() {
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
-  // lsuHasUrlSwap();  # LSUHas: field no longer used. 
-  // hideAvailableOnlineCallNumber(); # Preferred Call Number no longer used.
-  // removeSomePubDates();
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -261,20 +260,6 @@ var changeNamesAfterAjaxComplete = function() {
   })
 }
 
-var lsuHasUrlSwap = function() {
-  while ($J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').length) {
-    $J('.HOLDING:contains("<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB")').text(function() {
-      return $J(this).text()
-        .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.INDEX>', 'Index:')
-        .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
-    });
-  }
-}
-
-var hideAvailableOnlineCallNumber = function() {
-  $J('.displayElementText.PREFERRED_CALLNUMBER:contains("AVAILABLE ONLINE")').parent().empty();
-}
-
 var classifyElecAccessLinks = function() {
   var accessLinks = $J('.displayElementText.ELECTRONIC_ACCESS');
   $J(accessLinks).each(function() {
@@ -313,14 +298,6 @@ var changeSMSPopupLabel = function() {
 
 var changeSMSPopupTitle = function() {
   $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
-}
-
-var removeSomePubDates = function() {
-  $J('.format_container .formatType:contains("Electronic Resources")')
-    .closest('.results_bio ')
-    .find('.PUBDATE_RANGE')
-    .closest('.displayElementWrapper')
-    .remove();
 }
 
 var tempChangeHeaderHref = function() {
