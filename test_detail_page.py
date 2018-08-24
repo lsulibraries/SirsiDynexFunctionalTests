@@ -62,7 +62,7 @@ def test_hideMissingDetailBookImage(load_hello_driver):
     driver = load_hello_driver
     missing_cover_art = driver.find_element_by_id('detailCover0')
     parent_div = missing_cover_art.find_element_by_xpath('..')
-    assert '/client/assets/4.5.1/ctx/images/no_image.png' in missing_cover_art.get_attribute('src') and parent_div.get_attribute('style') == 'display: none;'
+    assert '/images/no_image.png' in missing_cover_art.get_attribute('src') and parent_div.get_attribute('style') == 'display: none;'
 
 
 def test_ILLIfCheckedOut(load_observing_driver):

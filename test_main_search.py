@@ -111,8 +111,8 @@ def test_subject_dropdown(load_driver):
 
 def test_periodical_title_dropdown(load_driver):
     driver = load_driver
-    fieldname, searchstring = 'Journal Title', 'asdf'
-    first_result_title = "ASDA Group, Ltd. SWOT Analysis"
+    fieldname, searchstring = 'Journal Title', 'hello'
+    first_result_title = "Highlights Hello"
     run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 ###################################################################################################################
