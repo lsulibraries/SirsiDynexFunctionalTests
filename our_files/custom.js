@@ -16,7 +16,6 @@ $J(document).ready(function() {
 
 var doGenericTasks = function() {
   customSearchLink();
-  // makeQuickSearchNewTab();
 }
 
 var doDetailViewTasks = function() {
@@ -56,10 +55,6 @@ var makeiframeNewTab = function() {
   console.log('hi');
   console.log(jQuery('.enterprise_catkey').length);
   jQuery('.call_number_search_header').attr('target', '_blank');
-}
-
-var makeQuickSearchNewTab = function() {
-  $J(".quicksearch_display_button a").attr('target', '_blank');
 }
 
 var createCitationButton = function() {
