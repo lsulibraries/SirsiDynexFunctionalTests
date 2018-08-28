@@ -8,11 +8,15 @@ $J(document).ready(function() {
     doAdvancedSearchViewTasks();
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
+  } else if (jQuery('.framedPage').length) {
+    console.log('only should show on iframe pages');
+    makeiframeNewTab();
   }
 });
 
 var doGenericTasks = function() {
   customSearchLink();
+  // makeQuickSearchNewTab();
 }
 
 var doDetailViewTasks = function() {
@@ -31,9 +35,6 @@ var doResultsViewTasks = function() {
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
-  // lsuHasUrlSwap();  # LSUHas: field no longer used. 
-  // hideAvailableOnlineCallNumber(); # Preferred Call Number no longer used.
-  // removeSomePubDates();
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -49,6 +50,17 @@ var doAccountPageTasks = function() {
 /*
 Starting custom functions.
 */
+
+var makeiframeNewTab = function() {
+  // the iframe we're targetting doesn't have the $ or $J shortcut, use jQuery term.
+  console.log('hi');
+  console.log(jQuery('.enterprise_catkey').length);
+  jQuery('.call_number_search_header').attr('target', '_blank');
+}
+
+var makeQuickSearchNewTab = function() {
+  $J(".quicksearch_display_button a").attr('target', '_blank');
+}
 
 var createCitationButton = function() {
   var oclcNUM = $J('#detail0_OCLC .OCLC_value').text();
@@ -270,10 +282,6 @@ var lsuHasUrlSwap = function() {
         .replace('<COM.SIRSIDYNIX.DISCOVERY.SEARCH.LIB.SUPPLEMENT>', 'Supplement:');
     });
   }
-}
-
-var hideAvailableOnlineCallNumber = function() {
-  $J('.displayElementText.PREFERRED_CALLNUMBER:contains("AVAILABLE ONLINE")').parent().empty();
 }
 
 var classifyElecAccessLinks = function() {
