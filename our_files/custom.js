@@ -9,8 +9,7 @@ $J(document).ready(function() {
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
   } else if (jQuery('.framedPage').length) {
-    console.log('only should show on iframe pages');
-    makeiframeNewTab();
+    // makeiframeNewTab();
   }
 });
 
@@ -29,6 +28,8 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
+  // moveStackMapToCurrentLocation();
+
 }
 
 var doResultsViewTasks = function() {
@@ -53,8 +54,6 @@ Starting custom functions.
 
 var makeiframeNewTab = function() {
   // the iframe we're targetting doesn't have the $ or $J shortcut, use jQuery term.
-  console.log('hi');
-  console.log(jQuery('.enterprise_catkey').length);
   jQuery('.call_number_search_header').attr('target', '_blank');
 }
 
@@ -338,6 +337,8 @@ var removeSomePubDates = function() {
     .remove();
 }
 
+var moveStackMapToCurrentLocation = function() {
+}
 
 /* Default entrypoints */
 /*
