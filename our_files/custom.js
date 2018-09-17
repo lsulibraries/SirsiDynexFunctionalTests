@@ -88,8 +88,10 @@ var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
 var renameDueStatus = function() {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function() {
     var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    var newText = itemStati[0].childNodes[0].nodeValue.replace('Due', 'Checked Out -- Due: ');
-    itemStati[0].childNodes[0].nodeValue = newText;
+    if (itemStati.length && itemStati[0].childNodes.length) {
+      var newText = itemStati[0].childNodes[0].nodeValue.replace('Due ', 'Checked Out -- Due: ');
+      itemStati[0].childNodes[0].nodeValue = newText;
+    }
   });
 }
 
