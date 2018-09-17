@@ -23,6 +23,7 @@ var doDetailViewTasks = function() {
   detailChangeToAccessThisItem();
   hideMissingDetailBookImage();
   ILLIfCheckedOut();
+  renameDueStatus();
   createCitationButton();
   prepOpenAccordions();
   linkAvailableOnlineCallNumber();
@@ -82,6 +83,14 @@ var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
     var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
   }
   window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
+}
+
+var renameDueStatus = function() {
+  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function() {
+    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
+    var newText = itemStati[0].childNodes[0].nodeValue.replace('Due', 'Checked Out -- Due: ');
+    itemStati[0].childNodes[0].nodeValue = newText;
+  });
 }
 
 var ILLIfCheckedOut = function() {
@@ -369,4 +378,5 @@ function customJavaScript() {
   //   }
 }
 
-function customDetailJavaScript() {}
+function customDetailJavaScript() {
+}
