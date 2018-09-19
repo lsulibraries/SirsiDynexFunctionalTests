@@ -17,6 +17,7 @@ var doGenericTasks = function() {
   customSearchLink();
 }
 
+var scheduleStackMapToCurrentLocation;
 var doDetailViewTasks = function() {
   detailViewIconReplace();
   detailChangeToAccessThisItem();
@@ -28,14 +29,16 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
-  // moveStackMapToCurrentLocation();
+  // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
 
 }
 
+var scheduleChangeAvailableIfZero;
 var doResultsViewTasks = function() {
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
+  scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
 }
 
 var doAdvancedSearchViewTasks = function() {
@@ -338,7 +341,37 @@ var removeSomePubDates = function() {
 }
 
 var moveStackMapToCurrentLocation = function() {
+  if ($J('.SMbutton').length) {
+    console.log('stackmap button present');
+    smbutton = $J('.SMbutton[value="Map It!"]');
+    stacksDiv = $J('.asyncFieldSD_ITEM_STATUS').not('.hidden');
+    var newHref = $J('<a />', {
+        onclick: smbutton.attr('onclick'), 
+        class: 'SMlink',
+        text: 'Find in the Library',
+        title: 'Find in the Library',
+        });
+    stacksDiv.text('');
+    newHref.appendTo(stacksDiv);
+
+    clearInterval(scheduleStackMapToCurrentLocation);
+  }
+  else {
+    console.log('stackmap button not present')
+  }
 }
+
+var changeAvailableIfZero = function() {
+  if ($J('.smallSpinner').length == 0) {
+    var zeroAvailable = $J('.availableNumber:contains("0")');
+    for (i=0; i < zeroAvailable.length; i++) {
+      $J(zeroAvailable[i].previous()).text('Currently Checked Out');
+      zeroAvailable.text('');
+    }
+    clearInterval(scheduleChangeAvailableIfZero);
+  }
+}
+
 
 /* Default entrypoints */
 /*
