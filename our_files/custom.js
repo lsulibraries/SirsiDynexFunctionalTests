@@ -29,7 +29,7 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
-  // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
+  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
 
 }
 
@@ -353,7 +353,7 @@ var moveStackMapToCurrentLocation = function() {
         });
     stacksDiv.text('');
     newHref.appendTo(stacksDiv);
-
+    smbutton.parent().remove();
     clearInterval(scheduleStackMapToCurrentLocation);
   }
   else {
