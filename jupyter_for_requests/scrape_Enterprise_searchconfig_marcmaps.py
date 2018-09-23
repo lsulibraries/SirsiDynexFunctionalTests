@@ -12,70 +12,43 @@ from bs4 import BeautifulSoup as soup
 # pip install requests
 
 
-"""functions to get response from urls"""
-
-
-def get_search_fields_editfield_page(search_field_code):
-    search_field_code = search_field_code.replace('/', '$002f').replace(' ', '$0020')
-    return s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields.edit/{}'.format(search_field_code))
-
-
-def get_search_fields_marc_page(search_field_code):
-    search_field_code = search_field_code.replace('/', '$002f').replace(' ', '$0020')
-    return s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields.confmarcmap/{}'.format(search_field_code))
-
-
-def get_max_search_fields_page():
-    search_fields_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields')
-    search_soup = soup(search_fields_page.content, 'lxml')
-    pages = search_soup.select('.t-data-grid-pager a')
-    max_page = max(int(i.text) for i in pages)
-    return max_page
-
-
-def get_marc_maps_editfield_page(search_field_code):
-    search_field_code = str(search_field_code).replace('/', '$002f').replace(' ', '$0020')
-    return s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps.edit/{}'.format(search_field_code))
-
-
-def get_marc_maps_managemarcmaps_confmarc21tags_page(search_field_code):
-    search_field_code = str(search_field_code).replace('/', '$002f').replace(' ', '$0020')
-    return s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps.confmarc21tags/{}/false'.format(search_field_code))
-
-
-def get_marc_maps_subfields_page(search_field_code):
-    search_field_code = str(search_field_code).replace('/', '$002f').replace(' ', '$0020')
-    return s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarctags.configuresubfields/{}'.format(search_field_code))
-
-
 """Utility functions"""
 
 
-def get_max_marc_maps_page():
-    search_fields_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps')
-    search_soup = soup(search_fields_page.content, 'lxml')
-    pages = search_soup.select('.t-data-grid-pager a')
-    max_page = max(int(i.text) for i in pages)
-    return max_page
+def make_soup(page_name, slug):
+    base_url = 'https://lsu.ent.sirsi.net/client/en_US/admin/search/'
+    urls = {
+        'managemarcsubfields.edit': '{}managemarcsubfields.edit/{}',
+        'managemarctags.edit': '{}managemarctags.edit/{}',
+        'managemarctags.configuresubfields': '{}managemarctags.configuresubfields/{}',
+        'managefields.grid.pager': '{}managefields.grid.pager/{}',
+        'managefields.edit': '{}managefields.edit/{}',
+        'managefields.configmarcmap': '{}managefields.confmarcmap/{}',
+        'managemarcmaps.grid.pager': '{}managemarcmaps.grid.pager/{}',
+        'managemarcmaps.edit': '{}managemarcmaps.edit/{}',
+        'managemarcmaps.confmarc21tags': '{}managemarcmaps.confmarc21tags/{}/false',
+    }
+    if isinstance(slug, str):
+        slug = slug.replace('/', '$002f').replace(' ', '$0020')
+    full_url = urls[page_name].format(base_url, slug)
+    page = s.get(full_url)
+    return soup(page.content, 'lxml')
+
+
+def get_max_page_count(kind):
+    url = {
+        'searchfields': 'https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields',
+        'marcmaps': 'https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps',
+    }
+    page = s.get(url[kind])
+    pagesoup = soup(page.content, 'lxml')
+    counts = pagesoup.select('.t-data-grid-pager a')
+    max_count = max(int(i.text) for i in counts)
+    return max_count
 
 
 def get_max_marc_maps_subfields(subfields_soup):
     return len(subfields_soup.select('.t-data-grid tbody tr'))
-
-
-def get_search_fields_items(page, search_fields_dict):
-    search_fields_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields.grid.pager/{}'.format(page))
-    search_soup = soup(search_fields_page.content, 'lxml')
-    if not search_fields_dict:
-        search_fields_dict = dict()
-    for row in search_soup.tbody:
-        search_field_code, search_field_name, search_field_hierarchy, links = row.contents
-        search_fields_dict[search_field_code.string] = {
-            'code': search_field_code.string,
-            'name': search_field_name.string,
-            'hierarchy': search_field_hierarchy.string.strip(),
-        }
-    return search_fields_dict
 
 
 """functions for parsing field types"""
@@ -115,20 +88,41 @@ def parse_textbox(css_id, my_soup):
 """Parsing Searchfield info"""
 
 
+def do_searchfields():
+    searchfields_dict = build_basic_search_dict()
+    searchfields_dict = add_searchfield_editfield_dict(searchfields_dict)
+    searchfields_dict = add_searchfield_configuremarcmap_dict(searchfields_dict)
+    with open('Enterprise_searchfields.json', 'w') as f:
+        f.write(json.dumps(searchfields_dict))
+
+
 def build_basic_search_dict():
-    search_fields_dict = None
-    max_page = get_max_search_fields_page()
+    searchfields_dict = None
+    max_page = get_max_page_count('searchfields')
     for page_num in range(1, max_page + 1):
-        search_fields_dict = get_search_fields_items(page_num, search_fields_dict)
-    return search_fields_dict
+        searchfields_dict = get_searchfields_items(page_num, searchfields_dict)
+    return searchfields_dict
 
 
-def add_search_field_editfield_dict(search_fields_dict):
-    for search_field in search_fields_dict:
-        editfield_page = get_search_fields_editfield_page(search_field)
-        editfield_soup = soup(editfield_page.content, 'lxml')
-        if not search_fields_dict[search_field].get('EditField'):
-            search_fields_dict[search_field]['EditField'] = dict()
+def get_searchfields_items(pagenum, searchfields_dict):
+    search_soup = make_soup('managefields.grid.pager', pagenum)
+    if not searchfields_dict:
+        searchfields_dict = dict()
+    for row in search_soup.tbody:
+        searchfield_code, searchfield_name, searchfield_hierarchy, links = row.contents
+        searchfields_dict[searchfield_code.string] = {
+            'code': searchfield_code.string,
+            'name': searchfield_name.string,
+            'hierarchy': searchfield_hierarchy.string.strip(),
+        }
+    return searchfields_dict
+
+
+def add_searchfield_editfield_dict(searchfields_dict):
+    for searchfield_code in searchfields_dict:
+        editfield_soup = make_soup('managefields.edit', searchfield_code)
+        if not searchfields_dict[searchfield_code].get('EditField'):
+            searchfields_dict[searchfield_code]['EditField'] = dict()
         editfield_dict = {
             'descripton': editfield_soup.select('#description')[0].string,
             'hierarchy': parse_dropdown('hierarchy', editfield_soup),
@@ -147,39 +141,88 @@ def add_search_field_editfield_dict(search_fields_dict):
             'detailTab': parse_dropdown('detailTab', editfield_soup),
             'specialProcessing': parse_dropdown('specialProcessing', editfield_soup),
         }
-        search_fields_dict[search_field]['EditField'].update(editfield_dict)
-    return search_fields_dict
+        searchfields_dict[searchfield_code]['EditField'].update(editfield_dict)
+    return searchfields_dict
 
 
-def add_search_field_configuremarcmap_dict(search_fields_dict):
-    for search_field in search_fields_dict:
-        configuremarcmap_page = get_search_fields_marc_page(search_field)
-        configuremarcmap_soup = soup(configuremarcmap_page.content, 'lxml')
-        search_fields_dict[search_field]['ConfigureMarcMap'] = parse_dropdown('marcMap', configuremarcmap_soup)
-    return search_fields_dict
+def add_searchfield_configuremarcmap_dict(searchfields_dict):
+    for searchfield_code in searchfields_dict:
+        configuremarcmap_soup = make_soup('managefields.configmarcmap', searchfield_code)
+        searchfields_dict[searchfield_code]['ConfigureMarcMap'] = parse_dropdown('marcMap', configuremarcmap_soup)
+    return searchfields_dict
 
 
 """Parsing MarcMap info"""
 
 
-def parse_editmarcmap_soup(editmarcmap_soup):
-    editmarcmap_dict = {
-        'description': parse_textbox('description', editmarcmap_soup),
-        'marc21Cond': parse_textbox('marc21Cond', editmarcmap_soup),
-        'unimarcCond': parse_textbox('unimarcCond', editmarcmap_soup),
-        'exclusiveValue': parse_checkbox('exclusiveValue', editmarcmap_soup),
+def do_marcmaps():
+    all_marc_codes = get_all_marc_codes()
+    all_marc_details_dict = {
+        i: get_marc_info(i) for i in all_marc_codes
     }
-    return editmarcmap_dict
+    with open('Enterprise_marc_fields.json', 'w') as f:
+        f.write(json.dumps(all_marc_details_dict))
+
+
+def get_all_marc_codes():
+    count_of_marc_results_pages = get_max_page_count('marcmaps')
+    marc_codes = set()
+    for index in range(1, count_of_marc_results_pages + 1):
+        marc_results_page_soup = make_soup('managemarcmaps.grid.pager', index)
+        marc_item_rows = marc_results_page_soup.select('#marcMapTable tbody tr')
+        for marc_item_row in marc_item_rows:
+            marc_code = marc_item_row.select('td')[0].string
+            marc_codes.add(marc_code)
+    return list(sorted(marc_codes))
+
+
+def get_marc_info(marc_code):
+    marcmap_item_dict = parse_marcmap_item_details(marc_code)
+    fields_soup = make_soup('managemarcmaps.confmarc21tags', marc_code)
+    fields = fields_soup.select('#tagsTable tbody tr')
+    for index, _ in enumerate(fields):
+        tag, field_marc_dict = parse_marcmap_item_tags_details(index)
+        marcmap_item_dict[tag] = field_marc_dict
+        marcmap_item_dict[tag]['subfields'] = parse_subfields(index)
+    return marcmap_item_dict
+
+
+def parse_marcmap_item_details(marc_code):
+    marcmap_item_details_soup = make_soup('managemarcmaps.edit', marc_code)
+    marc_item_details_dict = {
+        'description': parse_textbox('description', marcmap_item_details_soup),
+        'marc21Cond': parse_textbox('marc21Cond', marcmap_item_details_soup),
+        'unimarcCond': parse_textbox('unimarcCond', marcmap_item_details_soup),
+        'exclusiveValue': parse_checkbox('exclusiveValue', marcmap_item_details_soup),
+    }
+    return marc_item_details_dict
+
+
+def parse_marcmap_item_tags_details(index):
+    tag_details_soup = make_soup('managemarctags.edit', index)
+    tag_name = parse_textbox('tag', tag_details_soup)
+    field_marc_dict = {
+        'tag': tag_name,
+        'marcCond': parse_textbox('marcCond', tag_details_soup),
+        'firstPrefix': parse_textbox('firstPrefix', tag_details_soup),
+        'firstSuffix': parse_textbox('firstSuffix', tag_details_soup),
+        'otherPrefix': parse_textbox('otherPrefix', tag_details_soup),
+        'otherSuffix': parse_textbox('otherSuffix', tag_details_soup),
+        'concatSubfields': parse_checkbox('concatSubfields', tag_details_soup),
+        'concatTags': parse_checkbox('concatTags', tag_details_soup),
+        'fixedField': parse_checkbox('fixedField', tag_details_soup),
+        'offset': parse_textbox('offset', tag_details_soup),
+        'length': parse_textbox('length', tag_details_soup),
+    }
+    return tag_name, field_marc_dict
 
 
 def parse_subfields(marc_item_index):
-    subfields_page = get_marc_maps_subfields_page(marc_item_index)
-    subfields_soup = soup(subfields_page.content, 'lxml')
+    subfields_soup = make_soup('managemarctags.configuresubfields', marc_item_index)
     subfields_count = get_max_marc_maps_subfields(subfields_soup)
     subfields_dict = dict()
-    for count in range(0, subfields_count):
-        subfield_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcsubfields.edit/{}'.format(count))
-        subfield_page_soup = soup(subfield_page.content, 'lxml')
+    for subfield_index in range(subfields_count):
+        subfield_page_soup = make_soup('managemarcsubfields.edit', subfield_index)
         subfield = parse_textbox('subfield', subfield_page_soup)
         subfield_marc_dict = {
             'subfield': subfield,
@@ -189,50 +232,6 @@ def parse_subfields(marc_item_index):
         }
         subfields_dict[subfield] = subfield_marc_dict
     return subfields_dict
-
-
-def get_marc_info(marc_code):
-    print(marc_code)
-    item_marc_dict = dict()
-    editmarcmap_page = get_marc_maps_editfield_page(marc_code)
-    editmarcmap_soup = soup(editmarcmap_page.content, 'lxml')
-    editmarcmap_dict = parse_editmarcmap_soup(editmarcmap_soup)
-    item_marc_dict.update(editmarcmap_dict)
-
-    managemarcmaps_confmarc21tags_page = get_marc_maps_managemarcmaps_confmarc21tags_page(marc_code)
-    fields = soup(managemarcmaps_confmarc21tags_page.content, 'lxml').select('#tagsTable tbody tr')
-    for marc_item_index, _ in enumerate(fields):
-        managemarctags_edit_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarctags.edit/{}'.format(marc_item_index))
-        field_soup = soup(managemarctags_edit_page.content, 'lxml')
-        tag = parse_textbox('tag', field_soup)
-        field_marc_dict = {
-            'tag': tag,
-            'marcCond': parse_textbox('marcCond', field_soup),
-            'firstPrefix': parse_textbox('firstPrefix', field_soup),
-            'firstSuffix': parse_textbox('firstSuffix', field_soup),
-            'otherPrefix': parse_textbox('otherPrefix', field_soup),
-            'otherSuffix': parse_textbox('otherSuffix', field_soup),
-            'concatSubfields': parse_checkbox('concatSubfields', field_soup),
-            'concatTags': parse_checkbox('concatTags', field_soup),
-            'fixedField': parse_checkbox('fixedField', field_soup),
-            'offset': parse_textbox('offset', field_soup),
-            'length': parse_textbox('length', field_soup),
-        }
-        item_marc_dict[tag] = field_marc_dict
-        item_marc_dict[tag]['subfields'] = parse_subfields(marc_item_index)
-    return item_marc_dict
-
-
-def get_all_marc_codes():
-    pages_of_marc_codes = get_max_marc_maps_page()
-    marc_codes = set()
-    for count in range(1, pages_of_marc_codes + 1):
-        managemarcmaps_page = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps.grid.pager/{}'.format(count))
-        managemarcmaps_soup = soup(managemarcmaps_page.content, 'lxml')
-        marc_rows = managemarcmaps_soup.select('#marcMapTable tbody tr')
-        for row in marc_rows:
-            marc_codes.add(row.select('td')[0].string)
-    return list(sorted(marc_codes))
 
 
 if __name__ == '__main__':
@@ -250,18 +249,7 @@ if __name__ == '__main__':
         't:formdata': formdata,
     }
 
-    r = s.post(admin_login_url, data=admin_login_data)
+    s.post(admin_login_url, data=admin_login_data)
 
-    search_dict = build_basic_search_dict()
-    search_dict = add_search_field_editfield_dict(search_dict)
-    search_dict = add_search_field_configuremarcmap_dict(search_dict)
-    with open('Enterprise_search_fields.json', 'w') as f:
-        f.write(json.dumps(search_dict))
-
-    all_marc_codes = get_all_marc_codes()
-    all_marc_details_dict = dict()
-    for num, marc_code in enumerate(all_marc_codes):
-        marc_info = get_marc_info(marc_code)
-        all_marc_details_dict[marc_code] = marc_info
-    with open('Enterprise_marc_fields.json', 'w') as f:
-        f.write(json.dumps(all_marc_details_dict))
+    do_searchfields()
+    do_marcmaps()
