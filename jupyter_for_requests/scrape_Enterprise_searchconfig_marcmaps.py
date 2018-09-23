@@ -121,8 +121,8 @@ def get_searchfields_items(pagenum, searchfields_dict):
 def add_searchfield_editfield_dict(searchfields_dict):
     for searchfield_code in searchfields_dict:
         editfield_soup = make_soup('managefields.edit', searchfield_code)
-        if not searchfields_dict[searchfield_code].get('EditField'):
-            searchfields_dict[searchfield_code]['EditField'] = dict()
+        if not searchfields_dict[searchfield_code].get('Details'):
+            searchfields_dict[searchfield_code]['Details'] = dict()
         editfield_dict = {
             'descripton': editfield_soup.select('#description')[0].string,
             'hierarchy': parse_dropdown('hierarchy', editfield_soup),
@@ -141,14 +141,14 @@ def add_searchfield_editfield_dict(searchfields_dict):
             'detailTab': parse_dropdown('detailTab', editfield_soup),
             'specialProcessing': parse_dropdown('specialProcessing', editfield_soup),
         }
-        searchfields_dict[searchfield_code]['EditField'].update(editfield_dict)
+        searchfields_dict[searchfield_code]['Details'].update(editfield_dict)
     return searchfields_dict
 
 
 def add_searchfield_configuremarcmap_dict(searchfields_dict):
     for searchfield_code in searchfields_dict:
         configuremarcmap_soup = make_soup('managefields.configmarcmap', searchfield_code)
-        searchfields_dict[searchfield_code]['ConfigureMarcMap'] = parse_dropdown('marcMap', configuremarcmap_soup)
+        searchfields_dict[searchfield_code]['Marc Code'] = parse_dropdown('marcMap', configuremarcmap_soup)
     return searchfields_dict
 
 
@@ -252,4 +252,4 @@ if __name__ == '__main__':
     s.post(admin_login_url, data=admin_login_data)
 
     do_searchfields()
-    do_marcmaps()
+    # do_marcmaps()
