@@ -1,7 +1,11 @@
+#! /usr/bin/env python3
+
+
+import json
+import getpass
+
 import requests
 from bs4 import BeautifulSoup as soup
-import json
-
 
 """required imports"""
 # pip install bs4
@@ -232,32 +236,21 @@ def get_all_marc_codes():
 
 
 if __name__ == '__main__':
-    request_headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Cache-Control": "no-cache",
-        "Connection": "keep-alive",
-        "Cookie": "JSESSIONID=2F6E7BF66D9BAE0846E5313DBFDEA42B.tomcat-13409",
-        "Host": "lsu.ent.sirsi.net",
-        "Pragma": "no-cache",
-        "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
-    }
-
-    url = 'https://lsu.ent.sirsi.net/client/en_US/login.loginform'
-    data = {
-        'j_username': '',
-        'j_password': '',
-        't:formdata': '',
-    }
-    if not (data['j_username'] and data['j_password'] and data['t:formdata']):
-        data['j_username'] = input('what is your Enterprise username? ')
-        data['j_password'] = input('what is your Enterprise password? ')
-        data['t:formdata'] = input('paste in a "t:formdata value"\nBefore you log into Enterprise, Ctrl-i - Network tab - *submit your login* - find login.loginform - copy from Form Data the t:formdata text')
 
     s = requests.Session()
-    r = s.post(url, data=data)
+
+    admin_frontpage = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/admin')
+    admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
+    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
+
+    admin_login_url = 'https://lsu.ent.sirsi.net/client/en_US/login.loginform'
+    admin_login_data = {
+        'j_username': input('what is your Enterprise username? '),
+        'j_password': getpass.getpass('what is your Enterprise password? '),
+        't:formdata': formdata,
+    }
+
+    r = s.post(admin_login_url, data=admin_login_data)
 
     search_dict = build_basic_search_dict()
     search_dict = add_search_field_editfield_dict(search_dict)
@@ -265,10 +258,10 @@ if __name__ == '__main__':
     with open('Enterprise_search_fields.json', 'w') as f:
         f.write(json.dumps(search_dict))
 
-    # all_marc_codes = get_all_marc_codes()
-    # all_marc_details_dict = dict()
-    # for num, marc_code in enumerate(all_marc_codes):
-    #     marc_info = get_marc_info(marc_code)
-    #     all_marc_details_dict[marc_code] = marc_info
-    # with open('Enterprise_marc_fields.json', 'w') as f:
-    #     f.write(json.dumps(all_marc_details_dict))
+    all_marc_codes = get_all_marc_codes()
+    all_marc_details_dict = dict()
+    for num, marc_code in enumerate(all_marc_codes):
+        marc_info = get_marc_info(marc_code)
+        all_marc_details_dict[marc_code] = marc_info
+    with open('Enterprise_marc_fields.json', 'w') as f:
+        f.write(json.dumps(all_marc_details_dict))
