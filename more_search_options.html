@@ -1,23 +1,144 @@
 <div class="advanced_search_wrapper">
-<div class="advanced_search_box"><form action="search/results" name="advSearchForm" onsubmit="javascript:return Tapestry.waitForPage(event);">
-<div class="customAdvancedSearch">
-<p><label class="advancedSearchLabel" for="allWordsField">Find these words</label> <span class="advancedSearchField"><input id="allWordsField" class="advancedSearchTextField" type="text" name="qu" maxlength="512" /></span></p>
-<p><label class="advancedSearchLabel" for="restrictionDropDown">Field</label> <span class="advancedSearchField"><select id="restrictionDropDown" class="advancedSearchDropDown" title="Select Search Field" name="rt"> <option value="">Select a Field</option> <option value="">All Fields</option> <option value="false|||TITLE|||Title">Title</option> <option value="false|||AUTHOR|||Author">Author</option> <option value="false|||SUBJECT|||Subject">Subject</option> <option value="false|||C_PERIODICAL_TITLE|||Periodical Title">Journal Title</option> <option value="false|||ISBN|||ISBN">ISBN</option> </select></span></p>
-<p><span class="advancedSearchLabel"><label for="libraryDropDown">Library</label></span> <span class="advancedSearchDropDownHolder"> <select id="libraryDropDown" class="advancedSearchDropDown" name="qf" tabindex="13"> <option value="">All LSU Libraries</option> <option value="LIBRARY	Library	21:MIDL-MAIN	Middleton Library">Middleton Library (Main Collection)</option> <option value="LIBRARY	Library	21:MUSIC	Carter Music Resource Center">Carter Music Resources Center</option> <option value="LIBRARY	Library	21:CIC	Cartographic Information">Cartographic Information Center</option> <option value="LIBRARY	Library	21:DOCS_MICRO	Government Documents &amp; Microforms">Government Documents/Microforms</option> <option value="LIBRARY	Library	21:SPEC_COLL	Special Collections">Special Collections</option> <option value="LIBRARY	Library	21:VETMED	Veterinary Medicine Library">Veterinary Medicine Library</option> <option value="LIBRARY	Library	21:NONLIBRARY	Other Collections">Other Collections</option> </select> </span></p>
-<p><span class="advancedSearchLabel"><label for="locationDropDown">Location</label></span> <span class="advancedSearchDropDownHolder"> <select id="locationDropDown" class="advancedSearchDropDown" name="qf" tabindex="13"> <option value="">All Locations</option> <option value="LOCATION	Shelf Location	21:LLMVC	Louisiana and Lower Mississippi Valley Collections">Louisiana and Lower Mississippi Valley Collections</option> <option value="LOCATION	Shelf Location	21:RARE	Rare">Rare Books</option> <option value="LOCATION	Shelf Location	21:UARCHIVES	University Archives">University Archives</option> <option value="LOCATION	Shelf Location	21:POKER	Carriere Poker and Hoyle Collection">Carriere Poker and Hoyle Collection</option> <option value="LOCATION	Shelf Location	21:CODRESCU	Codrescu Collection of Outsider Literature">Codrescu Collection of Outsider Literature</option> <option value="LOCATION	Shelf Location	21:COHN	Cohn Collection">Cohn Collection</option> <option value="LOCATION	Shelf Location	21:MADDEN	David Madden Collection of Civil War Fiction">David Madden Collection of Civil War Fiction</option> <option value="LOCATION	Shelf Location	21:BLONDHEIM	David S. Blondheim Collection">David S. Blondheim Collection</option> <option value="LOCATION	Shelf Location	21:CHESS	Gladney Chess Collection">Gladney Chess Collection</option> <option value="LOCATION	Shelf Location	21:LINCOLN	Jones Lincoln Collection">Jones Lincoln Collection</option> <option value="LOCATION	Shelf Location	21:LAUGHLIN	Laughlin Collection">Laughlin Collection</option> <option value="LOCATION	Shelf Location	21:MCILHENNY	McIlhenny Natural History Collection">McIlhenny Natural History Collection</option><option value="LOCATION	Shelf Location	21:RHOADES	Rhoades Crayfish Collection">Rhoades Crayfish Collection</option> <option value="LOCATION	Shelf Location	21:MANN	Russell A. Mann Sherlock Holmes Collection">Russell A. Mann Sherlock Holmes Collection</option> <option value="LOCATION	Shelf Location	21:BOWLUS	William Morton Bowlus Collection of Comic Books">William Morton Bowlus Collection of Comic Books</option> <option value="LOCATION	Shelf Location	21:THWILLIAMS	T. Harry Williams Collection">T. Harry Williams Collection</option> </select> </span></p>
-<p><label class="advancedSearchLabel" for="advancedSearchFormat">Format </label> <span class="advancedSearchField"><select id="advancedSearchFormat" class="advancedSearchDropDown" name="qf"> <option value="">All Formats</option> <option value="FORMAT	Format	BOOK	Books">Books</option> <option value="FORMAT	Format	ER	Electronic Resources">Electronic Resources</option> <option value="ITYPE	Type	21:ARCH-MSS	Archive/Manuscript">Archives/Manuscripts</option> <option value="FORMAT	Format	MAP	Map">Maps</option> <option value="FORMAT	Format	MICROFORM	Microform">Microform</option> <option value="FORMAT	Format	MUSIC	Music">Music Score</option> </select></span></p>
-<p><label class="advancedSearchLabel" for="advancedSearchLanguage">Language </label> <span class="advancedSearchField"><select id="advancedSearchLanguage" class="advancedSearchDropDown" name="qf"> <option value="">All Languages</option> <option value="LANGUAGE	Language	ENG	English">English</option> <option value="LANGUAGE	Language	FRE	French">French</option> <option value="LANGUAGE	Language	SPA	Spanish">Spanish</option> <option value="LANGUAGE	Language	CHI	Chinese">Chinese</option> <option value="LANGUAGE	Language	GER	German">German</option> <option value="LANGUAGE	Language	GRC	Greek, Ancient">Greek - Ancient</option> <option value="LANGUAGE	Language	GRE	Greek, Modern">Greek - Modern</option> <option value="LANGUAGE	Language	HIN	Hindi">Hindi</option> <option value="LANGUAGE	Language	ITA	Italian">Italian</option> <option value="LANGUAGE	Language	JPN	Japanese">Japanese</option> <option value="LANGUAGE	Language	KOR	Korean">Korean</option> <option value="LANGUAGE	Language	LAT	Latin">Latin</option> <option value="LANGUAGE	Language	POL	Polish">Polish</option> <option value="LANGUAGE	Language	RUS	Russian">Russian</option> </select></span></p>
-<p><label class="advancedSearchLabel" for="advancedSearchPubYear">Year published</label> <span class="advancedSearchField"><select id="advancedSearchPubYear" class="advancedSearchDropDown" name="qf"> <option value="">All years</option> <option value="PUBDATE	Publication Date	2018-2019	2018-2019">2018-2019</option> <option value="PUBDATE	Publication Date	2010-2017	2010-2017">2010-2017</option> <option value="PUBDATE	Publication Date	2000-2009	2000-2009">2000-2009</option> <option value="PUBDATE	Publication Date	1990-1999	1990-1999">1990-1999</option> <option value="PUBDATE	Publication Date	1980-1989	1980-1989">1980-1989</option> <option value="PUBDATE	Publication Date	1970-1979	1970-1979">1970-1979</option> <option value="PUBDATE	Publication Date	1960-1969	1960-1969">1960-1969</option> <option value="PUBDATE	Publication Date	1900-1959	1900-1960">1900-1959</option> <option value="PUBDATE	Publication Date	1800-1899	1800-1899">1800-1899</option> <option value="PUBDATE	Publication Date	1700-1799	1700-1799">1700-1799</option> <option value="PUBDATE	Publication Date	1600-1699	1600-1699">1600-1699</option> <option value="PUBDATE	Publication Date	1450-1599	1450-1599">1450-1599</option> </select></span></p>
-<p class="advancedSearchOnlyAvailableWrapper"><label class="advancedSearchLabel" for="advancedSearchAvailable">Availability</label> <span class="advancedSearchField"> <input id="advancedSearchAvailableAll" class="advancedSearchRadioLabel" type="radio" name="av" value="" checked="checked" /><label class="advancedSearchRadioLabel" style="margin-right: 10px;" for="advancedSearchAvailableAll">Show all library items</label> <input id="AdvancedSearchAvailableSelected" class="advancedSearchRadioLabel" type="radio" name="av" value="0" /><label class="advancedSearchRadioLabel" for="advancedSearchAvailableSelected">Only show items available to checkout</label> </span></p>
-<div class="advancedSearchSubmit"><input id="advancedSearchButton" class="button" title="Search" type="submit" name="advancedSearchButton" value="Search" /></div>
-</div>
-<!-- close customAdvancedSearch div --></form></div>
-<!-- end Advanced Search div --> <!-- Search Tips-->
-<div class="searchtipsbox">
-<div class="introtext">This catalog behaves differently than our previous catalog. Some of the notable differences include:</div>
-<div class="searchtip">All terms are searched, including articles (a, an, the); e.g. a search for "the journal of philosophy" renders different results than a search for "journal of philosophy"</div>
-<div class="searchtip">Terms previously used as Boolean operators (AND, OR, NOT) are not used as operators in this system. They are searched just like any other keyword.</div>
-<div class="searchtip">When searching for works by a specific author, the order of the names no longer matters. E.g., a search for "Charles Dickens" functions the same as "Dickens, Charles"</div>
-</div>
+  <div class="advanced_search_box">
+    <form action="search/results" name="advSearchForm" onsubmit="javascript:return Tapestry.waitForPage(event);">
+      <div class="customAdvancedSearch">
+        <p>
+          <label class="advancedSearchLabel" for="allWordsField">Find these words</label>
+          <span class="advancedSearchField">
+          	<input id="allWordsField" class="advancedSearchTextField" type="text" name="qu" maxlength="512" />
+          </span>
+        </p>
+        <p>
+          <label class="advancedSearchLabel" for="restrictionDropDown">Field</label>
+          <span class="advancedSearchField">
+          	<select id="restrictionDropDown" class="advancedSearchDropDown" title="Select Search Field" name="rt">
+          		<option value="">Select a Field</option>
+          		<option value="">All Fields</option>
+          		<option value="false|||TITLE|||Title">Title</option>
+          		<option value="false|||AUTHOR|||Author">Author</option>
+          		<option value="false|||SUBJECT|||Subject">Subject</option>
+          		<option value="false|||C_PERIODICAL_TITLE|||Periodical Title">Journal Title</option>
+          		<option value="false|||ISBN|||ISBN">ISBN</option>
+          	</select>
+          </span>
+        </p>
+        <p>
+          <span class="advancedSearchLabel">
+          	<label for="libraryDropDown">Library</label>
+          </span> <span class="advancedSearchDropDownHolder">
+          	<select id="libraryDropDown" class="advancedSearchDropDown" name="qf" tabindex="13">
+          		<option value="">All LSU Libraries</option>
+          		<option value="LIBRARY	Library	21:MIDL-MAIN	Middleton Library">Middleton Library (Main Collection)</option>
+          		<option value="LIBRARY	Library	21:MUSIC	Carter Music Resource Center">Carter Music Resources Center</option>
+          		<option value="LIBRARY	Library	21:CIC	Cartographic Information">Cartographic Information Center</option>
+          		<option value="LIBRARY	Library	21:DOCS_MICRO	Government Documents &amp; Microforms">Government Documents/Microforms</option>
+          		<option value="LIBRARY	Library	21:SPEC_COLL	Special Collections">Special Collections</option>
+          		<option value="LIBRARY	Library	21:VETMED	Veterinary Medicine Library">Veterinary Medicine Library</option>
+          		<option value="LIBRARY	Library	21:NONLIBRARY	Other Collections">Other Collections</option>
+          	</select>
+          </span>
+        </p>
+        <p>
+          <span class="advancedSearchLabel">
+            <label for="locationDropDown">Location</label>
+          </span>
+          <span class="advancedSearchDropDownHolder">
+        		<select id="locationDropDown" class="advancedSearchDropDown" name="qf" tabindex="13">
+        			<option value="">All Locations</option>
+        			<option value="LOCATION	Shelf Location	21:LLMVC	Louisiana and Lower Mississippi Valley Collections">Louisiana and Lower Mississippi Valley Collections</option>
+        			<option value="LOCATION	Shelf Location	21:RARE	Rare">Rare Books</option>
+        			<option value="LOCATION	Shelf Location	21:UARCHIVES	University Archives">University Archives</option>
+        			<option value="LOCATION	Shelf Location	21:POKER	Carriere Poker and Hoyle Collection">Carriere Poker and Hoyle Collection</option>
+        			<option value="LOCATION	Shelf Location	21:CODRESCU	Codrescu Collection of Outsider Literature">Codrescu Collection of Outsider Literature</option>
+        			<option value="LOCATION	Shelf Location	21:COHN	Cohn Collection">Cohn Collection</option>
+        			<option value="LOCATION	Shelf Location	21:MADDEN	David Madden Collection of Civil War Fiction">David Madden Collection of Civil War Fiction</option>
+        			<option value="LOCATION	Shelf Location	21:BLONDHEIM	David S. Blondheim Collection">David S. Blondheim Collection</option>
+        			<option value="LOCATION	Shelf Location	21:CHESS	Gladney Chess Collection">Gladney Chess Collection</option>
+        			<option value="LOCATION	Shelf Location	21:LINCOLN	Jones Lincoln Collection">Jones Lincoln Collection</option>
+        			<option value="LOCATION	Shelf Location	21:LAUGHLIN	Laughlin Collection">Laughlin Collection</option>
+        			<option value="LOCATION	Shelf Location	21:MCILHENNY	McIlhenny Natural History Collection">McIlhenny Natural History Collection</option>
+        			<option value="LOCATION	Shelf Location	21:RHOADES	Rhoades Crayfish Collection">Rhoades Crayfish Collection</option>
+        			<option value="LOCATION	Shelf Location	21:MANN	Russell A. Mann Sherlock Holmes Collection">Russell A. Mann Sherlock Holmes Collection</option>
+        			<option value="LOCATION	Shelf Location	21:BOWLUS	William Morton Bowlus Collection of Comic Books">William Morton Bowlus Collection of Comic Books</option>
+        			<option value="LOCATION	Shelf Location	21:THWILLIAMS	T. Harry Williams Collection">T. Harry Williams Collection</option>
+        		</select>
+        	</span>
+        </p>
+        <p>
+          <label class="advancedSearchLabel" for="advancedSearchFormat">Format </label>
+          <span class="advancedSearchField">
+          	<select id="advancedSearchFormat" class="advancedSearchDropDown" name="qf">
+          		<option value="">All Formats</option> <option value="FORMAT	Format	BOOK	Books">Books</option>
+          		<option value="FORMAT	Format	ER	Electronic Resources">Electronic Resources</option>
+          		<option value="ITYPE	Type	21:ARCH-MSS	Archive/Manuscript">Archives/Manuscripts</option>
+          		<option value="FORMAT	Format	MAP	Map">Maps</option>
+          		<option value="FORMAT	Format	MICROFORM	Microform">Microform</option>
+          		<option value="FORMAT	Format	MUSIC	Music">Music Score</option>
+          	</select>
+          </span>
+        </p>
+        <p>
+          <label class="advancedSearchLabel" for="advancedSearchLanguage">Language </label>
+          <span class="advancedSearchField">
+          	<select id="advancedSearchLanguage" class="advancedSearchDropDown" name="qf">
+          		<option value="">All Languages</option> <option value="LANGUAGE	Language	ENG	English">English</option>
+          		<option value="LANGUAGE	Language	FRE	French">French</option>
+          		<option value="LANGUAGE	Language	SPA	Spanish">Spanish</option>
+          		<option value="LANGUAGE	Language	CHI	Chinese">Chinese</option>
+          		<option value="LANGUAGE	Language	GER	German">German</option>
+          		<option value="LANGUAGE	Language	GRC	Greek, Ancient">Greek - Ancient</option>
+          		<option value="LANGUAGE	Language	GRE	Greek, Modern">Greek - Modern</option>
+          		<option value="LANGUAGE	Language	HIN	Hindi">Hindi</option>
+          		<option value="LANGUAGE	Language	ITA	Italian">Italian</option>
+          		<option value="LANGUAGE	Language	JPN	Japanese">Japanese</option>
+          		<option value="LANGUAGE	Language	KOR	Korean">Korean</option>
+          		<option value="LANGUAGE	Language	LAT	Latin">Latin</option>
+          		<option value="LANGUAGE	Language	POL	Polish">Polish</option>
+          		<option value="LANGUAGE	Language	RUS	Russian">Russian</option>
+          	</select></span></p>
+        <p>
+          <label class="advancedSearchLabel" for="advancedSearchPubYear">Year published</label>
+          <span class="advancedSearchField">
+          	<select id="advancedSearchPubYear" class="advancedSearchDropDown" name="qf">
+          		<option value="">All years</option>
+          		<option value="PUBDATE	Publication Date	2018-2019	2018-2019">2018-2019</option>
+          		<option value="PUBDATE	Publication Date	2010-2017	2010-2017">2010-2017</option>
+          		<option value="PUBDATE	Publication Date	2000-2009	2000-2009">2000-2009</option>
+          		<option value="PUBDATE	Publication Date	1990-1999	1990-1999">1990-1999</option>
+          		<option value="PUBDATE	Publication Date	1980-1989	1980-1989">1980-1989</option>
+          		<option value="PUBDATE	Publication Date	1970-1979	1970-1979">1970-1979</option>
+          		<option value="PUBDATE	Publication Date	1960-1969	1960-1969">1960-1969</option>
+          		<option value="PUBDATE	Publication Date	1900-1959	1900-1960">1900-1959</option>
+          		<option value="PUBDATE	Publication Date	1800-1899	1800-1899">1800-1899</option>
+          		<option value="PUBDATE	Publication Date	1700-1799	1700-1799">1700-1799</option>
+          		<option value="PUBDATE	Publication Date	1600-1699	1600-1699">1600-1699</option>
+          		<option value="PUBDATE	Publication Date	1450-1599	1450-1599">1450-1599</option>
+          	</select>
+          </span>
+        </p>
+        <p class="advancedSearchOnlyAvailableWrapper">
+          <label class="advancedSearchLabel" for="advancedSearchAvailable">Availability</label>
+          <span class="advancedSearchField">
+          	<input id="advancedSearchAvailableAll" class="advancedSearchRadioLabel" type="radio" name="av" value="" checked="checked" />
+          	<label class="advancedSearchRadioLabel" style="margin-right: 10px;" for="advancedSearchAvailableAll">Show all library items</label>
+          	<input id="AdvancedSearchAvailableSelected" class="advancedSearchRadioLabel" type="radio" name="av" value="0" />
+          	<label class="advancedSearchRadioLabel" for="advancedSearchAvailableSelected">Only show items available to checkout</label>
+          </span>
+        </p>
+        <div class="advancedSearchSubmit">
+          <input id="advancedSearchButton" class="button" title="Search" type="submit" name="advancedSearchButton" value="Search" />
+        </div>
+      </div>
+      <!-- close customAdvancedSearch div -->
+    </form>
+  </div>
+  <!-- end Advanced Search div -->
+  <!-- Search Tips-->
+  <div class="searchtipsbox">
+    <div class="introtext">This catalog behaves differently than our previous catalog. Some of the notable differences include:</div>
+    <div class="searchtip">All terms are searched, including articles (a, an, the); e.g. a search for "the journal of philosophy" renders different results than a search for "journal of philosophy"</div>
+    <div class="searchtip">Terms previously used as Boolean operators (AND, OR, NOT) are not used as operators in this system. They are searched just like any other keyword.</div>
+    <div class="searchtip">When searching for works by a specific author, the order of the names no longer matters. E.g., a search for "Charles Dickens" functions the same as "Dickens, Charles"</div>
+  </div>
 </div>
 <!-- end Advanced Search wrapper div -->
