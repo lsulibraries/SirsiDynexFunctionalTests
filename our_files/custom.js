@@ -342,7 +342,6 @@ var removeSomePubDates = function() {
 
 var moveStackMapToCurrentLocation = function() {
   if ($J('.SMbutton').length) {
-    console.log('stackmap button present');
     smbutton = $J('.SMbutton[value="Map It!"]');
     stacksDiv = $J('.asyncFieldSD_ITEM_STATUS').not('.hidden');
     var newHref = $J('<a />', {
@@ -356,18 +355,16 @@ var moveStackMapToCurrentLocation = function() {
     smbutton.parent().remove();
     clearInterval(scheduleStackMapToCurrentLocation);
   }
-  else {
-    console.log('stackmap button not present')
-  }
 }
 
 var changeAvailableIfZero = function() {
   if ($J('.smallSpinner').length == 0) {
-    var zeroAvailable = $J('.availableNumber:contains("0")');
-    for (i=0; i < zeroAvailable.length; i++) {
-      $J(zeroAvailable[i].previous()).text('Currently Checked Out');
-      zeroAvailable.text('');
-    }
+    $J('.availableNumber').each(function(i, elem) {
+      if ($J(elem).text() == '0') {
+        $J(elem.previous()).text('Currently Checked Out');
+        $J(elem).text('');
+      }
+    });
     clearInterval(scheduleChangeAvailableIfZero);
   }
 }
