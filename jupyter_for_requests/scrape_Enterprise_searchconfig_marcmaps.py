@@ -180,10 +180,12 @@ def get_marc_info(marc_code):
     marcmap_item_dict = parse_marcmap_item_details(marc_code)
     fields_soup = make_soup('managemarcmaps.confmarc21tags', marc_code)
     fields = fields_soup.select('#tagsTable tbody tr')
+    if not marcmap_item_dict.get('Tags'):
+        marcmap_item_dict['Tags'] = list()
     for index, _ in enumerate(fields):
         tag, field_marc_dict = parse_marcmap_item_tags_details(index)
-        marcmap_item_dict[tag] = field_marc_dict
-        marcmap_item_dict[tag]['subfields'] = parse_subfields(index)
+        field_marc_dict['subfields'] = parse_subfields(index)
+        marcmap_item_dict['Tags'].append(field_marc_dict)
     return marcmap_item_dict
 
 
@@ -252,4 +254,4 @@ if __name__ == '__main__':
     s.post(admin_login_url, data=admin_login_data)
 
     do_searchfields()
-    # do_marcmaps()
+    do_marcmaps()
