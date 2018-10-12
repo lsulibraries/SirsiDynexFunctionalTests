@@ -29,7 +29,7 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
-  // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
+  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
 
 }
 
