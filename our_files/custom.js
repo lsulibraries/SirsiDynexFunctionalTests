@@ -29,7 +29,7 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
-  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
+  // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
 
 }
 
@@ -342,17 +342,21 @@ var removeSomePubDates = function() {
 
 var moveStackMapToCurrentLocation = function() {
   if ($J('.SMbutton').length) {
-    smbutton = $J('.SMbutton[value="Map It!"]');
-    stacksDiv = $J('.asyncFieldSD_ITEM_STATUS').not('.hidden');
-    var newHref = $J('<a />', {
-        onclick: smbutton.attr('onclick'), 
-        class: 'SMlink',
-        text: 'Find in the Library',
-        title: 'Find in the Library',
-        });
-    stacksDiv.text('');
-    newHref.appendTo(stacksDiv);
-    smbutton.parent().remove();
+    $J('.detailItemsTableRow').each(function(id, elem) {
+        smbutton = $J(elem).find('.SMbutton');
+        if (smbutton.length) {
+            stacksDiv = $J(elem).find('.asyncFieldSD_ITEM_STATUS').not('.hidden');
+            var newHref = $J('<a />', {
+                onclick: smbutton.attr('onclick'), 
+                class: 'SMlink',
+                text: 'Find in the Library',
+                title: 'Find in the Library',
+                });
+            stacksDiv.text('');
+            newHref.appendTo(stacksDiv);
+            smbutton.parent().remove();
+        };
+    })
     clearInterval(scheduleStackMapToCurrentLocation);
   }
 }
