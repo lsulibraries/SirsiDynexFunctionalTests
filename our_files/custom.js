@@ -29,7 +29,7 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
-  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 200);
+  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 800);
 
 }
 
@@ -342,7 +342,7 @@ var removeSomePubDates = function() {
 
 var moveStackMapToCurrentLocation = function() {
   var availableItemsCount = $J('.detailItemsDiv > div > table > tbody > tr').length;
-  var loopsDone = 0;
+  var stackMapLoopsDone = 0;
   if ($J('.SMbutton').length) {
     $J('.detailItemsTableRow').each(function(id, elem) {
       smbutton = $J(elem).find('.SMbutton');
@@ -359,10 +359,10 @@ var moveStackMapToCurrentLocation = function() {
         smbutton.parent().remove();
       };
     })
-    loopsDone += 1;
-    if (availableItemsCount / (loopsDone * 30) < 1) {
+    stackMapLoopsDone += 1;
+    if (availableItemsCount / (stackMapLoopsDone * 30) < 1) {
       clearInterval(scheduleStackMapToCurrentLocation);
-    }:
+    }
   };
 }
 
