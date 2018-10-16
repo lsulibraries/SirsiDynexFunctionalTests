@@ -341,24 +341,29 @@ var removeSomePubDates = function() {
 }
 
 var moveStackMapToCurrentLocation = function() {
+  var availableItemsCount = $J('.detailItemsDiv > div > table > tbody > tr').length;
+  var loopsDone = 0;
   if ($J('.SMbutton').length) {
     $J('.detailItemsTableRow').each(function(id, elem) {
-        smbutton = $J(elem).find('.SMbutton');
-        if (smbutton.length) {
-            stacksDiv = $J(elem).find('.asyncFieldSD_ITEM_STATUS').not('.hidden');
-            var newHref = $J('<a />', {
-                onclick: smbutton.attr('onclick'), 
-                class: 'SMlink',
-                text: 'Find in the Library',
-                title: 'Find in the Library',
-                });
-            stacksDiv.text('');
-            newHref.appendTo(stacksDiv);
-            smbutton.parent().remove();
-        };
+      smbutton = $J(elem).find('.SMbutton');
+      if (smbutton.length) {
+        stacksDiv = $J(elem).find('.asyncFieldSD_ITEM_STATUS').not('.hidden');
+        var newHref = $J('<a />', {
+          onclick: smbutton.attr('onclick'),
+          class: 'SMlink',
+          text: 'Find in the Library',
+          title: 'Find in the Library',
+        });
+        stacksDiv.text('');
+        newHref.appendTo(stacksDiv);
+        smbutton.parent().remove();
+      };
     })
-    clearInterval(scheduleStackMapToCurrentLocation);
-  }
+    loopsDone += 1;
+    if (availableItemsCount / (loopsDone * 30) < 1) {
+      clearInterval(scheduleStackMapToCurrentLocation);
+    }:
+  };
 }
 
 var changeAvailableIfZero = function() {
