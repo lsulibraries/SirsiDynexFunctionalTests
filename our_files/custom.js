@@ -33,11 +33,13 @@ var doDetailViewTasks = function() {
 
 }
 
+var scheduleConvertResultsStackMapToLink;
 var scheduleChangeAvailableIfZero;
 var doResultsViewTasks = function() {
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
+  scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 800);
   scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
 }
 
@@ -364,6 +366,22 @@ var moveStackMapToCurrentLocation = function() {
       clearInterval(scheduleStackMapToCurrentLocation);
     }
   };
+}
+
+var convertResultsStackMapToLink = function() {
+  if ($J('td > .SMbutton').length) {
+    $J('td > .SMbutton').each(function(i, elem) {
+      var newHref = $J('<a />', {
+        onclick: $J(elem).attr('onclick'),
+        class: 'SMlink',
+        text: 'Find in the Library',
+        title: 'Find in the Library',
+      });
+      newHref.appendTo($J(elem).parent());
+      $J(elem).remove();
+    });
+    clearInterval(scheduleConvertResultsStackMapToLink);
+  }
 }
 
 var changeAvailableIfZero = function() {
