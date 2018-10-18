@@ -9,7 +9,7 @@ $J(document).ready(function() {
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
   } else if (jQuery('.framedPage').length) {
-    // makeiframeNewTab();
+
   }
 });
 
@@ -30,7 +30,6 @@ var doDetailViewTasks = function() {
   replaceAvailableStatus();
   renameItemHoldsColumn();
   scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 800);
-
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -56,11 +55,6 @@ var doAccountPageTasks = function() {
 /*
 Starting custom functions.
 */
-
-var makeiframeNewTab = function() {
-  // the iframe we're targetting doesn't have the $ or $J shortcut, use jQuery term.
-  jQuery('.call_number_search_header').attr('target', '_blank');
-}
 
 var createCitationButton = function() {
   var oclcNUM = $J('#detail0_OCLC .OCLC_value').text();
