@@ -9,7 +9,7 @@ $J(document).ready(function() {
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
   } else if (jQuery('.framedPage').length) {
-
+    //pass
   }
 });
 
