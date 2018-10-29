@@ -57,9 +57,30 @@ Starting custom functions.
 */
 
 var createCitationButton = function() {
-  var oclcNUM = $J('#detail0_OCLC .OCLC_value').text();
-  var oclcISBN = $J('#detail0_ISBN .ISBN_value').text();
-  var oclcISSN = $J('#detail0_ISSN .ISSN_value').text();
+  var oclcNUM, oclcISBN, oclcISSN;
+
+  $J('#detail0_OCLC .OCLC_value').each(function() {
+    var oclc_value = $J(this).text();
+    if (oclc_value.length) {
+      oclcNUM = oclc_value;
+      return false;
+    }
+  });
+  $J('#detail0_ISBN .ISBN_value').each(function() {
+    var isbn_value = $J(this).text();
+    if (isbn_value.length) {
+      oclcISBN = isbn_value;
+      return false;
+    }
+  });
+  $J('#detail0_ISSN .ISSN_value').each(function() {
+    var issn_value = $J(this).text();
+    if (issn_value.length) {
+      oclcISSN = issn_value;
+      return false;
+    }
+  });
+
   if (oclcNUM || oclcISBN || oclcISSN) {
     var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
       .click(function() {
@@ -432,5 +453,4 @@ function customJavaScript() {
   //   }
 }
 
-function customDetailJavaScript() {
-}
+function customDetailJavaScript() {}
