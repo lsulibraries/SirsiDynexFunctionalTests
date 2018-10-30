@@ -108,3 +108,5 @@ venv.bak/
 # other random files
 jupyter_for_requests/trash.html
 jupyter_for_requests/credentials.txt
+jupyter_for_requests/Enterprise_marc_fields.json
+jupyter_for_requests/Enterprise_searchfields.json
