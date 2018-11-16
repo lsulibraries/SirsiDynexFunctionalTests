@@ -30,6 +30,7 @@ var doDetailViewTasks = function() {
   replaceAvailableStatus();
   renameItemHoldsColumn();
   scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 800);
+  replaceCallNumChildwithCallNum();
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -61,7 +62,7 @@ var createCitationButton = function() {
 
   $J('#detail0_OCLC .OCLC_value').each(function() {
     var oclc_value = $J(this).text();
-    if (oclc_value.length) {
+    if (oclc_value.length && !isNaN(oclc_value)) {
       oclcNUM = oclc_value;
       return false;
     }
@@ -409,6 +410,10 @@ var changeAvailableIfZero = function() {
     });
     clearInterval(scheduleChangeAvailableIfZero);
   }
+}
+
+var replaceCallNumChildwithCallNum = function() {
+  $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
 }
 
 
