@@ -33,6 +33,7 @@ def make_soup(page_name, slug):
     if isinstance(slug, str):
         slug = slug.replace('/', '$002f').replace(' ', '$0020')
     full_url = urls[page_name].format(base_url, slug)
+    print(full_url)
     page = s.get(full_url)
     return soup(page.content, 'lxml')
 
@@ -247,15 +248,20 @@ if __name__ == '__main__':
     formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
 
     admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
-    admin_login_data = {
-        'j_username': input('what is your Enterprise username? '),
-        'j_password': getpass.getpass('what is your Enterprise password? '),
-        't:formdata': formdata,
-    }
 
-    s.post(admin_login_url, data=admin_login_data)
+    for i in range(3):
+        admin_login_data = {
+            'j_username': input('what is your Enterprise username? '),
+            'j_password': getpass.getpass('what is your Enterprise password? '),
+            't:formdata': formdata,
+        }
+        login_response = s.post(admin_login_url, data=admin_login_data)
+        if 'login failed' in login_response.text.lower():
+            print('Login failed.  Please try again')
+        else:
+            break
 
     print('scraping your searchfields')
-    do_searchfields()
+    # do_searchfields()
     print('scraping your marcmaps')
     do_marcmaps()
