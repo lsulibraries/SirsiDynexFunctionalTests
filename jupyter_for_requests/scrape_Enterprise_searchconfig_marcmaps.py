@@ -7,6 +7,8 @@ import getpass
 import requests
 from bs4 import BeautifulSoup as soup
 
+ROOT_URL = 'https://lsu.ent.sirsi.net/client/en_US/'
+
 """required imports"""
 # pip install bs4
 # pip install requests
@@ -16,7 +18,7 @@ from bs4 import BeautifulSoup as soup
 
 
 def make_soup(page_name, slug):
-    base_url = 'https://lsu.ent.sirsi.net/client/en_US/admin/search/'
+    base_url = requests.compat.urljoin(ROOT_URL, 'admin/search/')
     urls = {
         'managemarcsubfields.edit': '{}managemarcsubfields.edit/{}',
         'managemarctags.edit': '{}managemarctags.edit/{}',
@@ -37,8 +39,8 @@ def make_soup(page_name, slug):
 
 def get_max_page_count(kind):
     url = {
-        'searchfields': 'https://lsu.ent.sirsi.net/client/en_US/admin/search/managefields',
-        'marcmaps': 'https://lsu.ent.sirsi.net/client/en_US/admin/search/managemarcmaps',
+        'searchfields': requests.compat.urljoin(ROOT_URL, 'admin/search/managefields'),
+        'marcmaps': requests.compat.urljoin(ROOT_URL, 'admin/search/managemarcmaps'),
     }
     page = s.get(url[kind])
     pagesoup = soup(page.content, 'lxml')
@@ -240,11 +242,11 @@ if __name__ == '__main__':
 
     s = requests.Session()
 
-    admin_frontpage = s.get('https://lsu.ent.sirsi.net/client/en_US/admin/admin')
+    admin_frontpage = s.get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
     admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
     formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
 
-    admin_login_url = 'https://lsu.ent.sirsi.net/client/en_US/login.loginform'
+    admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
     admin_login_data = {
         'j_username': input('what is your Enterprise username? '),
         'j_password': getpass.getpass('what is your Enterprise password? '),
@@ -253,5 +255,7 @@ if __name__ == '__main__':
 
     s.post(admin_login_url, data=admin_login_data)
 
+    print('scraping your searchfields')
     do_searchfields()
+    print('scraping your marcmaps')
     do_marcmaps()
