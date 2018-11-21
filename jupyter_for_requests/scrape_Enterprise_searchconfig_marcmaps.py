@@ -279,12 +279,12 @@ def requests_retry_session(
 
 
 def do_verbose_logging():
-    # http_client.HTTPConnection.debuglevel = 1
-    # logging.basicConfig()
-    # logging.getLogger().setLevel(logging.DEBUG)
-    # requests_log = logging.getLogger("requests.packages.urllib3")
-    # requests_log.setLevel(logging.DEBUG)
-    # requests_log.propagate = True   
+    http_client.HTTPConnection.debuglevel = 1
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+    requests_log = logging.getLogger("requests.packages.urllib3")
+    requests_log.setLevel(logging.DEBUG)
+    requests_log.propagate = True   
 
 
 if __name__ == '__main__':
