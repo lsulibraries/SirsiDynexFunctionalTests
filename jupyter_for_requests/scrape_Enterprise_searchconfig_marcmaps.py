@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-
 import json
 import getpass
 
@@ -237,16 +236,7 @@ def parse_subfields(marc_item_index):
     return subfields_dict
 
 
-if __name__ == '__main__':
-
-    s = requests.Session()
-
-    admin_frontpage = s.get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
-    admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
-    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
-
-    admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
-
+def login():
     for i in range(3):
         admin_login_data = {
             'j_username': input('what is your Enterprise username? '),
@@ -258,6 +248,22 @@ if __name__ == '__main__':
             print('Login failed.  Please try again')
         else:
             break
+
+
+if __name__ == '__main__':
+
+    s = requests.Session()
+    a = requests.adapters.HTTPAdapter(max_retries=10)
+    s.mount('http://', a)
+    s.mount('https://', a)
+
+
+    admin_frontpage = s.get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
+    admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
+    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
+
+    admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
+    login()
 
     print('scraping your searchfields')
     do_searchfields()
