@@ -2,8 +2,12 @@
 
 import json
 import getpass
+import logging
+import http.client as http_client
 
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 from bs4 import BeautifulSoup as soup
 
 ROOT_URL = 'https://lsu.ent.sirsi.net/client/en_US/'
@@ -31,7 +35,7 @@ def make_soup(page_name, slug):
         slug = slug.replace('/', '$002f').replace(' ', '$0020')
     full_url = urls[page_name].format(base_url, slug)
     print(full_url)
-    page = s.get(full_url)
+    page = requests_retry_session(session=s).get(full_url)
     return soup(page.content, 'lxml')
 
 
@@ -40,7 +44,7 @@ def get_max_page_count(kind):
         'searchfields': requests.compat.urljoin(ROOT_URL, 'admin/search/managefields'),
         'marcmaps': requests.compat.urljoin(ROOT_URL, 'admin/search/managemarcmaps'),
     }
-    page = s.get(url[kind])
+    page = requests_retry_session(session=s).get(url[kind])
     pagesoup = soup(page.content, 'lxml')
     counts = pagesoup.select('.t-data-grid-pager a')
     max_count = max(int(i.text) for i in counts)
@@ -237,6 +241,10 @@ def parse_subfields(marc_item_index):
 
 
 def login():
+    admin_frontpage = requests_retry_session(session=s).get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
+    admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
+    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
+    admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
     for i in range(3):
         admin_login_data = {
             'j_username': input('what is your Enterprise username? '),
@@ -250,19 +258,40 @@ def login():
             break
 
 
+def requests_retry_session(
+    retries=3,
+    backoff_factor=0.3,
+    status_forcelist=(500, 502, 504),
+    session=None,
+):
+    session = session or requests.Session()
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=status_forcelist,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
+
+
+def do_verbose_logging():
+    # http_client.HTTPConnection.debuglevel = 1
+    # logging.basicConfig()
+    # logging.getLogger().setLevel(logging.DEBUG)
+    # requests_log = logging.getLogger("requests.packages.urllib3")
+    # requests_log.setLevel(logging.DEBUG)
+    # requests_log.propagate = True   
+
+
 if __name__ == '__main__':
+    # do_verbose_logging()
 
     s = requests.Session()
-    a = requests.adapters.HTTPAdapter(max_retries=10)
-    s.mount('http://', a)
-    s.mount('https://', a)
 
-
-    admin_frontpage = s.get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
-    admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
-    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
-
-    admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
     login()
 
     print('scraping your searchfields')
