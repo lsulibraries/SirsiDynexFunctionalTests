@@ -10,9 +10,7 @@ from bs4 import BeautifulSoup as soup
 ROOT_URL = 'https://lsu.ent.sirsi.net/client/en_US/'
 
 """required imports"""
-# pip install bs4
-# pip install requests
-
+# pip install bs4 requests lxml
 
 """Utility functions"""
 
@@ -262,6 +260,6 @@ if __name__ == '__main__':
             break
 
     print('scraping your searchfields')
-    # do_searchfields()
+    do_searchfields()
     print('scraping your marcmaps')
     do_marcmaps()
