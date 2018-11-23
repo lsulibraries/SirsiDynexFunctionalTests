@@ -1,15 +1,16 @@
 var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/'; // Put your WS url here.
 var CLIENTID = 'DS_CLIENT';
 
-var policyRestMapController;
-var startUpdatedMARCHoldings = function(rId) {
-  var policyRestMap = getDetailPolicies();
-  policyRestMapController = setInterval(function() {
-    waitDetailMARCHoldings(rId, policyRestMap);
+var policyDictController;
+var updateAvailableTable = function(rId) {
+  var policyDict = getPolicies();
+  var titleInfo = getTitleInfo(rId);
+  policyDictController = setInterval(function() {
+    waitDetailMARCHoldings(rId, policyDict, titleInfo);
   }, 800);
 };
 
-var getDetailPolicies = function() {
+var getPolicies = function() {
   var locationMap = {};
   var libraryMap = {};
   var materialTypeMap = {};
@@ -38,28 +39,44 @@ var getDetailPolicies = function() {
   };
 };
 
-var waitDetailMARCHoldings = function(rId, policyRestMap) {
-  if ('locationMap' in policyRestMap && 'libraryMap' in policyRestMap) {
-    goDetailMARCHoldings(rId, policyRestMap);
-    clearInterval(policyRestMapController);
-  }
-};
-
-var goDetailMARCHoldings = function(rId, policyRestMap) {
+var getTitleInfo = function(rId) {
+  var titleInfo = []
   var catKey = $J('#' + rId + '_DOC_ID .DOC_ID_value').text().split(':')[1];
-  var titleWsURL = BASEWSURL + 'rest/standard/lookupTitleInfo?clientID=' + CLIENTID + '&titleID=' + catKey + '&includeMarcHoldings=true&marcEntryFilter=ALL&json=true&callback=?';
-  $J.getJSON(titleWsURL, function(tr) {
-    makeHoldingsTable(tr, rId, policyRestMap);
+  var titleInfoWsURL = BASEWSURL + 'rest/standard/lookupTitleInfo?clientID=' + CLIENTID + '&titleID=' + catKey + '&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true&callback=?'
+  var data;
+  $J.getJSON(titleInfoWsURL, function(data) {
+  console.log( "success" );
+  console.log(data);
+  })
+  .done(function() {
+    console.log( "second success" );
+  })
+  .fail(function() {
+    console.log( "error" );
+  })
+  .complete(function() {
+    console.log( "complete" );
   });
 };
 
-var makeHoldingsTable = function(tr, rId, policyRestMap) {
+var waitDetailMARCHoldings = function(rId, policyDict, titleInfo) {
+  var policyKeys = new Set(Object.keys(policyDict));
+  var expectedKeys = new Set(["locationMap", "libraryMap", "materialTypeMap"]);
+  if (policyKeys == expectedKeys && ) {
+    reviseAvailableTable(response, rId, policyDict);
+    clearInterval(policyDictController);
+  }
+};
+
+
+
+var reviseAvailableTable = function(tr, rId, policyDict) {
   var htmlHoldingOutput = '';
   var holdingsInfo = tr.TitleInfo[0].MarcHoldingsInfo;
   if (holdingsInfo) {
     htmlHoldingOutput = '<thead><tr><th class="detailItemsTable_LIBRARY"><div class="detailItemTable_th">Library</div></th><th class="detailItemsTable_LOCATION"><div class="detailItemTable_th">Shelf Location</div></th><th class="detailItemsTable_CALLNUMBER"><div class="detailItemTable_th">Call Number</div></th><th class="detailItemsTable_HOLDING"><div class="detailItemTable_th">LSU Has:</div></th></tr></thead><tbody>';
     $J.each(holdingsInfo, function(holdingIndex, holding) {
-      var holdingsRow = makeHoldingsRow(holdingIndex, holding, policyRestMap);
+      var holdingsRow = makeHoldingsRow(holdingIndex, holding, policyDict);
       htmlHoldingOutput += holdingsRow;
     });
     htmlHoldingOutput += '</tbody><tfoot></tfoot>';
@@ -69,9 +86,9 @@ var makeHoldingsTable = function(tr, rId, policyRestMap) {
   };
 };
 
-var makeHoldingsRow = function(holdingIndex, holding, policyRestMap) {
+var makeHoldingsRow = function(holdingIndex, holding, policyDict) {
   var holdingLibID = holding.holdingLibraryID;
-  var holdingLibDesc = policyRestMap.libraryMap[holdingLibID];
+  var holdingLibDesc = policyDict.libraryMap[holdingLibID];
   var holdingEntry = holding.MarcEntryInfo;
   var holdingShelfMark = '';
   var textualHoldings = '';
@@ -86,7 +103,7 @@ var makeHoldingsRow = function(holdingIndex, holding, policyRestMap) {
     if (entryId === '852') {
       var holdingLocationText = holdingEntryData.text;
       var holdingLocation = holdingLocationText.split('--')[0];
-      holdingLocationDesc = policyRestMap.locationMap[holdingLocation];
+      holdingLocationDesc = policyDict.locationMap[holdingLocation];
       holdingShelfMark = holdingLocationText.split('--')[1];
       if (holdingShelfMark && holdingShelfMark.length) {
         holdingShelfMark.trim();
