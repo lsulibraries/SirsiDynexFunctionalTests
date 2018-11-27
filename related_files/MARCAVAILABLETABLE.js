@@ -7,7 +7,6 @@ var updateAvailableTable = function(rId) {
   var policyDict = getPolicies();
   var titleInfo = getTitleInfo(rId);
   ajaxResponseController = setInterval(function() {
-    console.log(titleInfo);
     waitDetailMARCHoldings(rId, policyDict, titleInfo);
   }, 800);
 };
@@ -81,7 +80,6 @@ var reviseAvailableTable = function(rId, policyDict, titleInfo) {
   availableTable.find('thead tr th .detailItemTable_th').map( function(index, elem) {
     headerOrder[elem.textContent] = index;
   });
-  console.log(headerOrder);
   availableTable.find('tbody tr.detailItemsTableRow').map( function(index, elem) {
     var availableRow = extractRow(elem);
     for (var key in titleInfo['interestingData']) {
@@ -90,8 +88,6 @@ var reviseAvailableTable = function(rId, policyDict, titleInfo) {
             var foundRow = availableRow[headerOrder['Call Number']][1];
             if (matchingRow.trim() == foundRow.trim()) {
                 var newText = titleInfo['interestingData'][key]['publicNote'];
-                console.log(newText);
-                console.log(foundRow);
                 var matchCell = $J('.detailItemsTable_CALLNUMBER:contains("' + foundRow + '")');
                 $J(matchCell).siblings('.detailItemsTable_ITEMNOTE').text(newText);
             };
