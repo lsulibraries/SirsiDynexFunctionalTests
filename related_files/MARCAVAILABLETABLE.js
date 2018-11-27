@@ -3,11 +3,11 @@ var CLIENTID = 'DS_CLIENT';
 
 var ajaxResponseController;
 var updateAvailableTable = function(rId) {
-
+  $J('tbody tr td.detailItemsTable_ITEMNOTE').text('');
   var policyDict = getPolicies();
   var titleInfo = getTitleInfo(rId);
   ajaxResponseController = setInterval(function() {
-    console.log('trying once');
+    console.log(titleInfo);
     waitDetailMARCHoldings(rId, policyDict, titleInfo);
   }, 800);
 };
@@ -46,7 +46,6 @@ var getTitleInfo = function(rId) {
   var catKey = $J('#' + rId + '_DOC_ID .DOC_ID_value').text().split(':')[1];
   var titleInfoWsURL = BASEWSURL + 'rest/standard/lookupTitleInfo?clientID=' + CLIENTID + '&titleID=' + catKey + '&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true&callback=?'
   $J.getJSON(titleInfoWsURL, function(data) {
-      console.log("success");
       var parsedTitleInfo = parseTitleInfo(data);
       titleInfo['interestingData'] = parsedTitleInfo;
     })
@@ -69,51 +68,46 @@ var parseTitleInfo = function(data) {
 };
 
 var waitDetailMARCHoldings = function(rId, policyDict, titleInfo) {
-  if (('interestingData' in titleInfo) && (Object.keys(policyDict['locationMap']).length)) {
+  if ((titleInfo) && ('interestingData' in titleInfo) && (Object.keys(policyDict['locationMap']).length)) {
     reviseAvailableTable(rId, policyDict, titleInfo);
     clearInterval(ajaxResponseController);
   };
 };
 
 var reviseAvailableTable = function(rId, policyDict, titleInfo) {
-  console.log(titleInfo);
-  console.log(policyDict);
   var availableHeader = $J('h3.ui-accordion-header:contains("Available:")');
   var availableTable = $J(availableHeader).next();
   var headerOrder = {};
   availableTable.find('thead tr th .detailItemTable_th').map( function(index, elem) {
     headerOrder[elem.textContent] = index;
   });
-  var cells = {};
+  console.log(headerOrder);
   availableTable.find('tbody tr.detailItemsTableRow').map( function(index, elem) {
-    extractUsefulText(elem); 
-  })
+    var availableRow = extractRow(elem);
+    for (var key in titleInfo['interestingData']) {
+        if (titleInfo['interestingData'].hasOwnProperty(key)) {
+            var matchingRow = titleInfo['interestingData'][key]['callNumber'];
+            var foundRow = availableRow[headerOrder['Call Number']][1];
+            if (matchingRow.trim() == foundRow.trim()) {
+                var newText = titleInfo['interestingData'][key]['publicNote'];
+                console.log(newText);
+                console.log(foundRow);
+                var matchCell = $J('.detailItemsTable_CALLNUMBER:contains("' + foundRow + '")');
+                $J(matchCell).siblings('.detailItemsTable_ITEMNOTE').text(newText);
+            };
+        };
+    };
+  });
 };
 
-var extractUsefulText = function(clump) {
-  console.log(clump);
+var extractRow = function(clump) {
+  var ourText = {};
   $J(clump).find('td').each( function(index, elem) {
     if ($J(elem).find('div').length) {
-      ourText = $J(elem).find('div').text();
+      ourText[index] = [$J(elem).find('div').not('.hidden').attr('class'), $J(elem).find('div').not('.hidden').text()];
     } else {
-      ourText = $J(elem).text();
+      ourText[index] = [$J(elem).attr('class'), $J(elem).text()];
     };
-    console.log(ourText);
   });
+  return ourText;
 }
-
-// var reviseAvailableTable = function(rId, policyDict, titleInfo) {
-//   var htmlHoldingOutput = '';
-//   var holdingsInfo = tr.TitleInfo[0].MarcHoldingsInfo;
-//   if (holdingsInfo) {
-//     htmlHoldingOutput = '<thead><tr><th class="detailItemsTable_LIBRARY"><div class="detailItemTable_th">Library</div></th><th class="detailItemsTable_LOCATION"><div class="detailItemTable_th">Shelf Location</div></th><th class="detailItemsTable_CALLNUMBER"><div class="detailItemTable_th">Call Number</div></th><th class="detailItemsTable_HOLDING"><div class="detailItemTable_th">LSU Has:</div></th></tr></thead><tbody>';
-//     $J.each(holdingsInfo, function(holdingIndex, holding) {
-//       var holdingsRow = makeHoldingsRow(holdingIndex, holding, policyDict);
-//       htmlHoldingOutput += holdingsRow;
-//     });
-//     htmlHoldingOutput += '</tbody><tfoot></tfoot>';
-//     var hitNum = rId.split('detail')[1];
-//     var attachTarget = $J('#detail_accordion' + hitNum + ' h3:contains("Holdings")').next();
-//     $J(attachTarget).find('#detailItemTable0').html(htmlHoldingOutput);
-//   };
-// };
