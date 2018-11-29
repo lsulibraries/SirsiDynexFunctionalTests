@@ -45,9 +45,9 @@ var getTitleInfo = function(rId) {
   var catKey = $J('#' + rId + '_DOC_ID .DOC_ID_value').text().split(':')[1];
   var titleInfoWsURL = BASEWSURL + 'rest/standard/lookupTitleInfo?clientID=' + CLIENTID + '&titleID=' + catKey + '&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true&callback=?'
   $J.getJSON(titleInfoWsURL, function(data) {
-      var parsedTitleInfo = parseTitleInfo(data);
-      titleInfo['interestingData'] = parsedTitleInfo;
-    })
+    var parsedTitleInfo = parseTitleInfo(data);
+    titleInfo['interestingData'] = parsedTitleInfo;
+  })
   return titleInfo
 };
 
@@ -67,43 +67,64 @@ var parseTitleInfo = function(data) {
 };
 
 var waitDetailMARCHoldings = function(rId, policyDict, titleInfo) {
-  if ((titleInfo) && ('interestingData' in titleInfo) && (Object.keys(policyDict['locationMap']).length)) {
-    reviseAvailableTable(rId, policyDict, titleInfo);
+  if ((titleInfo) && ('interestingData' in titleInfo) && (policyDict['locationMap'])) {
+    makeAvailableTable(policyDict, titleInfo);
     clearInterval(ajaxResponseController);
   };
 };
 
-var reviseAvailableTable = function(rId, policyDict, titleInfo) {
-  var availableHeader = $J('h3.ui-accordion-header:contains("Available:")');
-  var availableTable = $J(availableHeader).next();
-  var headerOrder = {};
-  availableTable.find('thead tr th .detailItemTable_th').map( function(index, elem) {
-    headerOrder[elem.textContent] = index;
-  });
-  availableTable.find('tbody tr.detailItemsTableRow').map( function(index, elem) {
-    var availableRow = extractRow(elem);
-    for (var key in titleInfo['interestingData']) {
-        if (titleInfo['interestingData'].hasOwnProperty(key)) {
-            var matchingRow = titleInfo['interestingData'][key]['callNumber'];
-            var foundRow = availableRow[headerOrder['Call Number']][1];
-            if (matchingRow.trim() == foundRow.trim()) {
-                var newText = titleInfo['interestingData'][key]['publicNote'];
-                var matchCell = $J('.detailItemsTable_CALLNUMBER:contains("' + foundRow + '")');
-                $J(matchCell).siblings('.detailItemsTable_ITEMNOTE').text(newText);
-            };
-        };
+var makeAvailableTable = function(policyDict, titleInfo) {
+  var itemData = titleInfo['interestingData'];
+  var htmlAvailableOutput = `<div class="detailItems"><table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+      <thead>
+        <tr>
+          <th class="detailItemsTable_LIBRARY">
+            <div class="detailItemTable_th">Library</div>
+          </th>
+          <th class="detailItemsTable_ITYPE">
+            <div class="detailItemTable_th">Material Type</div>
+          </th>
+          <th class="detailItemsTable_CALLNUMBER">
+            <div class="detailItemTable_th">Call Number</div>
+          </th>
+          <th class="detailItemsTable_NOTE">
+            <div class="detailItemTable_th">Note</div>
+          </th>
+          <th class="detailItemsTable_COPY">
+            <div class="detailItemTable_th">Copy</div>
+          </th>
+          <th class="detailItemsTable_SD_ITEM_STATUS">
+            <div class="detailItemTable_th">Status</div>
+          </th>
+          <th class="detailItemsTable_SD_ITEM_HOLD_LINK">
+            <div class="detailItemTable_th">Item Holds</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>`
+  for (var row in itemData) {
+    if (itemData.hasOwnProperty(row)) {
+      var library = policyDict['libraryMap'][itemData[row]['libraryID']];
+      var material = policyDict['materialTypeMap'][itemData[row]['itemTypeID']];
+      var callNum = itemData[row]['callNumber'];
+      var location = policyDict['locationMap'][itemData[row]['currentLocationID']];
+      if (itemData[row]['publicNote'] && itemData[row]['publicNote'].length) {
+        var note = itemData[row]['publicNote'];
+      } else {
+        var note = '';
+      };
+      var copies = itemData[row]['numberOfCopies'];
+      var newRow = '<tr class="detailItemsTableRow">';
+      newRow += '<td class="detailItemsTable_LIBRARY"><div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518013572072">' + library + '</div><div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518013572072">' + library + '</div></td>';
+      newRow += '<td class="detailItemsTable_ITYPE">' + material + '</td>';
+      newRow += '<td class="detailItemsTable_CALLNUMBER">' + callNum + '</td>';
+      newRow += '<td class="detailItemsTable_NOTE">' + note + '</td>';
+      newRow += '<td class="detailItemsTable_COPY">' + copies + '</td>';
+      newRow += '<td class="detailItemsTable_SD_ITEM_STATUS"><div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518013572072">' + location + '</div><div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518013572072">Unknown</div></td>';
+      newRow += `<td class="detailItemsTable_SD_ITEM_HOLD_LINK"><div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518013572072"><a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:316195/31518013572072/item_hold?qu=korea+journal&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A316195%7E%7E0');});">Reserve This Copy</a></div><div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518013572072">Unavailable</div></td></tr>`;
+      htmlAvailableOutput += newRow;
     };
-  });
+  };
+  htmlAvailableOutput += '</tbody><tfoot></tfoot></table></div>';
+  $J('#detailItemsDiv0').html(htmlAvailableOutput);
 };
-
-var extractRow = function(clump) {
-  var ourText = {};
-  $J(clump).find('td').each( function(index, elem) {
-    if ($J(elem).find('div').length) {
-      ourText[index] = [$J(elem).find('div').not('.hidden').attr('class'), $J(elem).find('div').not('.hidden').text()];
-    } else {
-      ourText[index] = [$J(elem).attr('class'), $J(elem).text()];
-    };
-  });
-  return ourText;
-}
