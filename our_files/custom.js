@@ -13,11 +13,21 @@ $J(document).ready(function() {
   }
 });
 
+jQuery(document).ready(function() {
+  if (window.location.href.indexOf("lsu.ent.sirsi.net") > -1) {
+    jQuery('#frame_content').removeAttr('seamless');
+    jQuery('#frame_content').attr('scrolling', 'yes');
+  }
+});
+
+
+
 var doGenericTasks = function() {
   customSearchLink();
 }
 
 var scheduleStackMapToCurrentLocation;
+var scheduleIlliadLink;
 var doDetailViewTasks = function() {
   detailViewIconReplace();
   detailChangeToAccessThisItem();
@@ -29,6 +39,7 @@ var doDetailViewTasks = function() {
   linkAvailableOnlineCallNumber();
   replaceAvailableStatus();
   renameItemHoldsColumn();
+  scheduleIlliadLink = setInterval(secondILLIfCheckedOut, 800);
   scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 800);
   replaceCallNumChildwithCallNum();
 }
@@ -115,10 +126,24 @@ var renameDueStatus = function() {
   });
 }
 
+var secondILLIfCheckedOut = function() {
+  var doneStatus = $J('.asyncFieldSD_ITEM_STATUS:contains("Material has been checked out. Due:")');
+  if (doneStatus.length) {
+    if ($J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
+      clearInterval(scheduleIlliadLink);
+      return;
+    } else {
+      var illiadUrl = buildIlliadRequest();
+      addLinkILL(doneStatus[0].id, illiadUrl);
+      clearInterval(scheduleIlliadLink);
+    };
+  };
+};
+
 var ILLIfCheckedOut = function() {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function() {
     var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (!itemStati.length || $J('.illiadLinkUrl.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
+    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
       return;
     }
     var illiadUrl = buildIlliadRequest();
