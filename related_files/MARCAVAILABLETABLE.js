@@ -62,6 +62,9 @@ var parseTitleInfo = function(data) {
     interestingData[i]['itemTypeID'] = CallInfo[i]['ItemInfo'][0]['itemTypeID'];
     interestingData[i]['currentLocationID'] = CallInfo[i]['ItemInfo'][0]['currentLocationID'];
     interestingData[i]['publicNote'] = CallInfo[i]['ItemInfo'][0]['publicNote'];
+    var epochDue = new Date(CallInfo[i]['ItemInfo'][0]['dueDate']);
+    var dueDate = epochDue.getMonth() + '/' + epochDue.getDate() + '/' + epochDue.getFullYear()
+    interestingData[i]['dueDate'] = dueDate;
   };
   return interestingData;
 };
@@ -96,35 +99,39 @@ var makeAvailableTable = function(policyDict, titleInfo) {
           <th class="detailItemsTable_SD_ITEM_STATUS">
             <div class="detailItemTable_th">Status</div>
           </th>
-          <th class="detailItemsTable_SD_ITEM_HOLD_LINK">
-            <div class="detailItemTable_th">Item Holds</div>
-          </th>
         </tr>
       </thead>
       <tbody>`
   for (var row in itemData) {
     if (itemData.hasOwnProperty(row)) {
-      var library = policyDict['libraryMap'][itemData[row]['libraryID']];
-      var material = policyDict['materialTypeMap'][itemData[row]['itemTypeID']];
-      var callNum = itemData[row]['callNumber'];
-      var location = policyDict['locationMap'][itemData[row]['currentLocationID']];
-      if (itemData[row]['publicNote'] && itemData[row]['publicNote'].length) {
-        var note = itemData[row]['publicNote'];
-      } else {
-        var note = '';
-      };
-      var copies = itemData[row]['numberOfCopies'];
-      var newRow = '<tr class="detailItemsTableRow">';
-      newRow += '<td class="detailItemsTable_LIBRARY"><div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518013572072">' + library + '</div><div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518013572072">' + library + '</div></td>';
-      newRow += '<td class="detailItemsTable_ITYPE">' + material + '</td>';
-      newRow += '<td class="detailItemsTable_CALLNUMBER">' + callNum + '</td>';
-      newRow += '<td class="detailItemsTable_NOTE">' + note + '</td>';
-      newRow += '<td class="detailItemsTable_COPY">' + copies + '</td>';
-      newRow += '<td class="detailItemsTable_SD_ITEM_STATUS"><div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518013572072">' + location + '</div><div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518013572072">Unknown</div></td>';
-      newRow += `<td class="detailItemsTable_SD_ITEM_HOLD_LINK"><div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518013572072"><a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:316195/31518013572072/item_hold?qu=korea+journal&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A316195%7E%7E0');});">Reserve This Copy</a></div><div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518013572072">Unavailable</div></td></tr>`;
+      var newRow = makeRow(itemData, row, policyDict);
       htmlAvailableOutput += newRow;
     };
   };
   htmlAvailableOutput += '</tbody><tfoot></tfoot></table></div>';
   $J('#detailItemsDiv0').html(htmlAvailableOutput);
 };
+
+var makeRow = function(itemData, row, policyDict) {
+  var library = policyDict['libraryMap'][itemData[row]['libraryID']];
+  var material = policyDict['materialTypeMap'][itemData[row]['itemTypeID']];
+  var callNum = itemData[row]['callNumber'];
+  var location = policyDict['locationMap'][itemData[row]['currentLocationID']];
+  if (location.indexOf('Material has been checked out.') !== -1) {
+    location += ' ' + itemData[row]['dueDate'];
+  };
+  if (itemData[row]['publicNote'] && itemData[row]['publicNote'].length) {
+    var note = itemData[row]['publicNote'];
+  } else {
+    var note = '';
+  };
+  var copies = itemData[row]['numberOfCopies'];
+  var newRow = '<tr class="detailItemsTableRow">';
+  newRow += '<td class="detailItemsTable_LIBRARY"><div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518013572072">' + library + '</div><div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518013572072">' + library + '</div></td>';
+  newRow += '<td class="detailItemsTable_ITYPE">' + material + '</td>';
+  newRow += '<td class="detailItemsTable_CALLNUMBER">' + callNum + '</td>';
+  newRow += '<td class="detailItemsTable_NOTE">' + note + '</td>';
+  newRow += '<td class="detailItemsTable_COPY">' + copies + '</td>';
+  newRow += '<td class="detailItemsTable_SD_ITEM_STATUS"><div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518013572072">' + location + '</div><div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518013572072">Unknown</div></td>';
+  return newRow;
+}
