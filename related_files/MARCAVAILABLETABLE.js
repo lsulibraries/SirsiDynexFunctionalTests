@@ -91,7 +91,7 @@ var makeAvailableTable = function(policyDict, titleInfo) {
             <div class="detailItemTable_th">Call Number</div>
           </th>
           <th class="detailItemsTable_NOTE">
-            <div class="detailItemTable_th">Note</div>
+            <div class="detailItemTable_th">Item Note</div>
           </th>
           <th class="detailItemsTable_COPY">
             <div class="detailItemTable_th">Copy</div>
