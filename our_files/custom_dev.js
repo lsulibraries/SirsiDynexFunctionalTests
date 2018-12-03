@@ -20,8 +20,6 @@ jQuery(document).ready(function() {
   }
 });
 
-
-
 var doGenericTasks = function() {
   customSearchLink();
 }
