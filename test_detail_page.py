@@ -15,7 +15,8 @@ def load_hello_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
 
     def fin():
         print('teardown driver')
@@ -33,7 +34,9 @@ def load_observing_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user')
+
 
     def fin():
         print('teardown driver')
@@ -71,7 +74,7 @@ def test_ILLIfCheckedOut(load_observing_driver):
     wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'asyncFieldSD_ITEM_STATUS')))
     item_status_div = driver.find_element_by_class_name('asyncFieldSD_ITEM_STATUS')
     illiad_link = driver.find_element_by_xpath('//*[@class="illiadLinkUrl"]').get_attribute('href')
-    assert "Due " in item_status_div.text
+    assert "Due:" in item_status_div.text
     assert len(illiad_link) > 0
 
 
