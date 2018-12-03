@@ -9,16 +9,20 @@ $J(document).ready(function() {
   } else if ($J('#myAccount').length) {
     doAccountPageTasks();
   } else if (jQuery('.framedPage').length) {
-    //pass
+    // pass
   }
 });
 
+// Is this dead code?  Garrett can't find any effect this has.
+// All Enterprise pages test true for > -1, and changing these class attrs has no effect.
 jQuery(document).ready(function() {
   if (window.location.href.indexOf("lsu.ent.sirsi.net") > -1) {
     jQuery('#frame_content').removeAttr('seamless');
     jQuery('#frame_content').attr('scrolling', 'yes');
   }
 });
+
+
 
 var doGenericTasks = function() {
   customSearchLink();
@@ -448,37 +452,6 @@ Use these two functions to call your custom functions.
 Any code you want run, point to it from one of these two.
 */
 
-function customJavaScript() {
-  //   setTimeout("addContinueSearchLink();", 100);
-  // }
-
-  // function addContinueSearchLink() {
-  //   var language = com_sirsi_ent_page.localeCode;
-  //   if (language === "fr_CA" || language === "fr_FR") {
-  //     var continueText = 'Continuer la recherche dans: ';
-  //     //Update quicksearch buttons
-  //     jQuery('.quicksearch_display_button a').each(function() {
-  //       var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTFRE");
-  //       var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTFRE");
-  //       jQuery(this).attr('href', newLang);
-  //     });
-  //   } else if (language === "es_ES" || language === "es_CH") {
-  //     var continueText = 'Continuar la búsqueda en: ';
-  //     //Update quicksearch buttons
-  //     jQuery('.quicksearch_display_button a').each(function() {
-  //       var newLang = jQuery(this).attr('href').replace("ENTENG", "ENTSPA");
-  //       var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTSPA");
-  //       jQuery(this).attr('href', newLang);
-  //     });
-  //   } else {
-  //     var continueText = 'Continue the search in: ';
-  //     //Update quicksearch buttons
-  //     jQuery('.quicksearch_display_button a').each(function() {
-  //       var newLang = jQuery(this).attr('href').replace("ENTFRE", "ENTENG");
-  //       var newLang = jQuery(this).attr('href').replace("ENTSPA", "ENTENG");
-  //       jQuery(this).attr('href', newLang);
-  //     });
-  //   }
-}
+function customJavaScript() {}
 
 function customDetailJavaScript() {}

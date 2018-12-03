@@ -34,9 +34,27 @@ def load_observing_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
     driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user')
 
+    def fin():
+        print('teardown driver')
+        driver.close()
+
+    request.addfinalizer(fin)
+    return driver
+
+
+@pytest.fixture
+def load_specials_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
+    driver = webdriver.Firefox()
+    # driver.delete_all_cookies()
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
 
     def fin():
         print('teardown driver')
@@ -98,3 +116,9 @@ def test_replaceAvailableStatus(load_hello_driver):
     driver = load_hello_driver
     available_header = driver.find_element_by_xpath("//*[@class='detailItemsTable_SD_ITEM_STATUS']")
     assert available_header.text == 'Current Location'
+
+
+# def test_aeonLink(load_specials_driver):
+#     driver = load_specials_driver
+#     aeon_td = driver.find_element_by_class_name("detailItemsAeonRequest")
+# incomplete test for aeon link -- must figure a way to wait for async loading before testing presence
