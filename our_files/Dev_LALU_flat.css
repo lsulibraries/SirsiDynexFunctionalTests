@@ -1,0 +1,829 @@
+/*Replace "https://sitecode.ent.sirsi.net" with the url for the site below. This brings in the default stylesheet.*/
+@import 'https://lalu.ent.sirsi.net/client/css/vse/flat.css'; 
+
+/*****  BODY ************************************/
+
+/* make the width 900px */
+
+body {
+	background-color: #bbb;
+	width:900px;
+	margin:0 auto;
+}
+
+a {
+color:#ff471a;
+}
+
+.headerWrapper{
+	background-color: #ff471a;
+}
+.header_container {
+    min-height: 90px;
+}
+
+#content {
+	width:100%;
+	background-color: #fff;
+}
+.header-mid {
+width:20%;
+float:left;
+}
+
+
+#changePinPanel:after {
+content: "Must be 8 digits";
+}
+
+.GENERAL_NOTE_EDITABLE_label, .LOCAL_NOTE_EDITABLE_label, .CITREFNOTE_label, .RELCOLL_label {
+display: none;
+}
+
+.GENERAL_NOTE_EDITABLE:before {
+content: "General Note: ";
+font-weight: bold;
+color:#000;
+}
+
+.LOCAL_NOTE_EDITABLE:before {
+content: "Local Note: ";
+font-weight: bold;
+color:#000;
+}
+
+.CITREFNOTE:before {
+content: "References: ";
+font-weight: bold;
+color:#000;
+}
+
+
+.RELCOLL:before {
+content: "Related Collection: ";
+font-weight: bold;
+color:#000;
+}
+
+
+.PUBLICATIONINFO260264 {
+display: inline;
+}
+
+/* Wrapping link for logo - Dave added 03272015. */
+.lsulogo {
+  float: left; /* LTR */
+  margin: 1em 0 0 1em;
+  padding: 0;  
+  width:220px;
+  height:80px;
+  /*background-image:url('/custom/web/LSU-Libraries-logo-new.png');
+  background-repeat:no-repeat;*/
+}
+#searchBoxHomeLink {
+display:none;
+}
+
+#limitcolumn_title, #limitcolumn_availability {
+display:none;
+}
+
+/* Colors the body */
+/* Letter C on Theme Questionnaire - Flat theme */
+
+/*************************** HEADER AREA ******************************/
+
+/*Enterprise 4.5 Fix*/
+/* positions search box*/
+#q {
+margin-top: 10px;
+width: 330px;
+border-radius:0;
+}
+
+/*Enterprise 4.5 Fix*/
+/* positions Search Button */
+#searchButton {
+    top: 5px;
+    
+}
+
+
+/* Recolors general menu, links, pipes and welcome messages*/ 
+/* Sarah from SD suggested make this color the same as search bar (Letter B)*/
+#mainMenuContainer, #ada_header #mainMenuContainer {
+ background: #ff471a none repeat scroll 0 0;
+}
+
+/* text color of the menu bar (logout, My Account, My Lists, etc. bar) default is white. if want white don't have to change because white is default*/ 
+/* Letter E */
+.menuLink a, .menuLink a:visited, .menuLink a:active, .loginLink a, .menuActive a, #lpMainLink, #languageSelector .pipeSeparator,  .pipeSeparator-light  {
+ color: #ffffff;
+ font-weight: bold;
+}
+
+/* hover text color of the menu bar (logout, My Account, My Lists, etc. bar) default is white. if want white don't have to change*/ 
+/* Letter E */
+.menuLink a:hover, .loginLink a:hover, .menuActive a:hover, #lpMainLink:hover, #adaNav a:hover, .ada_link:hover, #languageSelector {
+ color: #ffffff;
+ font-weight: bold;
+}
+
+/* bright green text after a patron logs on.  If want something different than green change that here */
+.welcome {
+ color: #ffcc66;
+}
+
+/* Makes the Select Language drop down text bold.  Keep in mind if you change the color for the menulink and hover menulink, you will want to add/change the color here aslo */
+#languageSelector .lpdropdown a#lpMainLink {
+ font-weight: bold;
+}
+
+/* Adjusts color of Library Information box - defalut is blue with dark blue border*/
+#libraryInfo {
+  background-color: #ffffff;
+  border: 3px solid ;
+  width: 125px;
+}
+
+/* menu container background color */
+#mainMenuContainer {
+  background-color: ;
+  z-index: 52;
+}
+
+#ada_header #mainMenuContainer, #ada_header #searchBoxWrapper, .ada_div_top, .ada-mode .resultsToolbar_num_results, .ada-mode table.sortable thead, .ada-mode #accountSummary .summarySubheading, .ada-mode .myListFooter, .ada-mode #searchInterfiledPanelPlacard {
+  background: ;
+}
+
+
+
+
+
+/* eLibrary search buttons */
+
+
+
+.quicksearchBar{
+	background-color: #fff;
+	border-bottom: 1px solid #ff471a;
+}
+
+/*Results counter in search results hit list*/
+/* Removes Blue from Flat Theme*/
+.resultsToolbar_num_results {
+	color: #ffffff;
+	background: #515A5A;
+}
+
+#searchBoxAdvancedLink a {
+font-size:12px;
+font-weight: bold;
+}
+
+
+/*****************************Secondary Header Menu, i.e., the Breadcrumbs *******************************************/
+
+
+
+#secondary_header_menu_container {
+	
+font-size: 1.2em;
+
+}
+/*****************************DETAIL DISPLAY *******************************************/
+
+/* Detail Display header */
+/* Removes Blue from Flat Theme*/
+.ui-dialog .ui-dialog-titlebar {
+  background: #ff471a none repeat scroll 0 0 !important;
+}
+
+/* Accordion headers */
+/* Removes Blue from Flat Theme*/
+.ui-accordion-icons .ui-accordion-header a {
+  background: #ccc none repeat scroll 0 0 !important;
+  color: #000 !important;
+}
+
+/* Facet Headers*/
+/* Removes Blue from Flat Theme*/
+table.sortable thead {
+	background-color: #ff471a;
+}
+
+/* Recolors text in Facet headers. Adjust when adjusting color of Facet headers*/
+/* Removes Blue from Flat Theme*/
+.accordionHolder .availableLabel, .accordionHolder .availableNumber {
+	color: #000;
+}
+
+tr.detailItemsTableRow {
+font-size: 1.15em;
+}
+
+.detailItemTable_th {
+display: inline;
+}
+/************************** SEARCH BOX AREA **************************************/
+
+/* Search Button */
+/* Letter F on the Theme questionnaire */
+#searchButton, .ada-mode .button {
+ background-color: #529334;
+ color: #fff;
+font-weight: bold;
+}
+
+/* Letter F on the Theme questionnaire. Always have to do the hover color b/c if not then it will be blue */
+#searchButton:hover, .ada-mode .button:hover  {
+background-color: #529334;
+color: #fff;
+font-weight: bold;
+}
+
+/* Letter B on the Theme questionnaire */
+#searchBoxWrapper {
+background: #ff471a;
+margin-bottom:0;
+min-width:0;
+}
+
+/* fixes width to accomodate change to Spanish or other languages*/
+/* change this number if the search box/datawell and advance search drops down a line.*/
+
+
+/* Styles text in drop-downs and Advanced Search Link */
+/* Letter G */
+#searchBox .dropDown {
+	color: #000;
+}
+
+/******************** Advanced Search ***************************************/
+
+/* had to adjust the width to prevent this container from protuding out of its box on the advanced search */
+
+.columns_container {
+    min-height: 525px;
+    height: 700px; /* added 08022018 so advanced search page fits screen */
+    margin-top: 5px;
+    clear: both;
+}
+
+
+.columns_container#advancedSearchPage {
+    min-height: 525px;
+    height: 900px; /* added 08022018 so advanced search page fits screen */
+    margin-top: 5px;
+    clear: both;
+}
+.content_container {
+    margin-bottom: 0;
+    color: #000;
+    width: 99%;
+}
+
+.customAdvancedSearch {
+padding:0 0 2em 0;
+}
+
+.customAdvancedSearch .advancedSearchLabel {
+color:#000;
+font-size: 1.2em;
+}
+
+.advancedSearchLabelHidden {
+margin-left:-2000px;
+}
+
+.advancedSearchFieldInline {
+margin-left:2en;
+}
+
+.customAdvancedSearch .advancedSearchField, .advancedSearchDropDownHolder {
+margin-left: 12em;
+}
+
+.advancedSearchTextField {
+width:300px;
+}
+
+.advancedSearchSubmit {
+width:80%;
+}
+
+#advancedSearchButton {
+float: left;
+font-size: 2em;
+margin: 0 1.5em 0 1em;
+}
+
+.customAdvancedSearch .morelink {
+color:#000;
+font-size: 1em;
+margin: 1.5em 0;
+}
+
+p.advancedSearchOnlyAvailableWrapper {
+margin: 1.25em 0 1.25em 10px;
+}
+
+.advanced_search_wrapper {
+float:left;
+width:100%;
+}
+
+.advanced_search_box {
+float:left;
+width:60%;
+margin:0;
+
+}
+
+.searchtipsbox {
+float:left;
+width:30%;
+border:1px solid #111;
+border-radius: 10px;
+margin-left:2em;
+padding:1em;
+}
+
+.search_tips_heading {
+font-size:1.4em;
+margin:2em 1em;
+}
+
+.introtext {
+font-size:1.2em;
+}
+.searchtip {
+font-size:1.1em;
+margin:10px 5px;
+}
+
+/******************** CONTENT AREA ***************************************/
+
+
+/* Book River */
+/* Removes Blue from Flat Theme*/
+.nytimes_listbar {
+  background: #808080 none repeat scroll 0 0; 
+}
+
+.bookRiver .nytimes_select {
+  color: #808080;
+}
+
+#bookRiverWrapper .nytimes_bio .bold {
+  color: #808080;
+}
+
+.jscarousal {
+  background-color: #cbcbcb;
+}
+
+.jscarousal .jscarousal-left {
+  background-color: #d0d0d0;
+}
+
+.jscarousal .jscarousal-right {
+  background-color: #d0d0d0;
+}
+
+/******************************************* Search Results Display **********************/
+
+/*Enterprise 4.5 Fixes*/
+/* Bulk Actions Drop-down*/
+
+.customDropdown ul {
+	margin-left: -9px;
+	width: 200px;
+}
+
+.customDropdown li a {
+	border-bottom: none;
+	padding-left: 10px;
+}
+
+/*Recolors of text in search box drop-down menus*/
+#searchBox .dropDown {
+  color: ;
+}
+.dropDownButton, .sortDropDown, .listdetails_sort {
+border-radius: 0;
+font-size: 1.2em;
+width:150px;
+}
+
+
+.resultsToolbar_wrapper, .myListHeader, #bottomToolbar_wrapper {
+background-color: #fff;	
+border-bottom:1px solid #ccc;
+}
+
+.resultsToolbar_num_results {
+font-size: 1.5em;
+color: #222;
+background: #fff;
+box-shadow:none;
+}
+
+img#RSSImg {
+display: none;
+}
+
+.results_bio .formatType {
+padding:4px 0 0 0;
+}
+
+#formatContainer0 .formatType {
+padding:5px 0 0 0;
+margin: 0 0-7px 0;
+}
+
+.displayElementLabel.ELECTRONIC_ACCESS, .ELECTRONIC_ACCESS_label {
+display: block;
+}
+
+.ELECTRONIC_ACCESS > a {
+display: inline-block;
+padding-bottom: .3em;
+font-weight: bold;
+}
+
+.ELECTRONIC_ACCESS_label ~ a {
+display: inline-block;
+padding-bottom: .3em;
+font-weight: bold;
+}
+
+.access_button > a{
+background-color: #c5c3c3;
+border-radius: 5px;
+padding: 8px;
+margin: .7em 0 0 0;
+font-size: 1.2em;	
+}
+/************************************ Detailed Display ***************************************/
+
+.detail_biblio {
+    float: left;
+	width:400px;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+/********************************* Popup/Lightbox fixes ***********************/
+
+.holdsTable {
+    width: 100%;
+}
+
+
+/************************************ BUTTONS ***************************************/
+
+/* General Buttons in Search Results and Detail Display */
+/* Letter I on the Theme questionnaire */
+
+.list .results_right .button {
+font-weight: bold !important;	
+}
+.button, .ada-mode .button {
+ background-color: #529334;
+ color: #fff;
+font-weight: bold !important;
+}
+
+.button:hover, .ada-mode .button:hover {
+ background-color: #529334;
+ color: #fff;
+font-weight: bold !important;
+}
+
+/* login button */
+/* Not specifically listed on questionnaire but Sarah from SD suggested make it the same as the other button colors */
+.loginButton {
+ background-color: #529334;
+ color: #fff;
+font-weight: bold;
+}
+
+.loginButton:hover {
+ background-color: #529334;
+ color: #fff;
+font-weight: bold;
+}
+
+/* facet buttons */
+/* Not specifically listed on questionnaire but Sarah from SD suggested make it the same as the other button colors */
+.limitcolumn_wrapper .button, .ada-mode .limitcolumn_wrapper .button {
+  background-color: #529334;
+ color: #fff;
+font-weight: bold;
+}
+
+/* Not specifically listed on questionnaire but Sarah from SD suggested make it the same as the other button colors */
+.limitcolumn_wrapper .button:hover, .ada-mode .limitcolumn_wrapper .button:hover {
+ background-color: #529334;
+ color: #fff;
+}
+
+/************************** FACETS **************************************/
+
+/* Facet Headers */
+/* Removes Blue from Flat Theme*/
+.facetTitleRow {
+ background: #D0D0D0;
+}
+
+.facetTitle {
+ color: #000000;
+}
+
+/* Removes Blue from Flat Theme*/
+.breadCrumbs .facetTitle {
+	background: #D0D0D0;
+}
+
+/*Change font size of Pub Date facet and color of button */
+#limitcolumn_pub_chkbox {
+ font-size: 14px;
+}
+
+/*Recolors button in Publication Date Facet*/
+/* same issue here, the questionnaire didn't specifically say facet buttons so we use the general button color */
+#pub_date_btn{
+ background-color: #529334;
+ color: #fff;
+font-weight: bold;
+}
+
+
+/*********************** My Account Login Logo ***************************************************/
+
+/*Positions My Account logo. Used for direct linking to My Account */
+#loginModal iframe {
+    height: 360px !important;
+}
+#loginImageHolder {
+    text-align: center !important;
+}
+#loginDiv {
+    text-align: center !important;
+}
+
+/********************************* MY ACCOUNT and SEND REQUEST ***************************************/
+
+/* Acordion headers */
+/* Removes Blue from Flat Theme*/
+#preferencesTab .ui-widget-header {
+background: #D0D0D0 none repeat scroll 0 0 !important;
+color: #000000;
+width: 724px;
+}
+
+/* Summary headers */
+/* Removes Blue from Flat Theme*/
+#accountSummary .summarySubheading {
+  background: #D0D0D0 none repeat scroll 0 0;
+  color: #000000;
+}
+
+/* My Account Tabs */
+/* Removes Blue from Flat Theme*/
+#accountTabs ul li.ui-state-default {
+	background: #efefef !important;
+}
+
+/* My Account Tab Icons */
+/* Removes Blue from Flat Theme*/
+#accountMain #accountTabs ul li:nth-child(n) a::before {
+	color: #47763c;
+}
+
+/* Send a Request form */
+/* Removes Blue from Flat Theme*/
+.requestHeader {
+  background: #D0D0D0 none repeat scroll 0 0 !important;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding: 1em 1em;
+    font-size: 1.15em;
+}
+
+/*******************************MY LIST DISPLAY***********************************/
+
+/* Removes Blue from Flat Theme*/
+/*My List displays*/
+#myListsHeader {
+  background: #808080 none repeat scroll 0 0;
+}
+
+select.myListControl.lists {
+  color: #808080;
+}
+
+.myListControls #listdetails_sort {
+  color: #808080;
+}
+
+/*Login Button in My Lists*/
+#listLoginLink{
+	background-color: #003366;
+}
+
+#listLoginLink:hover{
+	background-color: #003366;
+}
+
+
+/**************************** FOOTER **************************************/
+
+
+#footer {
+	background: none;
+	color: #ff471a;
+	position: absolute;
+	position: static\9;
+	left: 0;
+	bottom: 0;
+	height: 44px;
+	min-height: 44px;
+	width: 100%;
+	margin-top: 20px;
+	padding-top: 5px;
+	min-width: 1000px;
+}
+
+
+#copyright {
+    display: none;
+}
+
+p.comment {
+margin: 0 0 1em 0;
+font-size: 1.35em;
+border-bottom: 1px solid #fff;
+width: 160px;
+}
+
+/* styles from responsive footer css on lib.lsu.edu */
+
+
+/****************************** Shortcodes ******************************/
+/* Content Shortcodes */
+.one_half {
+	width: 48%;
+}
+.one_third {
+	width: 30.66%;
+}
+.two_third {
+	width: 65.33%;
+}
+.one_fourth {
+	width: 22%;
+}
+.one_fifth {
+	width: 16.8%;
+}
+.one_sixth {
+	width: 15%;
+}
+.one_half, .one_third, .two_third, .one_fourth, .one_fifth {
+	margin-right: 3%;
+	margin-bottom: 10px;
+	float: left;
+}
+.one_sixth {
+	margin-right: 2%;
+	margin-bottom:20px;
+	float: left;
+}
+.lastcolumn {
+	margin-right: 0!important;
+	clear: right;
+}
+ 
+
+#footer body, #footer ul 
+{
+	margin:0px;
+	padding: 0px; 
+}
+
+/****************************** HOME - Content Part - Footer ******************************/
+.main-footer {
+	background:#4f4f4f;
+	padding:20px 0px;
+	margin: auto; 
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#e1e1e1;
+	max-width: 1000px;
+
+}
+.main-footer p {
+	 
+	
+}
+.main-footer h3 {
+	color:#FFCF52;
+	font-size: 14px;
+	margin-bottom: 5px;
+	text-transform: uppercase;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+ 
+
+.main-footer a
+	{
+	color: white;
+	text-decoration:none;	
+	}
+
+.main-footer ul, ol {
+	padding:0;
+	/*eliminates excess padding from normalize.css*/
+}
+.main-footer ul li {
+	color:#f1f2f2;
+	border-bottom:1px solid #787f94;
+	padding:5px 0 2px 0;
+	list-style:none;
+}
+.main-footer ul li:last-child {
+
+}
+.main-footer ul li:first-child {
+
+}
+.main-footer ul li a {
+	color:white;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	cursor:pointer;
+	text-decoration:none;
+}
+.main-footer ul li a:hover {
+	color:#F8D886;
+	padding-left:5px;
+}
+
+
+.main-footer .copyright-statement {
+margin:1em 0;
+border-top:1px solid #787f94;
+}
+
+.container:after {
+content: "\0020";
+display: block;
+height: 0;
+clear: both;
+visibility: hidden;
+}
+
+.container.footer {
+position: relative;
+padding: 0 0px 0 30px;
+margin: 0;
+width: 100%;
+}
+
+.accessibility-statement {
+font-weight: bold;
+}
+
+ @media only screen and (max-width: 767px) {
+/* @media only screen and (max-width: 980px) {*/
+
+.main-footer {
+	  
+	 width: 100%;
+	 
+ 
+}
+.one_half, .one_third, .two_third, .one_fourth, .one_fifth, .one_sixth {
+width: 100%;
+  
+}
+ 
+.container
+{
+	width: 90%;
+	 
+	}
+	
+	body {
+overflow-x:hidden;
+} 
+
+}

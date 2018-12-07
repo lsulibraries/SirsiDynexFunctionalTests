@@ -57,8 +57,8 @@ def test_page_loads(load_driver):
 
 
 def test_author_dropdown(load_driver):
-    fieldname, searchstring = 'Author', 'hello'
-    first_result_title = "The confessioun [o]f maister Iohn Kello minister of Spot, togidder with his ernist repentance maid vpon the scaffald befoir his suffering, the fourt day of October. 1570"
+    fieldname, searchstring = 'Author', 'a'
+    first_result_title = "A defence of true Protestants abused for the service of popery under the name of Presbyterians in a dialogue between A. and L., two sons of the church : where it is debated whether Presbyterians be as bad or worse than Papists and other Popish assertions are detected."
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -69,8 +69,8 @@ def test_title_dropdown(load_driver):
 
 
 def test_subject_dropdown(load_driver):
-    fieldname, searchstring = 'Subject', 'hello'
-    first_result_title = "To pyr to ai?onion, or, Everlasting fire no fancy being an answer to a late pestilent pamphlet, entituled (The foundations of hell-torments shaken and removed), wherein the author hath laboured to prove that there is no everlasting punishment for any man (though finally wicked and impenitent) after this life : his considerations considered, and his cavils, confuted : together with a practical improvement of the point, and the way to escape the damnation of Hell"
+    fieldname, searchstring = 'Subject', 'a'
+    first_result_title = "The A-stars : problems and perspectives"
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -89,8 +89,8 @@ def test_book_dropdown(load_driver):
 
 
 def test_map_dropdown(load_driver):
-    formatname, searchstring = 'Map', 'hello'
-    first_result_title = "Hells Canyon National Recreation Area, visual resource inventory."
+    formatname, searchstring = 'Map', 'a'
+    first_result_title = "A Guide to Chaco."
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
 
@@ -119,8 +119,8 @@ def test_sound_recording_dropdown(load_driver):
 
 
 def test_dvd_dropdown(load_driver):
-    formatname, searchstring = 'DVD', 'live'
-    first_result_title = "VA research and academic affiliates partners in health care discovery and innovation"
+    formatname, searchstring = 'DVD', 'the'
+    first_result_title = "After the storm"
     run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
 
