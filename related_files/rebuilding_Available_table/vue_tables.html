@@ -24,23 +24,35 @@
     </tbody>
   </table>
 </body>
+
+
 <script type="text/javascript">
 var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/"; // Put your WS url here.
 var CLIENTID = "DS_CLIENT";
 
+var idDescription = function (data) {
+    var baseArray = new Array();
+    for (var i = 0; i < data.length; i++) {
+        var policyID = data[i]['policyID'];
+        var policyDescription = data[i]['policyDescription'];
+        baseArray[policyID] = policyDescription;
+    };
+    return baseArray;
+};
+
 var getLocation = function () {
   var locationWsURL = BASEWSURL + "rest/admin/lookupLocationPolicyList?clientID=" + CLIENTID + "&json=true";
-  return axios.get(locationWsURL).then(response => response.data.policyInfo)
+  return axios.get(locationWsURL).then(response => response.data.policyInfo).then(response => idDescription(response));
 };
 
 var getLibrary = function () {
   var libraryWsURL = BASEWSURL + "rest/admin/lookupLibraryPolicyList?clientID=" + CLIENTID + "&json=true";
-  return axios.get(libraryWsURL).then(response => response.data.policyInfo);
+  return axios.get(libraryWsURL).then(response => response.data.policyInfo).then(response => idDescription(response));
 };
 
 var getMaterial = function () {
   var materialTypeWsURL = BASEWSURL + "rest/admin/lookupItemTypePolicyList?clientID=" + CLIENTID + "&json=true";
-  return axios.get(materialTypeWsURL).then(response => response.data.policyInfo);
+  return axios.get(materialTypeWsURL).then(response => response.data.policyInfo).then(response => idDescription(response));
 };
 
 var getTitleInfo = function (rId) {
@@ -70,8 +82,6 @@ var parseTitleInfo = function (data) {
   };
   return interestingData;
 };
-
-
 
 var vueTable = new Vue({
   el: "#vueTable",
