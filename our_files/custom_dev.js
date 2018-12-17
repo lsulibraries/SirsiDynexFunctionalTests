@@ -15,12 +15,12 @@ $J(document).ready(function() {
 
 // Is this dead code?  Garrett can't find any effect this has.
 // All Enterprise pages test true for > -1, and changing these class attrs has no effect.
-jQuery(document).ready(function() {
-  if (window.location.href.indexOf("lsu.ent.sirsi.net") > -1) {
-    jQuery('#frame_content').removeAttr('seamless');
-    jQuery('#frame_content').attr('scrolling', 'yes');
-  }
-});
+// jQuery(document).ready(function() {
+//   if (window.location.href.indexOf("lsu.ent.sirsi.net") > -1) {
+//     jQuery('#frame_content').removeAttr('seamless');
+//     jQuery('#frame_content').attr('scrolling', 'yes');
+//   }
+// });
 
 
 

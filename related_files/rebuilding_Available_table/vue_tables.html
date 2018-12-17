@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <table id="vueTable">
+    <thead>
+      <tr>
+        <th v-for="col in columns" v-on:click="sortTable(col)">{{col}}
+          <div class="arrow" v-if="col == sortColumn" v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"></div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="row in rows">
+        <td v-for="col in columns">{{row[col]}}</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+<script type="text/javascript">
+var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/"; // Put your WS url here.
+var CLIENTID = "DS_CLIENT";
+
+var getLocation = function () {
+  var locationWsURL = BASEWSURL + "rest/admin/lookupLocationPolicyList?clientID=" + CLIENTID + "&json=true";
+  return axios.get(locationWsURL).then(response => response.data.policyInfo)
+};
+
+var getLibrary = function () {
+  var libraryWsURL = BASEWSURL + "rest/admin/lookupLibraryPolicyList?clientID=" + CLIENTID + "&json=true";
+  return axios.get(libraryWsURL).then(response => response.data.policyInfo);
+};
+
+var getMaterial = function () {
+  var materialTypeWsURL = BASEWSURL + "rest/admin/lookupItemTypePolicyList?clientID=" + CLIENTID + "&json=true";
+  return axios.get(materialTypeWsURL).then(response => response.data.policyInfo);
+};
+
+var getTitleInfo = function (rId) {
+  var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/"; // Put your WS url here.
+  var CLIENTID = "DS_CLIENT";
+  // var titleInfo = {};
+  // var titleID = $J("#" + rId + "_DOC_ID .DOC_ID_value").text().split(":")[1];
+  var titleID = "2247614";
+  var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true";
+  return axios.get(titleInfoWsURL).then(response => response.data).then(function(data) {return parseTitleInfo(data)});
+};
+
+var parseTitleInfo = function (data) {
+  var interestingData = {};
+  var CallInfo = data["TitleInfo"][0]["CallInfo"];
+  for (var i = 0; i < CallInfo.length; i++) {
+    interestingData[i] = {};
+    interestingData[i]["numberOfCopies"] = CallInfo[i]["numberOfCopies"];
+    interestingData[i]["libraryID"] = CallInfo[i]["libraryID"];
+    interestingData[i]["callNumber"] = CallInfo[i]["callNumber"];
+    interestingData[i]["itemTypeID"] = CallInfo[i]["ItemInfo"][0]["itemTypeID"];
+    interestingData[i]["currentLocationID"] = CallInfo[i]["ItemInfo"][0]["currentLocationID"];
+    interestingData[i]["publicNote"] = CallInfo[i]["ItemInfo"][0]["publicNote"];
+    var epochDue = new Date(CallInfo[i]["ItemInfo"][0]["dueDate"]);
+    var dueDate = epochDue.getMonth() + "/" + epochDue.getDate() + "/" + epochDue.getFullYear()
+    interestingData[i]["dueDate"] = dueDate;
+  };
+  return interestingData;
+};
+
+
+
+var vueTable = new Vue({
+  el: "#vueTable",
+  titleInfo: getTitleInfo("detail0"),
+  created:  function() {
+    this.libraryMap = getLibrary();
+    this.locationMap = getLocation();
+    this.materialMap = getMaterial();
+    this.titleInfo = getTitleInfo('detail0');
+  },
+  data: {
+    ascending: false,
+    libraryMap: NaN,
+    locationMap: NaN,
+    materialMap: NaN,
+    titleInfo: NaN,
+    sortColumn: "",
+    // locationMap: {
+    //   'STACKS': 'Stacks',
+    //   'CHECKEDOUT': 'Material has been checked out. Due:',
+    //   'HOLDS': 'On hold for someone',
+    //   'ON-ORDER': 'Being acquired by the library',
+    //   'UNKNOWN': 'Unknown',
+    //   'REFERENCE': 'Reference',
+    //   'MISSING': 'Search in progress for item',
+    //   'LOST': 'Lost',
+    //   'BINDERY': 'At the bindery.  Due:',
+    //   'INPROCESS': 'Being cataloged',
+    //   'DISCARD': 'Withdrawn from the collection',
+    //   'INTRANSIT': 'Being transferred between libraries',
+    //   'ILL': 'On loan to another library. Due:',
+    //   'RESERVES': 'Reserve Desk',
+    //   'CATALOGING': 'Material being cataloged',
+    //   'LOST-PAID': 'Lost and paid for',
+    //   'REPAIR': 'Being repaired.  Due:',
+    //   'RESHELVING': 'Being returned to standard shelving location',
+    //   'ATLAS': 'Atlas Stand',
+    //   'AV': 'Audio-Visual Resources',
+    //   'BURDEN': 'NO LONGER USED - Burden Research Plantation',
+    //   'LOST-ASSUM': 'Assumed lost',
+    //   'CELT': 'NO LONGER USED - CELT Multimedia Library, 121 Himes Hall',
+    //   'CHESS': 'Gladney Chess Collection',
+    //   'CODRESCU': 'Codrescu Collection of Outsider Literature',
+    //   'COHN': 'Cohn Collection - Compact Shelving',
+    //   'COMPACT': 'Compact Shelving (Ask At Access Services Desk)',
+    //   'DICT-STAND': 'Dictionary Stand',
+    //   'DISP-CASE': 'Display Case',
+    //   'LONGOVRDUE': 'Items long overdue',
+    //   'DOE-M': 'Department of Energy Microfiche',
+    //   'EXHIBITION': 'On Exhibition (Ask At Service Desk)',
+    //   'FREN-FRAN': 'Center for French & Francophone Studies',
+    //   'GOVDOC-MF': 'Government Documents Microfiche',
+    //   'GUIDES': 'Guide Shelf',
+    //   'INDEXES': 'Indexes',
+    //   'JOUR-CURR': 'Current Journals',
+    //   'JOURNAL': 'Journals',
+    //   'JV-REF': 'Juvenile Reference',
+    //   'LAREMOTE': 'LLMVC - Remote Storage',
+    //   'LAUGHLIN': 'Laughlin Collection - Compact Shelving',
+    //   'LINCOLN': 'Jones Lincoln Collection - Compact Shelving',
+    //   'LOST-CLAIM': 'Claims lost',
+    //   'LLMVC': 'Louisiana and Lower Mississippi Valley Collections',
+    //   'MAPCASE': 'Map Case',
+    //   'MCILCOOKBK': 'McIlhenny Cook Book Collection - Remote Storage',
+    //   'MCILHENNY': 'McIlhenny Natural History Collection',
+    //   'MCILREMOTE': 'McIlhenny - Remote Storage',
+    //   'MICROFILMD': 'Special Collections Microfilming Department',
+    //   'NEWBOOKS': 'New Book Shelf',
+    //   'NTIS-MF': 'National Technical Information Service Microfiche',
+    //   'OCS-MEDIA': 'NO LONGER USED - Computing Services Media Center',
+    //   'OFFICE': 'Office',
+    //   'ONLINE': 'Online Resources',
+    //   'POKER': 'Carriere Poker and Hoyle Collection',
+    //   'INPROC-S': 'In process - shadowed',
+    //   'RARE': 'Rare',
+    //   'RAREREMOTE': 'Rare - Remote Storage',
+    //   'REFDESK': 'Research Desk',
+    //   'REFDESK-ID': 'Research Desk (ID Required)',
+    //   'REF-GOVDOC': 'Government Documents Reference',
+    //   'REF-LIS': 'Library Science Professional Readings',
+    //   'REF-PATENT': 'Reference Patents & Trademarks',
+    //   'REFTABLE_1': 'NO LONGER USED - Reference Table 1',
+    //   'REFTABLE_2': 'NO LONGER USED - Reference Table 2',
+    //   'REFTABLE_3': 'NO LONGER USED - Reference Table 3',
+    //   'REFTABLE_4': 'NO LONGER USED - Reference Table 4',
+    //   'REFTABLE_5': 'NO LONGER USED - Reference Table 5',
+    //   'REFTABLE_6': 'NO LONGER USED - Reference Table 6',
+    //   'REFTABLE_7': 'NO LONGER USED - Reference Table 7',
+    //   'REFTABLE_8': 'NO LONGER USED - Reference Table 8',
+    //   'RESTRICTED': 'Restricted Shelving (Ask At Service Desk)',
+    //   'RHOADES': 'Rhoades Crayfish Collection',
+    //   'THESIS-DIS': 'Theses and Dissertations',
+    //   'THMIDD': 'NO LONGER USED - Gen. Troy H. Middleton Collection',
+    //   'THWILLIAMS': 'T. Harry Williams Collection - Compact Shelving',
+    //   'UARCHIVES': 'University Archives',
+    //   'UN-DOCS': 'United Nations Documents',
+    //   'USCW-YP': "Williamson Civil War Young People's Collection",
+    //   'WGS': "Women's & Gender Studies, check for availability @ 118 Himes",
+    //   'WGS-BACH': "Women's & Gender Studies - Bach, 118 Himes Hall",
+    //   'WOMEN-CTR': "Women's Center, 5 Union Square",
+    //   'YP': "Young People's Collection",
+    //   'YPCALDECOT': "Young People's Caldecott Award Collection",
+    //   'YPKING': "Young People's King Award Collection",
+    //   'YPNEWBERY': "Young People's Newbery Award Collection",
+    //   'YPFRENCH': "Young People's French Language Collection",
+    //   'YPGERMAN': "Young People's German Language Collection",
+    //   'YPMISCLANG': "Young People's Misc. Foreign Language Collection",
+    //   'YPSPANISH': "Young People's Spanish Language Collection",
+    //   'PERM-RESV': 'Permanent Reserve',
+    //   'DELME': 'Delete Me',
+    //   'REF-LIS2': 'NO LONGER USED - Reference LIS Collection',
+    //   'YP-HIST': "Young People's Historical Collection",
+    //   'OVD-RECALL': 'Overdue recall',
+    //   'CIRC-DESK': 'Circulation Desk',
+    //   'REFLITSEC': 'NO LONGER USED - Reference Literary Section',
+    //   'REF-CIT': 'Reference Citation Indexes',
+    //   'CVTORDER': 'Dummy Item for Order Records',
+    //   'OVERSIZE': 'Oversize shelving',
+    //   'DESI_RESV': 'NO LONGER USED - Design Library Reserve Desk',
+    //   'MUSIC_RESV': 'Music Library Reserve Desk',
+    //   'EDU_RESV': 'Education Resources Reserve Desk',
+    //   'CIC_RESV': 'Cartographic Information Center Reserve Desk',
+    //   'VM_RESV': 'Vet Med Library Reserve Desk',
+    //   'DOCS_RESV': 'Government Docs/Microforms Reserve Desk',
+    //   'MIDL_RESV': 'Middleton Library Reserve Desk',
+    //   'BOWLUS': 'William Morton Bowlus Collection of Comic Books',
+    //   'MADDEN': 'David Madden Collection of Civil War Fiction',
+    //   'ORDER-SUB': 'Dummy location for Subscription orders',
+    //   'ORDER-SO': 'Dummy location for Standing orders',
+    //   'ORDER-CAN': 'Dummy location for Cancelled orders',
+    //   'OCSLAB': 'NO LONGER USED - Computer Lab, 109 Middleton',
+    //   'GPOCLAIM': 'GPO Unreceived Claim',
+    //   'ONLINE-NLA': 'Online Resources - no longer available',
+    //   'YP-ESL': "Young People's English as a Second Language (ESL) Collection",
+    //   'EDU-HIST': 'Education Resources Historical Collection',
+    //   'LOSTRESVS': 'Lost Reserve Items',
+    //   'EDU-LATEXT': 'Education Resources - Louisiana Textbooks',
+    //   'AACC': 'African American Cultural Center, 3 Union Square',
+    //   'SPEC_RESV': 'Special Collections Reserve Desk',
+    //   'UNBOUND-S': 'Unbound journal issues - shadowed',
+    //   'WD-MISSING': 'Withdrawn as missing',
+    //   'WD-LOST': 'Withdrawn as lost',
+    //   'WD-DAMAGED': 'Withdrawn as damaged',
+    //   'WD-NOTWANT': 'Withdrawn as not wanted',
+    //   'REFSADTLER': 'Reference Sadtler Collection',
+    //   'CIRCRETURN': 'Circ returns',
+    //   'LAREMOTE-S': 'LLMVC - Remote Storage (shadowed)',
+    //   'AAAS': 'African & African American Studies, 135 Howe-Russell',
+    //   'AVAIL_SOON': 'Available soon',
+    //   'INSHIPPING': 'Being shipped to destination',
+    //   'KITS': 'Kits',
+    //   'OCLC-PSC': 'OCLC Preservation Service Center',
+    //   'OCLC-DARCH': 'OCLC Digital Archive',
+    //   'CIRCOFFICE': 'Circulation Office',
+    //   'REF-OFFICE': 'Reference Office',
+    //   'DIST-ED': 'Distance education',
+    //   'BACKSTAGE': 'Backstage Library Works',
+    //   'SLISCATLAB': 'SLIS Cataloging Lab',
+    //   'FREN-EDUC': 'French Education Project, 111 Peabody Hall',
+    //   'RISDESK-ID': 'Research and Instruction Services Desk (ID Required)',
+    //   'RISDESK': 'Research and Instruction Services Desk',
+    //   'BLONDHEIM': 'David S. Blondheim Collection',
+    //   'MANN': 'Russell A. Mann Sherlock Holmes Collection-Compact Shelving',
+    //   'SUPERSEDED': 'Withdrawn - superseded'
+    // },
+    // libraryMap: {
+    //   'MIDL-MAIN': 'Middleton Library (Main Collection)',
+    //   'CIC': 'Cartographic Information Center, 313 Howe-Russell',
+    //   'Z_CHEM': 'DO NOT USE (was CHEMISTRY library policy)',
+    //   'Z_DESI': 'DO NOT USE (was DESIGN library policy)',
+    //   'DOCS_MICRO': 'Government Documents/Microforms, 53 Middleton',
+    //   'MUSIC': 'Carter Music Resources Center, 202 Middleton',
+    //   'SPEC_COLL': 'Special Collections, Hill Memorial Library',
+    //   'VETMED': 'Veterinary Medicine Library, 1117 Vet. Med. Bldg.',
+    //   'NONLIBRARY': 'Collections at LSU but not in LSU Libraries - Check Location'
+    // },
+    // materialMap: {
+    //   'UNKNOWN': 'Unknown',
+    //   'LAPTOPPUB': 'Public Use Laptop computer',
+    //   'AV': 'Audio-visual',
+    //   'AV-EQUIP': 'Audio-visual equipment',
+    //   'BOOK': 'Book',
+    //   'LAPTOPCARD': 'Wireless Card for use with Laptop',
+    //   'MICROFORM': 'Microform',
+    //   'NEWSPAPER': 'Newspaper',
+    //   'NEW-BOOK': 'New books',
+    //   'SERL-NCIRC': 'Serial Non-Circulating',
+    //   'ARCH-MSS': 'Archive/Manuscript',
+    //   'AV-NCIRC': 'Audio-visual non-circulation',
+    //   'BOOK-NCIRC': 'Book non-circulating',
+    //   'BOOKTRUCK': 'Booktruck',
+    //   'CARREL': 'Study Carrel',
+    //   'GRAPHIC': 'Posters, Pictures, etc.',
+    //   'SERIAL': 'Serial',
+    //   'SERIAL-UB': 'Unbound Serial',
+    //   'KEY': 'Key',
+    //   'LAPTOP': 'Staff Use laptop computer',
+    //   'MAP': 'Map',
+    //   'MAP-DEP': 'Depository Map collection',
+    //   'MAP-NCIRC': 'Map non-circulating',
+    //   'MICRONCIRC': 'Microform non-circulating',
+    //   'MICROSCOPE': 'Microscope',
+    //   'MSET': 'Music Set',
+    //   'NONCIRC-Y': 'Noncirculating',
+    //   'ONLINE': 'Online electronic resource',
+    //   'REFERENCE': 'Reference Material',
+    //   'ROOM': 'Room',
+    //   'SCORE': 'Music Score',
+    //   'YP': "Young People's Collection",
+    //   'PERM-RESV': 'Permanent Reserve',
+    //   'LAPTOPWC': 'Writing Center Laptop',
+    //   'SRSCLICKER': 'SRS Response Card (Clicker)',
+    //   'REF-NCIRC': 'Reference Material Non-Circulating',
+    //   'REFDESK-ID': 'Reference Desk ID Required',
+    //   'SUPPLIES': 'Supplies',
+    //   'TABLET': 'Public Use tablet computer',
+    //   'RISDESK-ID': 'Research and Instruction Services Desk - ID Required',
+    //   'LOCK': 'Lock for lockers',
+    //   'GAME': 'Game',
+    //   'UMBRELLA': 'Umbrella'
+    // },
+    rows: [
+      { "Library": 1, "Material Type": "Chandler Bing", "Call Number": "305-917-1301", "Copy": 1, "Current Location": "IT Manager", "Note": "over there", "Request Item": "Missing" },
+      { "Library": 2, "Material Type": "Ross Geller", "Call Number": "210-684-8953", "Current Location": "Paleontologist", "Copy": 5, "Note": "something", "Status": "Found" },
+      { "Library": 3, "Material Type": "Rachel Green", "Call Number": "765-338-0312", " Current Location": "Waitress", "Copy": 4, "Note": "what", },
+      { "Library": 4, "Material Type": "Monica Geller", "Call Number": "714-541-3336", "Current Location": "Head Chef", "Note": "message", },
+      { "Library": 5, "Material Type": "Joey Tribbiani", "Call Number": "972-297-6037", "Current Location": "Actor", "Copy": 0, },
+      { "Library": 6, "Material Type": "Phoebe Buffay", "Call Number": "760-318-8376", "Current Location": "Masseuse" }
+    ],
+  },
+  methods: {
+    "sortTable": function sortTable(col) {
+      if (this.sortColumn === col) {
+        this.ascending = !this.ascending;
+      } else {
+        this.ascending = true;
+        this.sortColumn = col;
+      }
+      var ascending = this.ascending;
+      this.rows.sort(function (a, b) {
+        if (a[col] > b[col]) {
+          return ascending ? 1 : -1
+        } else if (a[col] < b[col]) {
+          return ascending ? -1 : 1
+        }
+        return 0;
+      })
+    }
+  },
+  computed: {
+    "columns": function columns() {
+      if (this.rows.length == 0) {
+        return [];
+      }
+      return Object.keys(this.rows[0])
+    },
+  },
+
+});
+</script>
+
+</html>
