@@ -3,41 +3,48 @@
 <html>
 
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+  <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+  <script src="dev_resources/vue.js"></script>
+  <script src="dev_resources/axios.min.js"></script>
+  <link rel="stylesheet" href="LALU_flat.css">
 </head>
 
 <body>
-  <table id="vueTable">
-    <thead>
-      <tr>
-        <th v-for="col in columns" v-on:click="sortTable(col)">{{col}}
-          <div class="arrow" v-if="col == sortColumn" v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"></div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="row in rows">
-        <td v-for="col in columns">{{row[col]}}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="tblHtIE9Fix detailItemsDiv ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="detailItemsDiv0" role="tabpanel" style="display: block; visibility: visible;">
+    <div class="detailItems ">
+      <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+        <thead>
+          <tr>
+            <th v-for="col in columns" v-on:click="sortTable(col)" :class="['detailItemsTable_' + col]">{{col}}
+              <div class="arrow" v-if="col == sortColumn" v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in rows" class="detailItemsTableRow">
+            <td v-for="col in columns" :class="['detailItemsTable_' + col]">
+              <div :class="['asyncField' + col]">{{row[col]}}</div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
+  </div>
 </body>
-
-
 <script type="text/javascript">
 var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/"; // Put your WS url here.
 var CLIENTID = "DS_CLIENT";
 
 var idDescription = function (data) {
-    var baseArray = new Array();
-    for (var i = 0; i < data.length; i++) {
-        var policyID = data[i]['policyID'];
-        var policyDescription = data[i]['policyDescription'];
-        baseArray[policyID] = policyDescription;
-    };
-    return baseArray;
+  var baseArray = new Array();
+  for (var i = 0; i < data.length; i++) {
+    var policyID = data[i]['policyID'];
+    var policyDescription = data[i]['policyDescription'];
+    baseArray[policyID] = policyDescription;
+  };
+  return baseArray;
 };
 
 var getLocation = function () {
@@ -57,9 +64,9 @@ var getMaterial = function () {
 
 var getTitleInfo = function (rId) {
   // var titleID = $J("#" + rId + "_DOC_ID .DOC_ID_value").text().split(":")[1];
-  var titleID = "2247614";  // just for develompment, remove later
+  var titleID = "2247614"; // just for develompment, remove later
   var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true";
-  return axios.get(titleInfoWsURL).then(response => response.data).then(function(data) {return parseTitleInfo(data)});
+  return axios.get(titleInfoWsURL).then(response => response.data).then(data => parseTitleInfo(data));
 };
 
 var parseTitleInfo = function (data) {
@@ -80,21 +87,56 @@ var parseTitleInfo = function (data) {
   return interestingData;
 };
 
+var replaceText = function (locationDict, materialDict, libraryDict, titleDict) {
+  titleDict.then(function (item) {
+    console.log(item);
+    for (var key in item) {
+      if (item.hasOwnProperty(key)) {
+        console.log(key);
+        console.log("next");
+        var shortLocation = item[key]['currentLocationID'];
+        var shortType = item[key]['itemTypeID'];
+        var shortLibrary = item[key]['libraryID'];
+        locationDict.then(function (thing) {
+          console.log(thing[shortLocation]);
+          item[key]['currentLocationID'] = thing[shortLocation];
+        });
+        materialDict.then(function (thing) {
+          console.log(thing[shortType]);
+          item[key]['itemTypeID'] = thing[shortType];
+        })
+        libraryDict.then(function (thing) {
+          console.log(thing[shortLibrary]);
+          item[key]['libraryID'] = thing[shortLibrary];
+        })
+        return item;
+      }
+    };
+  });
+};
+
+var mergeTitleInfo = function () {
+  var locationDict = getLocation();
+  var materialDict = getMaterial();
+  var libraryDict = getLibrary();
+  var titleDict = getTitleInfo('detail0');
+  return Promise.all([locationDict, materialDict, libraryDict, titleDict])
+    .then(function () {
+      // console.log(locationDict, materialDict, libraryDict, titleDict);
+      // return {locationDict, materialDict, libraryDict, titleDict};
+      return replaceText(locationDict, materialDict, libraryDict, titleDict);
+      // return replaceText(locationDict, materialDict, libraryDict, titleDict);
+    });
+};
+
 var vueTable = new Vue({
-  el: "#vueTable",
-  titleInfo: getTitleInfo("detail0"),
-  created:  function() {
-    this.libraryMap = getLibrary();
-    this.locationMap = getLocation();
-    this.materialMap = getMaterial();
-    this.titleInfo = getTitleInfo('detail0');
+  el: "#detailItemTable0",
+  created: function () {
+    this.titleInfo = mergeTitleInfo();
   },
   data: {
     ascending: false,
-    libraryMap: NaN,
-    locationMap: NaN,
-    materialMap: NaN,
-    titleInfo: NaN,
+    titleInfo: '',
     sortColumn: "",
 
     rows: [
