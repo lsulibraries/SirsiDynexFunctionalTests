@@ -95,10 +95,8 @@ var getTitleInfo = function (rId) {
 };
 
 var hasPubNote = function (info) {
-  console.log(info);
   for (var rownum in info) {
     if (info.hasOwnProperty(rownum)) {
-      console.log(info[rownum]);
       if (info[rownum]['publicNote']) {
         return true;
       }
@@ -109,7 +107,6 @@ var hasPubNote = function (info) {
 
 var parseDueDate = function (reportedDate) {
   if (reportedDate) {
-    console.log(reportedDate);
     var epochDue = new Date(reportedDate);
     var dueDate = epochDue.getMonth() + 1 + "/" + epochDue.getDate() + "/" + epochDue.getFullYear()
   } else {
@@ -138,7 +135,6 @@ var replaceText = function (locationDict, materialDict, libraryDict, titleDict) 
   titleDict.then(function (item) {
     var newData = new Array;
     var includePubNote = hasPubNote(item);
-    console.log(includePubNote);
     for (var rownum in item) {
       if (item.hasOwnProperty(rownum)) {
         var newRow = new Array;
@@ -168,7 +164,6 @@ var replaceText = function (locationDict, materialDict, libraryDict, titleDict) 
         vueTable.columns = Object.keys(newRow);
       };
     }
-    console.log(newData);
     vueTable.rows = newData;
     return newData;
   })
@@ -179,9 +174,9 @@ var doWebcallTiming = function () {
   var materialDict = getMaterial();
   var libraryDict = getLibrary();
   var titleDict = getTitleInfo('detail0');
+  /* Ensure the four necessary Promises have returned before processing them */
   return Promise.all([locationDict, materialDict, libraryDict, titleDict])
     .then(data => replaceText(locationDict, materialDict, libraryDict, titleDict))
-    .then(function (x) { console.log(x) })
 };
 
 var vueTable = new Vue({
