@@ -84,6 +84,9 @@ var getMaterial = function () {
 var getTitleInfo = function (rId) {
   // var titleID = $J("#" + rId + "_DOC_ID .DOC_ID_value").text().split(":")[1];
   var titleID = "2648907"; // just for develompment, remove later
+  // var titleID = "316195"; // just for develompment, remove later
+  // var titleID = "2125167"; // just for develompment, remove later
+
   var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true";
   return axios.get(titleInfoWsURL)
     .then(response => response.data)
@@ -91,20 +94,42 @@ var getTitleInfo = function (rId) {
     .then(data => vueTable.parsedRow = data)
 };
 
+var hasPubNote = function (info) {
+  console.log(info);
+  for (var rownum in info) {
+    if (info.hasOwnProperty(rownum)) {
+      console.log(info[rownum]);
+      if (info[rownum]['publicNote']) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+var parseDueDate = function (reportedDate) {
+  if (reportedDate) {
+    console.log(reportedDate);
+    var epochDue = new Date(reportedDate);
+    var dueDate = epochDue.getMonth() + 1 + "/" + epochDue.getDate() + "/" + epochDue.getFullYear()
+  } else {
+    var dueDate = "";
+  }
+  return dueDate;
+}
+
 var parseTitleInfo = function (data) {
   var interestingData = {};
   var CallInfo = data["TitleInfo"][0]["CallInfo"];
   for (var i = 0; i < CallInfo.length; i++) {
     interestingData[i] = {};
-    interestingData[i]["numberOfCopies"] = CallInfo[i]["numberOfCopies"];
     interestingData[i]["libraryID"] = CallInfo[i]["libraryID"];
+    interestingData[i]["numberOfCopies"] = CallInfo[i]["numberOfCopies"];
     interestingData[i]["callNumber"] = CallInfo[i]["callNumber"];
     interestingData[i]["itemTypeID"] = CallInfo[i]["ItemInfo"][0]["itemTypeID"];
     interestingData[i]["currentLocationID"] = CallInfo[i]["ItemInfo"][0]["currentLocationID"];
     interestingData[i]["publicNote"] = CallInfo[i]["ItemInfo"][0]["publicNote"];
-    var epochDue = new Date(CallInfo[i]["ItemInfo"][0]["dueDate"]);
-    var dueDate = epochDue.getMonth() + "/" + epochDue.getDate() + "/" + epochDue.getFullYear()
-    interestingData[i]["dueDate"] = dueDate;
+    interestingData[i]["dueDate"] = parseDueDate(CallInfo[i]["ItemInfo"][0]["dueDate"]);
   };
   return interestingData;
 };
@@ -112,6 +137,8 @@ var parseTitleInfo = function (data) {
 var replaceText = function (locationDict, materialDict, libraryDict, titleDict) {
   titleDict.then(function (item) {
     var newData = new Array;
+    var includePubNote = hasPubNote(item);
+    console.log(includePubNote);
     for (var rownum in item) {
       if (item.hasOwnProperty(rownum)) {
         var newRow = new Array;
@@ -119,14 +146,24 @@ var replaceText = function (locationDict, materialDict, libraryDict, titleDict) 
         var shortType = item[rownum]['itemTypeID'];
         var shortLibrary = item[rownum]['libraryID'];
         newRow = {
-          'Material Type': vueTable.materialMap[shortType],
-          'Current Location': vueTable.locationMap[shortLocation],
           'Library': vueTable.libraryMap[shortLibrary],
+          'Material Type': vueTable.materialMap[shortType],
           'Call Number': item[rownum]['callNumber'],
           'Copy': item[rownum]['numberOfCopies'],
+          'Current Location': vueTable.locationMap[shortLocation],
           'Public Note': item[rownum]['publicNote'],
           'Due': item[rownum]['dueDate'],
+          'Request Item': '',
         }
+        /* Removes Public Note column if column is empty */
+        if (!includePubNote) {
+          delete newRow['Public Note'];
+        }
+        /* Concats due date after Location if it has a due date */
+        if (newRow['Due'].length) {
+          newRow['Current Location'] = newRow['Current Location'] + '  ' + newRow['Due'];
+        }
+        delete newRow['Due'];
         newData.push(newRow);
         vueTable.columns = Object.keys(newRow);
       };
