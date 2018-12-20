@@ -22,13 +22,13 @@ var doGenericTasks = function() {
 var doDetailViewTasks = function() {
   replaceAvailableTable();
   detailViewIconReplace();
-  // detailChangeToAccessThisItem();
+  detailChangeToAccessThisItem();
   hideMissingDetailBookImage();
   // ILLIfCheckedOut();
   // renameDueStatus();
   createCitationButton();
   prepOpenAccordions();
-  // linkAvailableOnlineCallNumber();
+  linkAvailableOnlineCallNumber();
   // replaceAvailableStatus();
   // renameItemHoldsColumn();
   // scheduleIlliadLink = setInterval(secondILLIfCheckedOut, 800);
@@ -279,7 +279,7 @@ var linkAvailableOnlineCallNumber = function() {
   if (!hrefElectronicAccess) {
     return;
   }
-  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
+  $J('td.detailItemsTable_Call.Number:contains("AVAILABLE ONLINE")')
     .each(function(i, elem) {
       elem.innerHTML = '';
       new_div = $J('<div>');
@@ -449,7 +449,7 @@ var replaceAvailableTable = function () {
           <tbody>
             <tr v-if="rows" v-for="row in rows" class="detailItemsTableRow">
               <td v-for="col in columns" :class="['detailItemsTable_' + col]">
-                <div :class="['asyncField' + col]">{{row[col]}}</div>
+                <div v-html="row[col]" :class="['asyncField' + col]">{{row[col]}}</div>
               </td>
             </tr>
           </tbody>
@@ -576,6 +576,21 @@ var parseTitleInfo = function (data) {
   return interestingData;
 };
 
+
+var reviseRow = function (newRow) {
+  if (newRow['Call Number'] == 'AVAILABLE ONLINE') {
+    hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+    newRow['Call Number'] = 'Available online<br><a title="Access this item" href="' + hrefElectronicAccess + '">Access this item</a>';
+  }
+  /* Concats due date after Location if it has a due date */
+  if (newRow['Due'].length) {
+    newRow['Current Location'] = newRow['Current Location'] + '  ' + newRow['Due'];
+  }
+  delete newRow['Due'];
+  return newRow;
+}
+
+
 var replaceText = function (locationDict, materialDict, libraryDict, titleDict) {
   titleDict.then(function (item) {
     var newData = new Array;
@@ -595,16 +610,12 @@ var replaceText = function (locationDict, materialDict, libraryDict, titleDict) 
           'Public Note': item[rownum]['publicNote'],
           'Due': item[rownum]['dueDate'],
           'Request Item': '',
-        }
+        };
         /* Removes Public Note column if column is empty */
         if (!includePubNote) {
           delete newRow['Public Note'];
         }
-        /* Concats due date after Location if it has a due date */
-        if (newRow['Due'].length) {
-          newRow['Current Location'] = newRow['Current Location'] + '  ' + newRow['Due'];
-        }
-        delete newRow['Due'];
+        newRow = reviseRow(newRow);
         newData.push(newRow);
         vueTable.columns = Object.keys(newRow);
       };
