@@ -21,12 +21,12 @@ var doGenericTasks = function() {
 // var scheduleIlliadLink;
 var doDetailViewTasks = function() {
   replaceAvailableTable();
-  // detailViewIconReplace();
+  detailViewIconReplace();
   // detailChangeToAccessThisItem();
-  // hideMissingDetailBookImage();
+  hideMissingDetailBookImage();
   // ILLIfCheckedOut();
   // renameDueStatus();
-  // createCitationButton();
+  createCitationButton();
   prepOpenAccordions();
   // linkAvailableOnlineCallNumber();
   // replaceAvailableStatus();
@@ -34,7 +34,6 @@ var doDetailViewTasks = function() {
   // scheduleIlliadLink = setInterval(secondILLIfCheckedOut, 800);
   // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 800);
   // replaceCallNumChildwithCallNum();
-
 }
 
 var scheduleConvertResultsStackMapToLink;
