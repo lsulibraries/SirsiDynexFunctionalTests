@@ -69,6 +69,11 @@ Starting custom functions.
 */
 
 var createCitationButton = function() {
+  // shortcircuit if "Cite As" field in object body
+  if ($J('.PREFCITE524').length) {
+    return;
+  }
+
   var oclcNUM, oclcISBN, oclcISSN;
 
   $J('#detail0_OCLC .OCLC_value').each(function() {
