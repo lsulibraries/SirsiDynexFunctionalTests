@@ -259,9 +259,11 @@ var linkAvailableOnlineCallNumber = function() {
 
 var titleInfoDict = {};
 var scheduleReplacePubNoteCells;
+var scheduleNewBookShelf;
 var replaceItemNote = function() {
   getTitleInfo();
   scheduleReplacePubNoteCells = setInterval(replacePubNoteCells, 100);
+  scheduleNewBookShelf = setInterval(fixNewBookShelf, 100);
 }
 
 var getTitleInfo = function() {
@@ -338,6 +340,42 @@ var replacePubNoteCells = function() {
       $J('.detailItemsTable_ITEMNOTE').remove();
     }
     clearInterval(scheduleReplacePubNoteCells);
+  }
+}
+
+var fixNewBookShelf = function() {
+  if (Object.keys(titleInfoDict).length && titleInfoDict.constructor === Object) {
+    //  loop through the Available Table rows & replace PublicNote cell text    
+    $J('tr.detailItemsTableRow').each(function(index, elem) {
+      var isAvailTable = $J(elem).closest('#detailItemsDiv0').length;
+      if (!isAvailTable) {
+        return;
+      }
+      var callNoElem = $J(elem).find('.detailItemsTable_CALLNUMBER');
+      if (callNoElem.length) {
+        var callNo = $J(callNoElem).text().trim();
+      } else {
+        var callNo = ''
+      }
+      var correctItemDict = titleInfoDict[callNo];
+      if (correctItemDict === undefined) {
+        return;
+      }
+      if (Object.keys(correctItemDict).length) {
+        var correctLocation = correctItemDict['currentLocationID'];
+        console.log(correctLocation);
+        // check if any elems have any value for this key, else we later delete the whole column.
+        if (correctLocation == "NEWBOOKS") {
+          console.log($J(elem).find('.asyncFieldSD_ITEM_STATUS'));
+          var locationCell = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS');
+          locationCell.empty().text('New Books Display');
+          var holdsCell = $J(elem).closest('tr').find('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden');
+          holdsCell.empty().text('Available');
+          clearInterval(scheduleNewBookShelf);
+        }
+      }
+    });
+    clearInterval(scheduleNewBookShelf);
   }
 }
 
