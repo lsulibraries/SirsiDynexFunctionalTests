@@ -24,7 +24,6 @@ var doGenericTasks = function () {
   customSearchLink();
 }
 
-var scheduleStackMapToCurrentLocation;
 var doDetailViewTasks = function () {
   // Isolated tasks
   detailViewIconReplace();
@@ -41,7 +40,6 @@ var doDetailViewTasks = function () {
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
-  scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 100);
   // ITEM_HOLD_LINK tasks
   aeonRequest();
   elecAccessIfUnavailable();
@@ -50,6 +48,7 @@ var doDetailViewTasks = function () {
 
 var scheduleConvertResultsStackMapToLink;
 var scheduleChangeAvailableIfZero;
+
 var doResultsViewTasks = function () {
   friendlyizeNoResults();
   resultsChangeToAccessThisItem();
@@ -429,32 +428,6 @@ var renameDueStatus = function () {
       itemStati[0].childNodes[0].nodeValue = newText;
     }
   });
-}
-
-var moveStackMapToCurrentLocation = function () {
-  var availableItemsCount = $J('.detailItemsDiv > div > table > tbody > tr').length;
-  var stackMapLoopsDone = 0;
-  if ($J('.SMbutton').length) {
-    $J('.detailItemsTableRow').each(function (id, elem) {
-      smbutton = $J(elem).find('.SMbutton');
-      if (smbutton.length) {
-        stacksDiv = $J(elem).find('.asyncFieldSD_ITEM_STATUS').not('.hidden');
-        var newHref = $J('<a />', {
-          onclick: smbutton.attr('onclick'),
-          class: 'SMlink',
-          text: 'Find in the Library',
-          title: 'Find in the Library',
-        });
-        stacksDiv.text('');
-        newHref.appendTo(stacksDiv);
-        smbutton.parent().remove();
-      };
-    })
-    stackMapLoopsDone += 1;
-    if (availableItemsCount / (stackMapLoopsDone * 30) < 1) {
-      clearInterval(scheduleStackMapToCurrentLocation);
-    }
-  };
 }
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
