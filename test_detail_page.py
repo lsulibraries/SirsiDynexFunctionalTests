@@ -4,7 +4,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 import pytest
+
+
+import time
 
 
 @pytest.fixture
@@ -55,6 +59,24 @@ def load_specials_driver(request):
     # driver.delete_all_cookies()
     # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
     driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
+
+    def fin():
+        print('teardown driver')
+        driver.close()
+
+    request.addfinalizer(fin)
+    return driver
+
+@pytest.fixture
+def load_book_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
+    driver = webdriver.Firefox()
+    # driver.delete_all_cookies()
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:179060/one')
 
     def fin():
         print('teardown driver')
@@ -118,7 +140,39 @@ def test_replaceAvailableStatus(load_hello_driver):
     assert available_header.text == 'Current Location'
 
 
-# def test_aeonLink(load_specials_driver):
-#     driver = load_specials_driver
-#     aeon_td = driver.find_element_by_class_name("detailItemsAeonRequest")
-# incomplete test for aeon link -- must figure a way to wait for async loading before testing presence
+def test_aeonLink(load_specials_driver):
+    driver = load_specials_driver
+    while True:
+        aeon_td = driver.find_element_by_class_name("detailItemsAeonRequest")
+        if aeon_td:
+            break
+        time.sleep(1)
+    assert aeon_td.text == 'Request Item'
+
+
+def test_stackmap(load_book_driver):
+    driver = load_book_driver
+    while True:
+        try:
+            stackmap_a = driver.find_element_by_class_name('SMlink')
+            if stackmap_a:
+                break
+        except NoSuchElementException:
+            time.sleep(1)
+    assert stackmap_a.text == 'Find in the Library'
+
+def test_citationbuttonarrives(load_book_driver):
+    driver = load_book_driver
+    citation_button = driver.find_element_by_xpath('//div[@id="CitationButton"]/input')
+    assert citation_button.get_attribute('value') == 'Citation'
+
+def test_availableheaderscallnumberrename(load_book_driver):
+    driver = load_book_driver
+    call_number_header = driver.find_element_by_xpath('//th[@class="detailItemsTable_CALLNUMBER"]/div')
+    assert call_number_header.text == 'Call Number'
+
+
+def test_availableheadersrequestitemrename(load_book_driver):
+    driver = load_book_driver
+    call_number_header = driver.find_element_by_xpath('//th[@class="detailItemsTable_SD_ITEM_HOLD_LINK"]/div')
+    assert call_number_header.text == 'Request Item'
