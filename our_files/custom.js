@@ -37,6 +37,7 @@ var doDetailViewTasks = function () {
   replaceCallNumChildwithCallNum();
   linkAvailableOnlineCallNumber();
   replaceItemNote();
+  replaceDetailGovDocsLabel();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
@@ -48,12 +49,12 @@ var doDetailViewTasks = function () {
 
 var scheduleConvertResultsStackMapToLink;
 var scheduleChangeAvailableIfZero;
-
 var doResultsViewTasks = function () {
   friendlyizeNoResults();
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
+  replaceGovDocsLabel();
   scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
   scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
 }
@@ -378,6 +379,12 @@ var fixNewBookShelf = function () {
   }
 }
 
+var replaceDetailGovDocsLabel = function () {
+  $J('.asyncFieldLIBRARY').ajaxComplete(function () {
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
+  })
+}
+
 //Detail View Tasks -- ITEM_STATUS tasks
 var ILLIfCheckedOut = function () {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
@@ -562,6 +569,10 @@ var doesElecAccessLinkHaveText = function (elem) {
     return false;
   }
   return true;
+}
+
+var replaceGovDocsLabel = function () {
+  $J('div.LIBRARY:contains(" Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
 }
 
 var convertResultsStackMapToLink = function () {

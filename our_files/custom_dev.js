@@ -24,7 +24,6 @@ var doGenericTasks = function () {
   customSearchLink();
 }
 
-// var scheduleStackMapToCurrentLocation;
 var doDetailViewTasks = function () {
   // Isolated tasks
   detailViewIconReplace();
@@ -38,10 +37,10 @@ var doDetailViewTasks = function () {
   replaceCallNumChildwithCallNum();
   linkAvailableOnlineCallNumber();
   replaceItemNote();
+  replaceDetailGovDocsLabel();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
-  // scheduleStackMapToCurrentLocation = setInterval(moveStackMapToCurrentLocation, 100);
   // ITEM_HOLD_LINK tasks
   aeonRequest();
   elecAccessIfUnavailable();
@@ -55,6 +54,7 @@ var doResultsViewTasks = function () {
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
+  replaceGovDocsLabel();
   scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
   scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
 }
@@ -379,6 +379,12 @@ var fixNewBookShelf = function () {
   }
 }
 
+var replaceDetailGovDocsLabel = function () {
+  $J('.asyncFieldLIBRARY').ajaxComplete(function () {
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
+  })
+}
+
 //Detail View Tasks -- ITEM_STATUS tasks
 var ILLIfCheckedOut = function () {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
@@ -429,32 +435,6 @@ var renameDueStatus = function () {
       itemStati[0].childNodes[0].nodeValue = newText;
     }
   });
-}
-
-var moveStackMapToCurrentLocation = function () {
-  var availableItemsCount = $J('.detailItemsDiv > div > table > tbody > tr').length;
-  var stackMapLoopsDone = 0;
-  if ($J('.SMbutton').length) {
-    $J('.detailItemsTableRow').each(function (id, elem) {
-      smbutton = $J(elem).find('.SMbutton');
-      if (smbutton.length) {
-        stacksDiv = $J(elem).find('.asyncFieldSD_ITEM_STATUS').not('.hidden');
-        var newHref = $J('<a />', {
-          onclick: smbutton.attr('onclick'),
-          class: 'SMlink',
-          text: 'Find in the Library',
-          title: 'Find in the Library',
-        });
-        stacksDiv.text('');
-        newHref.appendTo(stacksDiv);
-        smbutton.parent().remove();
-      };
-    })
-    stackMapLoopsDone += 1;
-    if (availableItemsCount / (stackMapLoopsDone * 30) < 1) {
-      clearInterval(scheduleStackMapToCurrentLocation);
-    }
-  };
 }
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
@@ -589,6 +569,10 @@ var doesElecAccessLinkHaveText = function (elem) {
     return false;
   }
   return true;
+}
+
+var replaceGovDocsLabel = function () {
+  $J('div.LIBRARY:contains(" Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
 }
 
 var convertResultsStackMapToLink = function () {
