@@ -38,6 +38,7 @@ var doDetailViewTasks = function () {
   linkAvailableOnlineCallNumber();
   replaceItemNote();
   replaceDetailGovDocsLabel();
+  convertEntryToLinks();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
@@ -49,6 +50,7 @@ var doDetailViewTasks = function () {
 
 var scheduleConvertResultsStackMapToLink;
 var scheduleChangeAvailableIfZero;
+
 var doResultsViewTasks = function () {
   friendlyizeNoResults();
   resultsChangeToAccessThisItem();
@@ -363,10 +365,8 @@ var fixNewBookShelf = function () {
       }
       if (Object.keys(correctItemDict).length) {
         var correctLocation = correctItemDict['currentLocationID'];
-        console.log(correctLocation);
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctLocation == "NEWBOOKS") {
-          console.log($J(elem).find('.asyncFieldSD_ITEM_STATUS'));
           var locationCell = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS');
           locationCell.empty().text('New Books Display');
           var holdsCell = $J(elem).closest('tr').find('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden');
@@ -383,6 +383,29 @@ var replaceDetailGovDocsLabel = function () {
   $J('.asyncFieldLIBRARY').ajaxComplete(function () {
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
   })
+}
+
+var convertEntryToLinks = function () {
+  var succeedingEntryElem = $J('.displayElementText.SUCCENTRY');
+  var precedingEntryElem = $J('.displayElementText.PRECENTRY');
+  replaceEntryWithLink(succeedingEntryElem);
+  replaceEntryWithLink(precedingEntryElem);
+}
+
+var replaceEntryWithLink = function (entryElem) {
+  var formattedText = entryElem.text().strip();
+  while (formattedText.includes(' ')) {
+    formattedText = formattedText.replace(' ', '+');
+  }
+  var entryLink = $J("<a />", {
+    class: "EntryLink",
+    alt: entryElem.text(),
+    title: entryElem.text(),
+    href: "/client/en_US/lsu/search/results?qu=" + entryElem.text().replace(' ', '+'),
+    text: entryElem.text()
+  });
+  entryElem.text('')
+  entryElem.append(entryLink);
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
