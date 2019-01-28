@@ -46,6 +46,7 @@ var doDetailViewTasks = function () {
   aeonRequest();
   elecAccessIfUnavailable();
   deUnavailablePermReserve();
+  deUnavailableWhiteReserve();
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -529,6 +530,19 @@ var deUnavailablePermReserve = function () {
     })
   })
 }
+var deUnavailableWhiteReserve = function () {
+  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
+      var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
+      var itemHoldText = $J(elem).text();
+      var isMatch = (callNumText.trim() == 'WHITE RESV.') && (itemHoldText.trim() == 'Unavailable');
+      if (isMatch) {
+        $J(elem).text('Available');
+      }
+    })
+  })
+}
+
 
 //Results View tasks
 var friendlyizeNoResults = function () {
