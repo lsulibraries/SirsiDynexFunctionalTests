@@ -1,3 +1,6 @@
+var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
+var CLIENTID = 'DS_CLIENT';
+
 $J(document).ready(function () {
   doGenericTasks();
   if ($J('.detail_main').length) {
@@ -402,7 +405,7 @@ var replaceEntryWithLink = function (entryElem) {
     class: "EntryLink",
     alt: entryElem.text(),
     title: entryElem.text(),
-    href: "/client/en_US/lsu/search/results?qu=" + entryElem.text().replace(' ', '+'),
+    href: "/client/en_US/lsu/search/results?rt=false%7C%7C%7CUNIFORM_TITLE_LSU%7C%7C%7CUniform+Title+LSU&qu=" + entryElem.text().replace(' ', '+'),
     text: entryElem.text()
   });
   entryElem.text('')
