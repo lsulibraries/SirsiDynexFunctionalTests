@@ -53,7 +53,7 @@ var doDetailViewTasks = function () {
 }
 
 var scheduleConvertResultsStackMapToLink;
-var scheduleChangeAvailableIfZero;
+var schedulechangeAvailableAfterSpinner;
 
 var doResultsViewTasks = function () {
   friendlyizeNoResults();
@@ -62,8 +62,7 @@ var doResultsViewTasks = function () {
   classifyElecAccessLinks();
   replaceGovDocsLabel();
   scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
-  scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
-  ResultsdeUnavailableWhiteReserve();
+  schedulechangeAvailableAfterSpinner = setInterval(changeAvailableAfterSpinner, 200);
 }
 
 var doAdvancedSearchViewTasks = function () {
@@ -632,20 +631,25 @@ var convertResultsStackMapToLink = function () {
   }
 }
 
-var changeAvailableIfZero = function () {
+var changeAvailableAfterSpinner = function () {
   if ($J('.smallSpinner').length == 0) {
-    $J('.availableNumber').each(function (i, elem) {
-      if ($J(elem).text() == '0') {
-        $J(elem.previous()).text('Currently Checked Out');
-        $J(elem).text('');
-      }
-    });
-    clearInterval(scheduleChangeAvailableIfZero);
+    changeAvailableToZero();
+    changeAvailableIfWhiteResv();
+    clearInterval(schedulechangeAvailableAfterSpinner);
   }
 }
 
-var ResultsdeUnavailableWhiteReserve = function () {
-  $J('.results_bio .thumb_hidden .displayElementText.CALLNUMBER').each( function(i, elem) {
+var changeAvailableToZero = function () {
+  $J('.availableNumber').each(function (i, elem) {
+    if ($J(elem).text() == '0') {
+      $J(elem.previous()).text('Currently Checked Out');
+      $J(elem).text('');
+    }
+  })
+}
+
+var changeAvailableIfWhiteResv = function () {
+  $J('.results_bio .thumb_hidden .displayElementText.CALLNUMBER').each(function (i, elem) {
     if ($J(elem).text().trim() == 'WHITE RESV.') {
       $J(elem).closest('.results_bio').find('.availableLabel').text('Available: 1');
     }
