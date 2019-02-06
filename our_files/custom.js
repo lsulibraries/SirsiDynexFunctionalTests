@@ -41,7 +41,7 @@ var doDetailViewTasks = function () {
   linkAvailableOnlineCallNumber();
   replaceItemNote();
   replaceDetailGovDocsLabel();
-  convertEntryToLinks();
+  makePrecedingSucceedingLinks();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
@@ -49,7 +49,7 @@ var doDetailViewTasks = function () {
   aeonRequest();
   elecAccessIfUnavailable();
   deUnavailablePermReserve();
-  deUnavailableWhiteReserve();
+  DetaildeUnavailableWhiteReserve();
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -63,6 +63,7 @@ var doResultsViewTasks = function () {
   replaceGovDocsLabel();
   scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
   scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
+  ResultsdeUnavailableWhiteReserve();
 }
 
 var doAdvancedSearchViewTasks = function () {
@@ -389,7 +390,7 @@ var replaceDetailGovDocsLabel = function () {
   })
 }
 
-var convertEntryToLinks = function () {
+var makePrecedingSucceedingLinks = function () {
   var succeedingEntryElem = $J('.displayElementText.SUCCENTRY');
   var precedingEntryElem = $J('.displayElementText.PRECENTRY');
   replaceEntryWithLink(succeedingEntryElem);
@@ -533,7 +534,8 @@ var deUnavailablePermReserve = function () {
     })
   })
 }
-var deUnavailableWhiteReserve = function () {
+
+var DetaildeUnavailableWhiteReserve = function () {
   $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
     $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
       var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
@@ -545,7 +547,6 @@ var deUnavailableWhiteReserve = function () {
     })
   })
 }
-
 
 //Results View tasks
 var friendlyizeNoResults = function () {
@@ -641,6 +642,14 @@ var changeAvailableIfZero = function () {
     });
     clearInterval(scheduleChangeAvailableIfZero);
   }
+}
+
+var ResultsdeUnavailableWhiteReserve = function () {
+  $J('.results_bio .thumb_hidden .displayElementText.CALLNUMBER').each( function(i, elem) {
+    if ($J(elem).text().trim() == 'WHITE RESV.') {
+      $J(elem).closest('.results_bio').find('.availableLabel').text('Available: 1');
+    }
+  })
 }
 
 //Advanced Search Page tasks
