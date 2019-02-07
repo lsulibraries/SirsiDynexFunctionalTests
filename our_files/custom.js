@@ -331,7 +331,7 @@ var replacePubNoteCells = function () {
         return;
       }
       if (Object.keys(correctItemDict).length) {
-        var correctItemPubNote = correctItemDict['publicNote'];
+        var correctItemPubNote = correctItemDict['publicNote'] || '';
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctItemPubNote) {
           hasValues = true;
