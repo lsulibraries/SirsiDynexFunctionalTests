@@ -42,6 +42,7 @@ var doDetailViewTasks = function () {
   replaceItemNote();
   replaceDetailGovDocsLabel();
   makePrecedingSucceedingLinks();
+  deVSeriesLink();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
@@ -410,6 +411,12 @@ var replaceEntryWithLink = function (entryElem) {
   });
   entryElem.text('')
   entryElem.append(entryLink);
+}
+
+var deVSeriesLink = function() {
+    var origLink = $J('.displayElementText.SERIES a').attr('href');
+    var newLink = origLink.split('+%3B+')[0];
+    $J('.displayElementText.SERIES a').attr('href', newLink);
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
