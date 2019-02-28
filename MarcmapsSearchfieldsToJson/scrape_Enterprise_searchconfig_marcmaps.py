@@ -196,6 +196,7 @@ def get_marc_info(marc_code):
 def parse_marcmap_item_details(marc_code):
     marcmap_item_details_soup = make_soup('managemarcmaps.edit', marc_code)
     marc_item_details_dict = {
+        'name': parse_textbox('mltf_2', marcmap_item_details_soup),
         'description': parse_textbox('description', marcmap_item_details_soup),
         'marc21Cond': parse_textbox('marc21Cond', marcmap_item_details_soup),
         'unimarcCond': parse_textbox('unimarcCond', marcmap_item_details_soup),

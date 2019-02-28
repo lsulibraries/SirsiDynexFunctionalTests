@@ -1,3 +1,6 @@
+var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
+var CLIENTID = 'DS_CLIENT';
+
 $J(document).ready(function () {
   doGenericTasks();
   if ($J('.detail_main').length) {
@@ -38,7 +41,8 @@ var doDetailViewTasks = function () {
   linkAvailableOnlineCallNumber();
   replaceItemNote();
   replaceDetailGovDocsLabel();
-  convertEntryToLinks();
+  makePrecedingSucceedingLinks();
+  deVSeriesLink();
   // ITEM_STATUS tasks
   ILLIfCheckedOut();
   renameDueStatus();
@@ -46,11 +50,11 @@ var doDetailViewTasks = function () {
   aeonRequest();
   elecAccessIfUnavailable();
   deUnavailablePermReserve();
-  deUnavailableWhiteReserve();
+  DetaildeUnavailableWhiteReserve();
 }
 
 var scheduleConvertResultsStackMapToLink;
-var scheduleChangeAvailableIfZero;
+var schedulechangeAvailableAfterSpinner;
 
 var doResultsViewTasks = function () {
   friendlyizeNoResults();
@@ -59,7 +63,7 @@ var doResultsViewTasks = function () {
   classifyElecAccessLinks();
   replaceGovDocsLabel();
   scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
-  scheduleChangeAvailableIfZero = setInterval(changeAvailableIfZero, 200);
+  schedulechangeAvailableAfterSpinner = setInterval(changeAvailableAfterSpinner, 200);
 }
 
 var doAdvancedSearchViewTasks = function () {
@@ -328,7 +332,7 @@ var replacePubNoteCells = function () {
         return;
       }
       if (Object.keys(correctItemDict).length) {
-        var correctItemPubNote = correctItemDict['publicNote'];
+        var correctItemPubNote = correctItemDict['publicNote'] || '';
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctItemPubNote) {
           hasValues = true;
@@ -386,7 +390,7 @@ var replaceDetailGovDocsLabel = function () {
   })
 }
 
-var convertEntryToLinks = function () {
+var makePrecedingSucceedingLinks = function () {
   var succeedingEntryElem = $J('.displayElementText.SUCCENTRY');
   var precedingEntryElem = $J('.displayElementText.PRECENTRY');
   replaceEntryWithLink(succeedingEntryElem);
@@ -402,11 +406,17 @@ var replaceEntryWithLink = function (entryElem) {
     class: "EntryLink",
     alt: entryElem.text(),
     title: entryElem.text(),
-    href: "/client/en_US/lsu/search/results?qu=" + entryElem.text().replace(' ', '+'),
+    href: "/client/en_US/lsu/search/results?rt=false%7C%7C%7CUNIFORM_TITLE_LSU%7C%7C%7CUniform+Title+LSU&qu=" + entryElem.text().replace(' ', '+'),
     text: entryElem.text()
   });
   entryElem.text('')
   entryElem.append(entryLink);
+}
+
+var deVSeriesLink = function() {
+    var origLink = $J('.displayElementText.SERIES a').attr('href');
+    var newLink = origLink.split('+%3B+')[0];
+    $J('.displayElementText.SERIES a').attr('href', newLink);
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
@@ -530,7 +540,8 @@ var deUnavailablePermReserve = function () {
     })
   })
 }
-var deUnavailableWhiteReserve = function () {
+
+var DetaildeUnavailableWhiteReserve = function () {
   $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
     $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
       var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
@@ -542,7 +553,6 @@ var deUnavailableWhiteReserve = function () {
     })
   })
 }
-
 
 //Results View tasks
 var friendlyizeNoResults = function () {
@@ -628,16 +638,29 @@ var convertResultsStackMapToLink = function () {
   }
 }
 
-var changeAvailableIfZero = function () {
+var changeAvailableAfterSpinner = function () {
   if ($J('.smallSpinner').length == 0) {
-    $J('.availableNumber').each(function (i, elem) {
-      if ($J(elem).text() == '0') {
-        $J(elem.previous()).text('Currently Checked Out');
-        $J(elem).text('');
-      }
-    });
-    clearInterval(scheduleChangeAvailableIfZero);
+    changeAvailableToZero();
+    changeAvailableIfWhiteResv();
+    clearInterval(schedulechangeAvailableAfterSpinner);
   }
+}
+
+var changeAvailableToZero = function () {
+  $J('.availableNumber').each(function (i, elem) {
+    if ($J(elem).text() == '0') {
+      $J(elem.previous()).text('Currently Checked Out');
+      $J(elem).text('');
+    }
+  })
+}
+
+var changeAvailableIfWhiteResv = function () {
+  $J('.results_bio .thumb_hidden .displayElementText.CALLNUMBER').each(function (i, elem) {
+    if ($J(elem).text().trim() == 'WHITE RESV.') {
+      $J(elem).closest('.results_bio').find('.availableLabel').text('Available: 1');
+    }
+  })
 }
 
 //Advanced Search Page tasks
