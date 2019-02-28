@@ -243,7 +243,7 @@ def parse_subfields(marc_item_index):
 def login():
     admin_frontpage = requests_retry_session(session=s).get(requests.compat.urljoin(ROOT_URL, 'admin/admin'))
     admin_frontpage_soup = soup(admin_frontpage.content, 'lxml')
-    formdata = admin_frontpage_soup.select('input["name"="t:formdata"]')[0]['value']
+    formdata = admin_frontpage_soup.select("""input[name="t:formdata"]""")[0]['value']
     admin_login_url = requests.compat.urljoin(ROOT_URL, 'login.loginform')
     for i in range(3):
         admin_login_data = {
@@ -284,7 +284,7 @@ def do_verbose_logging():
     logging.getLogger().setLevel(logging.DEBUG)
     requests_log = logging.getLogger("requests.packages.urllib3")
     requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True   
+    requests_log.propagate = True
 
 
 if __name__ == '__main__':
