@@ -27,7 +27,15 @@ def load_driver(request):
     return driver
 
 
-def run_search_query(driver, fieldname=None, formatname=None, searchstring=None, location=None, first_result_title=None):
+def run_search_query(
+        driver,
+        fieldname=None,
+        formatname=None,
+        searchstring=None,
+        location=None,
+        first_result_title=None,
+        first_result_format=None
+    ):
     if fieldname:
         field = Select(driver.find_element_by_id('fieldDropDown'))
         field.select_by_visible_text(fieldname)
@@ -43,10 +51,16 @@ def run_search_query(driver, fieldname=None, formatname=None, searchstring=None,
         input.send_keys(searchstring)
     input.send_keys(Keys.ENTER)
     wait = WebDriverWait(driver, 10)
-    results_1 = wait.until(
-        EC.presence_of_element_located((By.ID, "detailLink0"))
-    )
-    assert results_1.get_attribute('title') == first_result_title
+    if first_result_format:
+        result_format = wait.until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'formatType'))
+        )
+        assert result_format.text == first_result_format
+    else:
+        results_1 = wait.until(
+            EC.presence_of_element_located((By.ID, "detailLink0"))
+        )
+        assert results_1.get_attribute('title') == first_result_title
 
 
 def test_page_loads(load_driver):
@@ -79,52 +93,57 @@ def test_periodical_title_dropdown(load_driver):
     first_result_title = "Highlights Hello"
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
-#########################################################################################
+########################################################################################
 
 
 def test_music_score_dropdown(load_driver):
-    formatname, searchstring = 'Music Score', 'hello'
-    first_result_title = "Hello, Dolly! A musical comedy."
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'Music Score', 'the'
+    first_result_format = "Music"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_music_sound_recording_dropdown(load_driver):
-    formatname, searchstring = 'Music Sound Recording', 'hello'
-    first_result_title = "Quatuor pour la fin du temps. (Quartet for the end of time)"
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'Music Sound Recording', 'the'
+    first_result_format = "Music Sound Recording"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_audio_disc_dropdown(load_driver):
-    formatname, searchstring = 'Compact Disc', 'hello'
-    first_result_title = "Hello again"
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'Compact Disc', 'the'
+    first_result_format = "Audio disc"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_audio_cassette_dropdown(load_driver):
-    formatname, searchstring = 'Audio Cassette', 'hello'
-    first_result_title = "Strings, keyboard and harp"
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'Audio Cassette', 'the'
+    first_result_format = "Audio cassette"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_book_dropdown(load_driver):
-    formatname, searchstring = 'Book', 'hello'
-    first_result_title = "Hello, Dolly."
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'Book', 'the'
+    first_result_format = "Book"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_lp_dropdown(load_driver):
-    formatname, searchstring = 'LP (Sound Recording)', 'Virtuoso'
-    first_result_title = "Virtuoso cello encores"
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'LP (Sound Recording)', 'the'
+    first_result_format = "Sound recording"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
 def test_dvd_dropdown(load_driver):
-    formatname, searchstring = 'DVD', 'hello'
-    first_result_title = "Hello Louisiana a musical travel film"
-    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
+    formatname, searchstring = 'DVD', 'the'
+    first_result_format = "Video disc"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
 
 
-#########################################################################################
+def test_dvd_dropdown(load_driver):
+    formatname, searchstring = 'Videocassette', 'the'
+    first_result_format = "Video cassette"
+    run_search_query(load_driver, formatname=formatname, searchstring=searchstring, first_result_format=first_result_format)
+
+# #########################################################################################
 
 
 def test_author_plus_music_score_dropdown(load_driver):
@@ -133,7 +152,7 @@ def test_author_plus_music_score_dropdown(load_driver):
     run_search_query(load_driver, fieldname=fieldname, formatname=formatname, searchstring=searchstring, first_result_title=first_result_title)
 
 
-###########################################################################################
+# ###########################################################################################
 
 def test_author_plus_music_score_plus_carter_location(load_driver):
     fieldname, formatname, location, searchstring = 'Author', 'Music Score', 'Carter Music Resources Center, 202 Middleton', 'Mendelssohn'

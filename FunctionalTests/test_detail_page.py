@@ -20,7 +20,7 @@ def load_hello_driver(request):
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
     # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
 
     def fin():
         print('teardown driver')
@@ -39,7 +39,7 @@ def load_observing_driver(request):
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
     # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+user+experience')
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user')
 
     def fin():
         print('teardown driver')
@@ -58,7 +58,7 @@ def load_specials_driver(request):
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
     # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
 
     def fin():
         print('teardown driver')
@@ -76,7 +76,7 @@ def load_book_driver(request):
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
     # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:179060/one')
+    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:179060/one')
 
     def fin():
         print('teardown driver')
@@ -143,9 +143,12 @@ def test_replaceAvailableStatus(load_hello_driver):
 def test_aeonLink(load_specials_driver):
     driver = load_specials_driver
     while True:
-        aeon_td = driver.find_element_by_class_name("detailItemsAeonRequest")
-        if aeon_td:
-            break
+        try:
+            aeon_td = driver.find_element_by_class_name("detailItemsAeonRequest")
+            if aeon_td:
+                break
+        except:
+            continue
         time.sleep(1)
     assert aeon_td.text == 'Request Item'
 

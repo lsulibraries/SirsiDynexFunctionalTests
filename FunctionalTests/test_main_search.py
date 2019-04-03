@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+import pdb
+
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
@@ -32,7 +34,13 @@ def load_driver(request):
     return driver
 
 
-def run_search_query(driver, fieldname=None, searchstring=None, location=None, first_result_title=None):
+def run_search_query(
+        driver,
+        fieldname=None,
+        searchstring=None,
+        location=None,
+        first_result_title=None
+        ):
     if fieldname:
         field = Select(driver.find_element_by_id('srchfield1'))
         field.select_by_visible_text(fieldname)
@@ -51,7 +59,12 @@ def run_search_query(driver, fieldname=None, searchstring=None, location=None, f
     assert results_1.get_attribute('title') == first_result_title
 
 
-def get_first_page_results_locations(driver, location=None, searchstring=None, expected_results_location=None):
+def get_first_page_results_locations(
+        driver,
+        location=None,
+        searchstring=None,
+        expected_results_location=None
+        ):
     if location:
         box = Select(driver.find_element_by_id('library'))
         box.select_by_visible_text(location)
@@ -64,8 +77,9 @@ def get_first_page_results_locations(driver, location=None, searchstring=None, e
     location_divs = wait.until(
         EC.presence_of_element_located((By.CLASS_NAME, "LIBRARY"))
     )
+    # pdb.set_trace()
     location_divs = driver.find_elements_by_class_name('LIBRARY')
-    filtered_location_divs = [i for i in location_divs if 'displayElementText' in i.get_property('classList')['value']]
+    filtered_location_divs = [i for i in location_divs if 'displayElementText' in i.get_property('classList')]
     count_dict = {'totals': 0, 'site': dict()}
     for div in filtered_location_divs:
         count_dict['totals'] += 1
@@ -115,67 +129,8 @@ def test_periodical_title_dropdown(load_driver):
     first_result_title = "Highlights Hello"
     run_search_query(driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
-###################################################################################################################
-
-
-def test_all_locations(load_driver):
-    driver = load_driver
-    location, searchstring = 'All Libraries', 'reactivation'
-    first_result_title = 'Continental reactivation and reworking'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_middleton_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Middleton Library', 'mew'
-    first_result_title = 'Charlotte Mew and her friends'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_special_collections_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Special Collections', 'asdf'
-    first_result_title = 'The Impact of Modifying the Jones Act on US Coastal Shipping'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_government_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Government Documents/Microforms', 'register'
-    first_result_title = 'Federal register.'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_music_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Music Resources', 'if'
-    first_result_title = '... if He please (1954).'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_cartographic_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Cartographic Information Center', 'of'
-    first_result_title = 'Yearbook of agriculture'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_nonLSU_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Other Collections', 'of'
-    first_result_title = 'Advocate of dialoge'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
-
-def test_veterinary_location(load_driver):
-    driver = load_driver
-    location, searchstring = 'Veterinary Medicine Library', 'asdf'
-    first_result_title = 'AO principles of equine osteosynthesis'
-    run_search_query(driver, location=location, searchstring=searchstring, first_result_title=first_result_title)
-
 
 ##################################################################################################################
-#  Test by returned location text
 
 
 def test_for_middleton_location(load_driver):
@@ -195,7 +150,7 @@ def test_for_special_collections_location(load_driver):
 def test_for_government_location(load_driver):
     driver = load_driver
     location = 'Government Documents/Microforms'
-    expected_results_location = 'Government Documents/Microforms'
+    expected_results_location = 'Government Documents - (Currently Closed to Public - See Access Services)'
     get_first_page_results_locations(driver, location=location, expected_results_location=expected_results_location)
 
 
