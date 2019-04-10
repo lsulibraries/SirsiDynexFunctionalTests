@@ -413,10 +413,12 @@ var replaceEntryWithLink = function (entryElem) {
   entryElem.append(entryLink);
 }
 
-var deVSeriesLink = function() {
-    var origLink = $J('.displayElementText.SERIES a').attr('href');
+var deVSeriesLink = function () {
+  var origLink = $J('.displayElementText.SERIES a').attr('href');
+  if (origLink && origLink.length) {
     var newLink = origLink.split('+%3B+')[0];
     $J('.displayElementText.SERIES a').attr('href', newLink);
+  };
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
@@ -478,6 +480,7 @@ var aeonRequest = function () {
   var REMOTE = 'LLMVC - Remote Storage';
   var REQUEST_MATERIAL = 'Request Item';
   var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
+  var requestType;
   var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('#detail0_TITLE .TITLE_value').first().text());
   var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
   var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
@@ -495,11 +498,11 @@ var aeonRequest = function () {
       var itemLocation = '&Location=' + encodeURIComponent(curLocation);
       if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
         if (curLocation == REMOTE) {
-          baseURL += '&Value=GenericRequestAllIronMountain';
+          requestType = '&Value=GenericRequestAllIronMountain';
         } else {
-          baseURL += '&Value=GenericRequestAll';
+          requestType = '&Value=GenericRequestAll';
         }
-        var aeonElem = $J('<td class="detailItemsAeonRequest"><a target="_blank" href="' + baseURL + itemRefnum + itemDocType + itemTitle + itemAuthor + itemEdition + itemCall + itemPub + itemPubDate + itemLocation + itemPlace + itemInfo1 + '">' + REQUEST_MATERIAL + '</a></td>');
+        var aeonElem = $J('<td class="detailItemsAeonRequest"><a target="_blank" href="' + baseURL + requestType + itemRefnum + itemDocType + itemTitle + itemAuthor + itemEdition + itemCall + itemPub + itemPubDate + itemLocation + itemPlace + itemInfo1 + '">' + REQUEST_MATERIAL + '</a></td>');
         var destElem = $J(this).find('.detailItemsTable_SD_ITEM_HOLD_LINK').not('.hidden');
         replaceItemHoldsElem(aeonElem, destElem);
       }
