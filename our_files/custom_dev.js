@@ -51,6 +51,7 @@ var doDetailViewTasks = function () {
   elecAccessIfUnavailable();
   deUnavailablePermReserve();
   DetaildeUnavailableWhiteReserve();
+  deUnavailableReferenceMaterial();
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -62,8 +63,8 @@ var doResultsViewTasks = function () {
   resultsViewIconReplace();
   classifyElecAccessLinks();
   replaceGovDocsLabel();
-  scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 100);
-  schedulechangeAvailableAfterSpinner = setInterval(changeAvailableAfterSpinner, 200);
+  scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 300);
+  schedulechangeAvailableAfterSpinner = setInterval(changeAvailableAfterSpinner, 300);
 }
 
 var doAdvancedSearchViewTasks = function () {
@@ -177,7 +178,7 @@ var hideMissingDetailBookImage = function () {
 }
 
 var prepOpenAccordions = function () {
-  setTimeout("openAccordions();", 200);
+  setTimeout("openAccordions();", 300);
 }
 
 var openAccordions = function () {
@@ -269,13 +270,13 @@ var scheduleReplacePubNoteCells;
 var scheduleNewBookShelf;
 var replaceItemNote = function () {
   getTitleInfo();
-  scheduleReplacePubNoteCells = setInterval(replacePubNoteCells, 100);
-  scheduleNewBookShelf = setInterval(fixNewBookShelf, 100);
+  scheduleReplacePubNoteCells = setInterval(replacePubNoteCells, 300);
+  scheduleNewBookShelf = setInterval(fixNewBookShelf, 300);
 }
 
 var getTitleInfo = function () {
   var titleID = $J("#" + 'detail0' + "_DOC_ID .DOC_ID_value").text().split(":")[1];
-  var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeMarcHoldings=true&includeCatalogingInfo=true&includeAvailabilityInfo=true&includeOrderInfo=true&includeBoundTogether=true&includeCallNumberSummary=true&marcEntryFilter=ALL&includeItemInfo=true&json=true&includeOPACInfo=true";
+  var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeItemInfo=true&json=true";
   $J.ajax({
     dataType: "json",
     url: titleInfoWsURL,
@@ -435,7 +436,7 @@ var ILLIfCheckedOut = function () {
 
 var buildIlliadRequest = function () {
   var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('#detail0_TITLE .TITLE_value').text();
+  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text();
   var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
   var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
   var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
@@ -481,7 +482,7 @@ var aeonRequest = function () {
   var REQUEST_MATERIAL = 'Request Item';
   var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
   var requestType;
-  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('#detail0_TITLE .TITLE_value').first().text());
+  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text());
   var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
   var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
   var itemPub = '&ItemPublisher=' + encodeURIComponent(jQuery('#detail0_PUBLISHER .PUBLISHER_value').first().text());
@@ -556,6 +557,20 @@ var DetaildeUnavailableWhiteReserve = function () {
     })
   })
 }
+
+var deUnavailableReferenceMaterial = function () {
+  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
+      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
+      var itemHoldText = $J(elem).text();
+      var isMatch = (materialText.trim() == 'Reference Material') && (itemHoldText.trim() == 'Unavailable');
+      if (isMatch) {
+        $J(elem).text('Available');
+      }
+    })
+  })
+}
+
 
 //Results View tasks
 var friendlyizeNoResults = function () {
