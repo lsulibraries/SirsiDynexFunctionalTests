@@ -436,7 +436,7 @@ var ILLIfCheckedOut = function () {
 
 var buildIlliadRequest = function () {
   var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text();
+  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750);
   var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
   var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
   var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
@@ -482,7 +482,7 @@ var aeonRequest = function () {
   var REQUEST_MATERIAL = 'Request Item';
   var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
   var requestType;
-  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text());
+  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750));
   var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
   var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
   var itemPub = '&ItemPublisher=' + encodeURIComponent(jQuery('#detail0_PUBLISHER .PUBLISHER_value').first().text());
