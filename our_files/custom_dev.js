@@ -44,14 +44,87 @@ var doDetailViewTasks = function () {
   makePrecedingSucceedingLinks();
   deVSeriesLink();
   // ITEM_STATUS tasks
-  ILLIfCheckedOut();
-  renameDueStatus();
+  // ILLIfCheckedOut();
+  // renameDueStatus();
   // ITEM_HOLD_LINK tasks
-  aeonRequest();
-  elecAccessIfUnavailable();
-  deUnavailablePermReserve();
-  DetaildeUnavailableWhiteReserve();
-  deUnavailableReferenceMaterial();
+  // aeonRequest();
+  // elecAccessIfUnavailable();
+  // deUnavailablePermReserve();
+  // DetaildeUnavailableWhiteReserve();
+  // deUnavailableReferenceMaterial();
+  // deUnavailableReserveDesk();
+  makeRequestItemColumn();
+}
+
+var makeRequestItemColumn = function() {
+  $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
+  $header = $availableTable.children('thead');
+  $rows = $availableTable.children('tbody');
+  makeRequestItemHeader($header);
+  makeRequestItemCells($rows);
+}
+
+var makeRequestItemHeader = function($header) {
+  $newHeader = $J('<th>', {class: "detailItemsTable_SD_ITEM_HOLD_LINK"});
+  $newHeaderChild = $J('<div>', {class: "detailItemTable_th", text: "Request Item"});
+  $newHeader.append($newHeaderChild);
+  $sortButton = $J('<span>', {class: "sortable_sortAnyInd"})
+    .append($J('<img>', {src: "/client/images/account-icons/sortable.png", class: "checkoutsIcons", alt: "Click to Sort"}));
+  $newHeader.append($sortButton);
+  $header.children().filter('tr').append($newHeader);
+}
+
+var makeRequestItemCells = function($rows) {
+  $rows.children('tr').each(function(i, row) {
+    var callNumber = $J(row).find('.detailItemsTable_CALLNUMBER').text();
+    illiadUrl = buildIlliadRequest(callNumber);
+    $elem = $J('<td>', {class: "detailItemsTable_SD_ITEM_HOLD_LINK"})
+      .append($J('<div>', {class: "asyncFieldSD_ITEM_HOLD_LINK"}))
+      .append($J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Item'}));
+    row.append($elem[0]);
+  })
+}
+
+var buildIlliadRequest = function (callNumber) {
+  var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
+  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750);
+  var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
+  var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
+  var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
+  var oslAuthorLastName = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text().split(',')[0];
+  var oslPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
+  var oslPublisher = $J('#detail0_PUBLISHER .PUBLISHER_value').text();
+  var oslPubPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').text().split(':')[0];
+  if (oslFormat == 'Continuing Resources') {
+    var requestType = 'article';
+    var oslISXN = oslISSN;
+  } else {
+    var requestType = 'loan';
+    var oslISXN = oslISBN;
+  }
+  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
+  return illiadUrl;
+}
+
+
+var ILLIfCheckedOut = function () {
+  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
+    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
+    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
+      return;
+    }
+    var illiadUrl = buildIlliadRequest();
+    addLinkILL(itemStati[0].id, illiadUrl)
+  });
+}
+
+var addLinkILL = function (itemId, illiadUrl) {
+  var dueElem = $J('#' + itemId);
+  if (dueElem.siblings('.illiadLink').length) {
+    return;
+  }
+  var illiadNode = $J('<div>', { class: 'illiadLink' }).appendTo(dueElem);
+  var illiadHref = $J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan' }).appendTo(illiadNode);
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -423,46 +496,7 @@ var deVSeriesLink = function () {
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
-var ILLIfCheckedOut = function () {
-  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
-      return;
-    }
-    var illiadUrl = buildIlliadRequest();
-    addLinkILL(itemStati[0].id, illiadUrl)
-  });
-}
 
-var buildIlliadRequest = function () {
-  var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text();
-  var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
-  var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
-  var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
-  var oslAuthorLastName = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text().split(',')[0];
-  var oslPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
-  var oslPublisher = $J('#detail0_PUBLISHER .PUBLISHER_value').text();
-  var oslPubPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').text().split(':')[0];
-  if (oslFormat == 'Continuing Resources') {
-    var requestType = 'article';
-    var oslISXN = oslISSN;
-  } else {
-    var requestType = 'loan';
-    var oslISXN = oslISBN;
-  }
-  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
-  return illiadUrl;
-}
-
-var addLinkILL = function (itemId, illiadUrl) {
-  var dueElem = $J('#' + itemId);
-  if (dueElem.siblings('.illiadLink').length) {
-    return;
-  }
-  var illiadNode = $J('<div>', { class: 'illiadLink' }).appendTo(dueElem);
-  var illiadHref = $J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan' }).appendTo(illiadNode);
-}
 
 var renameDueStatus = function () {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
@@ -482,7 +516,7 @@ var aeonRequest = function () {
   var REQUEST_MATERIAL = 'Request Item';
   var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
   var requestType;
-  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text());
+  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750));
   var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
   var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
   var itemPub = '&ItemPublisher=' + encodeURIComponent(jQuery('#detail0_PUBLISHER .PUBLISHER_value').first().text());
@@ -571,6 +605,17 @@ var deUnavailableReferenceMaterial = function () {
   })
 }
 
+var deUnavailableReserveDesk = function () {
+  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
+      var locationText = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS').not('.hidden').text();
+      var itemHoldText = $J(elem).text();
+      if ((itemHoldText.trim() == 'Unavailable') && (locationText.indexOf('Middleton Library Reserve Desk')) > -1) {
+        $J(elem).text('Available');
+      }
+    })
+  })   
+}
 
 //Results View tasks
 var friendlyizeNoResults = function () {
