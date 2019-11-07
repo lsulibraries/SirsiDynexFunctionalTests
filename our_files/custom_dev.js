@@ -673,9 +673,9 @@ var replaceOrCreate = function (row, url) {
       .append($J('<a>', { href: url, class: 'RequestLinkUrl', text: 'Request Item' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
-    $existingElem.attr('href', url); // replace
+    $existingElem.attr('href', url);  // replace
   } else {
-    row.append($elem[0]); //create
+    row.append($elem[0]);  //create
   }
 }
 
