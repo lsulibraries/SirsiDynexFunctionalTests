@@ -44,7 +44,6 @@ var doDetailViewTasks = function () {
   makePrecedingSucceedingLinks();
   deVSeriesLink();
   // ITEM_STATUS tasks
-  // renameDueStatus();
   // ITEM_HOLD_LINK tasks
   // aeonRequest();
   // elecAccessIfUnavailable();
@@ -53,6 +52,8 @@ var doDetailViewTasks = function () {
   // deUnavailableReferenceMaterial();
   // deUnavailableReserveDesk();
   makeRequestItemColumn();
+  renameDueStatus();
+
 }
 
 
@@ -453,55 +454,159 @@ var elecAccessIfUnavailable = function () {
   })
 }
 
-var deUnavailablePermReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Permanent Reserve') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
+var makeRequestItemColumn = function () {
+  $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
+  $header = $availableTable.children('thead');
+  $rows = $availableTable.children('tbody');
+  makeRequestItemHeader($header);
+  makeRequestItemCells($rows);
+}
+
+var makeRequestItemHeader = function ($header) {
+  $newHeader = $J('<th>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" });
+  $newHeaderChild = $J('<div>', { class: "detailItemTable_th", text: "Request Item" });
+  $newHeader.append($newHeaderChild);
+  $sortButton = $J('<span>', { class: "sortable_sortAnyInd" })
+    .append($J('<img>', { src: "/client/images/account-icons/sortable.png", class: "checkoutsIcons", alt: "Click to Sort" }));
+  $newHeader.append($sortButton);
+  $header.children().filter('tr').append($newHeader);
+}
+
+var makeRequestItemCells = function ($rows) {
+  $rows.children('tr').each(function (i, row) {
+    $J(row).find('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
+      var callNumber = $J(row).find('.detailItemsTable_CALLNUMBER').text().replace(/\n/g, '');
+      var curLocation = $J(row).find('.asyncFieldSD_ITEM_STATUS').first().text().replace(/\n/g, '');
+      var matType = $J(row).find('.detailItemsTable_ITYPE').text().replace(/\n/g, '')
+      var itemType = $J(row).find('.detailItemsTable_ITYPE').text().replace(/\n/g, '');
+      var libz = $J(row).find('.asyncFieldLIBRARY').not('.hidden');
+      var library = libz.text().replace(/\n/g, '');
+      var fakeCheckout = isFakeCheckout(callNumber, curLocation, matType);
+      var elecAccessLink = hasElecAccess(row);
+      if (elecAccessLink.length) {
+        makeElecAccess(row, elecAccessLink);
+      } else if (fakeCheckout === true) {
+        makeFakeAvailable(row);
+      } else {
+        if (library == 'Special Collections') {
+          var url = buildAeonRequest(callNumber, curLocation, itemType, library);
+        } else {
+          var url = buildIlliadRequest(callNumber);
+        }
+        replaceOrCreate(row, url);
+      };
     })
   })
 }
 
-var DetaildeUnavailableWhiteReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (callNumText.trim() == 'WHITE RESV.') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
+var hasElecAccess = function (row) {
+  var link = $J(row).find('.detailItemsTable_CALLNUMBER a').not('.hidden');
+  if (link) {
+    return link;
+  }
+  return false;
 }
 
-var deUnavailableReferenceMaterial = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Reference Material') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
+var makeElecAccess = function (row, link) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
+      .append($J('<a>', { href: link.attr('href'), class: 'RequestLinkUrl', text: 'Request Item' })));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
+  if ($existingElem.length) {
+    $existingElem.attr('href', link.attr('href'));  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
 }
 
-var deUnavailableReserveDesk = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var locationText = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      if ((itemHoldText.trim() == 'Unavailable') && (locationText.indexOf('Middleton Library Reserve Desk')) > -1) {
-        $J(elem).text('Available');
-      }
-    })
-  })
+var isFakeCheckout = function (callNumber, curLocation, matType) {
+  // libraries are using checkout to move items to reserves
+  // instead of creating new locations like "Reserves".
+  // These 'callNumbers' items are actually probably
+  // in the library, so we hack them to report "Available"
+  // They lost the ability to track items checked out from
+  // reserve locations, so we have to pretend the item
+  // is probably present in the reserve location with this hack.
+  if (callNumber == 'WHITE RESV.') {
+    return true;
+  }
+  if (matType == 'Reference Material') {
+    return true;
+  }
+  if (matType == 'Permanent Reserve') {
+    return true;
+  }
+  if (curLocation.indexOf('Middleton Library Reserve Desk') > -1) {
+    return true;
+  }
+  return false;
+}
+
+var makeFakeAvailable = function (row) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Available" }));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK');
+  if ($existingElem.length) {
+    $existingElem.text("Available");  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
+}
+
+var replaceOrCreate = function (row, url) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
+      .append($J('<a>', { href: url, class: 'RequestLinkUrl', text: 'Request Item' })));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
+  if ($existingElem.length) {
+    $existingElem.attr('href', url);  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
+}
+
+var buildIlliadRequest = function (callNumber) {
+  var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
+  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
+  var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
+  var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
+  var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
+  var oslAuthorLastName = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text().split(',')[0];
+  var oslPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
+  var oslPublisher = $J('#detail0_PUBLISHER .PUBLISHER_value').text();
+  var oslPubPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').text().split(':')[0];
+  if (oslFormat == 'Continuing Resources') {
+    var requestType = 'article';
+    var oslISXN = oslISSN;
+  } else {
+    var requestType = 'loan';
+    var oslISXN = oslISBN;
+  }
+  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace + '&Notes=' + callNumber + '&CallNumber' + 'testingtesting');
+  return illiadUrl;
+}
+
+var buildAeonRequest = function (callNumber, curLocation, itemType, library) {
+  var SPEC_COLL = 'Special Collections';
+  var ALT_SPEC_COLL = 'Special Collections, Hill Memorial Library';
+  var REMOTE = 'LLMVC - Remote Storage';
+  var REQUEST_MATERIAL = 'Request Item';
+  var itemTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
+  var itemAuthor = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text();
+  var itemPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
+  var itemPub = $J('#detail0_PUBLISHER .PUBLISHER_value').first().text();
+  var itemPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').first().text().split(':')[0];
+  var itemRefnum = $J('#detail0_DOC_ID .DOC_ID_value').text().split(':')[1];
+  var itemEdition = $J('#detail0_EDITION .EDITION_value').text();
+  var itemInfo1 = $J('#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value').text();
+  var requestType;
+  if (curLocation == REMOTE) {
+    requestType = 'GenericRequestAllIronMountain';
+  } else {
+    requestType = 'GenericRequestAll';
+  };
+  var aeonUrl = encodeURI('https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20' + '&Value=' + requestType + '&ReferenceNumber=' + itemRefnum + '&DocumentType=' + itemType + '&ItemTitle=' + itemTitle + '&ItemAuthor=' + itemAuthor + '&ItemEdition=' + itemEdition + '&CallNumber=' + callNumber + '&ItemPublisher=' + itemPub + '&ItemDate=' + itemPubDate + '&Location=' + curLocation + '&ItemPlace=' + itemPlace + '&ItemInfo1=' + itemInfo1);
+  return aeonUrl;
 }
 
 //Results View tasks
@@ -631,97 +736,6 @@ var changeSMSPopupTitle = function () {
   $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
 }
 
-var makeRequestItemColumn = function () {
-  $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
-  $header = $availableTable.children('thead');
-  $rows = $availableTable.children('tbody');
-  makeRequestItemHeader($header);
-  makeRequestItemCells($rows);
-}
-
-var makeRequestItemHeader = function ($header) {
-  $newHeader = $J('<th>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" });
-  $newHeaderChild = $J('<div>', { class: "detailItemTable_th", text: "Request Item" });
-  $newHeader.append($newHeaderChild);
-  $sortButton = $J('<span>', { class: "sortable_sortAnyInd" })
-    .append($J('<img>', { src: "/client/images/account-icons/sortable.png", class: "checkoutsIcons", alt: "Click to Sort" }));
-  $newHeader.append($sortButton);
-  $header.children().filter('tr').append($newHeader);
-}
-
-var makeRequestItemCells = function ($rows) {
-  $rows.children('tr').each(function (i, row) {
-    $J(row).find('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-      var callNumber = $J(row).find('.detailItemsTable_CALLNUMBER').text().replace(/\n/g, '');
-      var curLocation = $J(row).find('.asyncFieldSD_ITEM_STATUS').first().text().replace(/\n/g, '');
-      var itemType = $J(row).find('.detailItemsTable_ITYPE').text().replace(/\n/g, '');
-      var libz = $J(row).find('.asyncFieldLIBRARY').not('.hidden');
-      var library = libz.text().replace(/\n/g, '');
-      if (library == 'Special Collections') {
-        var url = buildAeonRequest(callNumber, curLocation, itemType, library);
-      } else {
-        var url = buildIlliadRequest(callNumber);
-      }
-      replaceOrCreate(row, url);
-    })
-  })
-}
-
-var replaceOrCreate = function (row, url) {
-  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
-    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
-      .append($J('<a>', { href: url, class: 'RequestLinkUrl', text: 'Request Item' })));
-  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
-  if ($existingElem.length) {
-    $existingElem.attr('href', url);  // replace
-  } else {
-    row.append($elem[0]);  //create
-  }
-}
-
-var buildIlliadRequest = function (callNumber) {
-  var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
-  var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
-  var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
-  var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
-  var oslAuthorLastName = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text().split(',')[0];
-  var oslPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
-  var oslPublisher = $J('#detail0_PUBLISHER .PUBLISHER_value').text();
-  var oslPubPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').text().split(':')[0];
-  if (oslFormat == 'Continuing Resources') {
-    var requestType = 'article';
-    var oslISXN = oslISSN;
-  } else {
-    var requestType = 'loan';
-    var oslISXN = oslISBN;
-  }
-  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace + '&Notes=' + callNumber + '&CallNumber' + 'testingtesting');
-  return illiadUrl;
-}
-
-var buildAeonRequest = function (callNumber, curLocation, itemType, library) {
-  var SPEC_COLL = 'Special Collections';
-  var ALT_SPEC_COLL = 'Special Collections, Hill Memorial Library';
-  var REMOTE = 'LLMVC - Remote Storage';
-  var REQUEST_MATERIAL = 'Request Item';
-  var itemTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
-  var itemAuthor = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text();
-  var itemPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
-  var itemPub = $J('#detail0_PUBLISHER .PUBLISHER_value').first().text();
-  var itemPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').first().text().split(':')[0];
-  var itemRefnum = $J('#detail0_DOC_ID .DOC_ID_value').text().split(':')[1];
-  var itemEdition = $J('#detail0_EDITION .EDITION_value').text();
-  var itemInfo1 = $J('#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value').text();
-  var requestType;
-  if (curLocation == REMOTE) {
-    requestType = 'GenericRequestAllIronMountain';
-  } else {
-    requestType = 'GenericRequestAll';
-  };
-  var aeonUrl = encodeURI('https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20' + '&Value=' + requestType + '&ReferenceNumber=' + itemRefnum + '&DocumentType=' + itemType + '&ItemTitle=' + itemTitle + '&ItemAuthor=' + itemAuthor + '&ItemEdition=' + itemEdition + '&CallNumber=' + callNumber + '&ItemPublisher=' + itemPub + '&ItemDate=' + itemPubDate + '&Location=' + curLocation + '&ItemPlace=' + itemPlace + '&ItemInfo1=' + itemInfo1);
-  return aeonUrl;
-}
 
 /* Default entrypoints */
 /*
