@@ -38,21 +38,15 @@ var doDetailViewTasks = function () {
   renameItemNoteColumn();
   renameItemHoldsColumn();
   replaceCallNumChildwithCallNum();
-  linkAvailableOnlineCallNumber();
   replaceItemNote();
   replaceDetailGovDocsLabel();
   makePrecedingSucceedingLinks();
   deVSeriesLink();
   // ITEM_STATUS tasks
-  // ITEM_HOLD_LINK tasks
-  // aeonRequest();
-  // elecAccessIfUnavailable();
-  // deUnavailablePermReserve();
-  // DetaildeUnavailableWhiteReserve();
-  // deUnavailableReferenceMaterial();
-  // deUnavailableReserveDesk();
-  makeRequestItemColumn();
   renameDueStatus();
+  // ITEM_HOLD_LINK tasks
+  // elecAccessIfUnavailable();
+  makeRequestItemColumn();
 
 }
 
@@ -239,33 +233,6 @@ var changeNamesAfterAjaxComplete = function () {
 
 var replaceCallNumChildwithCallNum = function () {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
-}
-
-var linkAvailableOnlineCallNumber = function () {
-  hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-  if (!hrefElectronicAccess) {
-    return;
-  }
-  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
-      new_div.append(new_p);
-      new_div.append(new_href);
-      new_div.appendTo(elem);
-    })
-  $J('td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
-      new_div.append(new_p);
-      new_div.append(new_href);
-      new_div.appendTo(elem);
-    })
 }
 
 var titleInfoDict = {};
@@ -482,9 +449,10 @@ var makeRequestItemCells = function ($rows) {
       var libz = $J(row).find('.asyncFieldLIBRARY').not('.hidden');
       var library = libz.text().replace(/\n/g, '');
       var fakeCheckout = isFakeCheckout(callNumber, curLocation, matType);
-      var elecAccessLink = hasElecAccess(row);
-      if (elecAccessLink.length) {
+      var elecAccessLink = hasElecAccess(row, callNumber);
+      if (elecAccessLink && elecAccessLink.length) {
         makeElecAccess(row, elecAccessLink);
+        removeCallNumAccessthisitem(row);
       } else if (fakeCheckout === true) {
         makeFakeAvailable(row);
       } else {
@@ -499,24 +467,30 @@ var makeRequestItemCells = function ($rows) {
   })
 }
 
-var hasElecAccess = function (row) {
-  var link = $J(row).find('.detailItemsTable_CALLNUMBER a').not('.hidden');
-  if (link) {
+var hasElecAccess = function (row, callNumber) {
+  var link = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1);
+  if (link && is_actionable) {
     return link;
   }
   return false;
 }
 
 var makeElecAccess = function (row, link) {
+  console.log(link);
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
     .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
-      .append($J('<a>', { href: link.attr('href'), class: 'RequestLinkUrl', text: 'Request Item' })));
+      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Request Item' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
     $existingElem.attr('href', link.attr('href'));  // replace
   } else {
     row.append($elem[0]);  //create
   }
+}
+
+var removeCallNumAccessthisitem = function (row) {
+  $J(row).find('.detailItemsTable_CALLNUMBER a').remove()
 }
 
 var isFakeCheckout = function (callNumber, curLocation, matType) {
