@@ -30,7 +30,6 @@ var doGenericTasks = function () {
 var doDetailViewTasks = function () {
   // Isolated tasks
   detailViewIconReplace();
-  createCitationButton();
   hideMissingDetailBookImage();
   prepOpenAccordions();
   detailChangeToAccessThisItem();
@@ -46,7 +45,6 @@ var doDetailViewTasks = function () {
   renameDueStatus();
   // ITEM_HOLD_LINK tasks
   makeRequestItemColumn();
-
 }
 
 
@@ -96,59 +94,6 @@ var detailViewIconReplace = function () {
       format_containerDiv[0].firstElementChild.textContent = iconString;
     }
   }
-}
-
-var createCitationButton = function () {
-  // shortcircuit if "Cite As" field in object body
-  if ($J('.PREFCITE524').length) {
-    return;
-  }
-
-  var oclcNUM, oclcISBN, oclcISSN;
-
-  $J('#detail0_OCLC .OCLC_value').each(function () {
-    var oclc_value = $J(this).text().replace('(OCoLC)', '');
-    if (oclc_value.length && !isNaN(oclc_value)) {
-      oclcNUM = oclc_value;
-      return false;
-    }
-  });
-  $J('#detail0_ISBN .ISBN_value').each(function () {
-    var isbn_value = $J(this).text();
-    if (isbn_value.length) {
-      oclcISBN = isbn_value;
-      return false;
-    }
-  });
-  $J('#detail0_ISSN .ISSN_value').each(function () {
-    var issn_value = $J(this).text();
-    if (issn_value.length) {
-      oclcISSN = issn_value;
-      return false;
-    }
-  });
-
-  if (oclcNUM || oclcISBN || oclcISSN) {
-    var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
-      .click(function () {
-        citationPopup(oclcNUM, oclcISBN, oclcISSN);
-      });
-    var newDiv = $J('<div>', { id: 'CitationButton' });
-    $J('#detailActionsdetail0').append(newDiv.append(newButton));
-  }
-}
-
-var citationPopup = function (oclcNUM, oclcISBN, oclcISSN) {
-  if (oclcNUM != '') {
-    var myURL = 'http://www.worldcat.org/oclc/' + oclcNUM + '?page=citation';
-  } else if (oclcISBN != '') {
-    oclcISBN2 = oclcISBN.substr(0, 13);
-    var myURL = 'http://www.worldcat.org/isbn/' + oclcISBN2 + '?page=citation';
-  } else if (oclcISSN != '') {
-    oclcISSN2 = oclcISSN.substr(0, 8);
-    var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
-  }
-  window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
 }
 
 var hideMissingDetailBookImage = function () {
