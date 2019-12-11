@@ -399,7 +399,7 @@ var makeRequestItemCells = function ($rows) {
 
 var hasElecAccess = function (row, callNumber) {
   var link = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1);
+  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1) || (callNumber.indexOf('AUTO') > -1);
   if (link && is_actionable) {
     return link;
   }
