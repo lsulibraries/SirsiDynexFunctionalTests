@@ -84,7 +84,7 @@ def test_title_dropdown(load_driver):
 
 def test_subject_dropdown(load_driver):
     fieldname, searchstring = 'Subject', 'hello'
-    first_result_title = "Ernest Hello : vie, oeuvre, mission"
+    first_result_title = "Pink globalization : Hello Kitty's trek across the Pacific"
     run_search_query(load_driver, fieldname=fieldname, searchstring=searchstring, first_result_title=first_result_title)
 
 
