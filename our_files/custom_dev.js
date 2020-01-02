@@ -399,7 +399,7 @@ var makeRequestItemCells = function ($rows) {
 
 var hasElecAccess = function (row, callNumber) {
   var link = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1);
+  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1) || (callNumber.indexOf('AUTO') > -1);
   if (link && is_actionable) {
     return link;
   }
@@ -409,7 +409,7 @@ var hasElecAccess = function (row, callNumber) {
 var makeElecAccess = function (row, link) {
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
     .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
-      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Request Item' })));
+      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Access Online' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
     $existingElem.attr('href', link);  // replace
@@ -447,10 +447,10 @@ var isFakeCheckout = function (callNumber, curLocation, matType) {
 
 var makeFakeAvailable = function (row) {
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
-    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Available" }));
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Ask the Reserve Desk" }));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK');
   if ($existingElem.length) {
-    $existingElem.text("Available");  // replace
+    $existingElem.text("Ask the Reserve Desk");  // replace
   } else {
     row.append($elem[0]);  //create
   }
