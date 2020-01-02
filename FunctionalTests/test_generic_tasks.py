@@ -15,10 +15,11 @@ def load_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/')
+    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/')
+    driver.get("https://lalutest.ent.sirsi.net/client/en_US/lsu/")
 
     def fin():
-        print('teardown driver')
+        print("teardown driver")
         driver.close()
 
     request.addfinalizer(fin)
@@ -30,13 +31,17 @@ def load_driver(request):
 
 def test_customSearchLinkText(load_driver):
     driver = load_driver
-    more_search_options_link = driver.find_element_by_xpath('//*[@title="Advanced Search"]')
+    more_search_options_link = driver.find_element_by_xpath(
+        '//*[@title="Advanced Search"]'
+    )
     assert more_search_options_link.text == "More Search Options"
 
 
 def test_customSearchLinkWorks(load_driver):
     driver = load_driver
-    more_search_options_link = driver.find_element_by_xpath('//*[@title="Advanced Search"]')
+    more_search_options_link = driver.find_element_by_xpath(
+        '//*[@title="Advanced Search"]'
+    )
     more_search_options_link.click()
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.CLASS_NAME, "advancedSearchField")))
@@ -45,7 +50,7 @@ def test_customSearchLinkWorks(load_driver):
 
 def test_tempChangeHeaderHref(load_driver):
     driver = load_driver
-    lsu_logo = driver.find_element_by_class_name('header-mid')
+    lsu_logo = driver.find_element_by_class_name("header-mid")
     lsu_logo.click()
     wait = WebDriverWait(driver, 10)
     wait.until(EC.presence_of_element_located((By.CLASS_NAME, "motto")))
