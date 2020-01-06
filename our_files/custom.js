@@ -1,4 +1,4 @@
-var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
+var BASEWSURL = 'https://lalutest.sirsi.net/lalutest_ilsws/';
 var CLIENTID = 'DS_CLIENT';
 
 $J(document).ready(function () {
@@ -52,6 +52,7 @@ var doDetailViewTasks = function () {
   deUnavailablePermReserve();
   DetaildeUnavailableWhiteReserve();
   deUnavailableReferenceMaterial();
+  deUnavailableReserveDesk();
 }
 
 var scheduleConvertResultsStackMapToLink;
@@ -384,11 +385,12 @@ var fixNewBookShelf = function () {
     clearInterval(scheduleNewBookShelf);
   }
 }
-
-var replaceDetailGovDocsLabel = function () {
+var replaceDetailGovDocsLabel = function  () {
+	
   $J('.asyncFieldLIBRARY').ajaxComplete(function () {
+	
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
-  })
+  });
 }
 
 var makePrecedingSucceedingLinks = function () {
@@ -571,6 +573,17 @@ var deUnavailableReferenceMaterial = function () {
   })
 }
 
+var deUnavailableReserveDesk = function () {
+  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
+      var locationText = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS').not('.hidden').text();
+      var itemHoldText = $J(elem).text();
+      if ((itemHoldText.trim() == 'Unavailable') && (locationText.indexOf('Middleton Library Reserve Desk')) > -1) {
+        $J(elem).text('Available');
+      }
+    })
+  })   
+}
 
 //Results View tasks
 var friendlyizeNoResults = function () {

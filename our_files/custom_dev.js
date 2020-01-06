@@ -1,4 +1,4 @@
-var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
+var BASEWSURL = 'https://lalutest.sirsi.net/lalutest_ilsws/';
 var CLIENTID = 'DS_CLIENT';
 
 $J(document).ready(function () {
@@ -30,6 +30,7 @@ var doGenericTasks = function () {
 var doDetailViewTasks = function () {
   // Isolated tasks
   detailViewIconReplace();
+  createCitationButton();
   hideMissingDetailBookImage();
   prepOpenAccordions();
   detailChangeToAccessThisItem();
@@ -44,7 +45,9 @@ var doDetailViewTasks = function () {
   // ITEM_STATUS tasks
   renameDueStatus();
   // ITEM_HOLD_LINK tasks
+  // elecAccessIfUnavailable();
   makeRequestItemColumn();
+
 }
 
 
@@ -79,7 +82,25 @@ var customSearchLink = function () {
 }
 
 //Detail View Tasks -- Independent
-var detailViewIconReplace = function () {
+/*
+Purpose: Replaces the format image with words
+Desktop Incoming Markup: 
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">
+      <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-BOOK icon-p"></span>
+      <span class="formatText">Book</span>
+    </div>
+  </div>
+
+Desktop Outgoing Markup:   
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">Book</div>
+  </div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
+var detailViewIconReplace = function () {  
   var format_containerDiv = document.getElementsByClassName('format_container');
   var iconTexts = Array();
   for (var i = 0; i < format_containerDiv.length; i++) {
@@ -96,6 +117,119 @@ var detailViewIconReplace = function () {
   }
 }
 
+var createCitationButton = function () {
+  // shortcircuit if "Cite As" field in object body
+  if ($J('.PREFCITE524').length) {
+    return;
+  }
+
+  var oclcNUM, oclcISBN, oclcISSN;
+
+  $J('#detail0_OCLC .OCLC_value').each(function () {
+    var oclc_value = $J(this).text().replace('(OCoLC)', '');
+    if (oclc_value.length && !isNaN(oclc_value)) {
+      oclcNUM = oclc_value;
+      return false;
+    }
+  });
+  $J('#detail0_ISBN .ISBN_value').each(function () {
+    var isbn_value = $J(this).text();
+    if (isbn_value.length) {
+      oclcISBN = isbn_value;
+      return false;
+    }
+  });
+  $J('#detail0_ISSN .ISSN_value').each(function () {
+    var issn_value = $J(this).text();
+    if (issn_value.length) {
+      oclcISSN = issn_value;
+      return false;
+    }
+  });
+
+  if (oclcNUM || oclcISBN || oclcISSN) {
+    var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
+      .click(function () {
+        citationPopup(oclcNUM, oclcISBN, oclcISSN);
+      });
+    var newDiv = $J('<div>', { id: 'CitationButton' });
+    $J('#detailActionsdetail0').append(newDiv.append(newButton));
+  }
+}
+
+var citationPopup = function (oclcNUM, oclcISBN, oclcISSN) {
+  if (oclcNUM != '') {
+    var myURL = 'http://www.worldcat.org/oclc/' + oclcNUM + '?page=citation';
+  } else if (oclcISBN != '') {
+    oclcISBN2 = oclcISBN.substr(0, 13);
+    var myURL = 'http://www.worldcat.org/isbn/' + oclcISBN2 + '?page=citation';
+  } else if (oclcISSN != '') {
+    oclcISSN2 = oclcISSN.substr(0, 8);
+    var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
+  }
+  window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
+}
+
+/*
+Purpose: Hide the default cover image; only shows the 
+  image if it’s actually the book cover
+Desktop Incoming Markup w/ Image: 
+  <div class="detail_cover_art_div">
+    <img 
+      src="https://secure.syndetics.com/index.aspx?type=xw12&amp;client=louislibnet&amp;upc=&amp;oclc=&amp;isbn=9781560983729/LC.JPG" 
+      alt="Cover image for " 
+      id="detailCover0" 
+      title="Cover image for " 
+      class="detail_cover_art">
+  <div class="facebook_like_detail"></div>
+  </div>
+
+Desktop Outgoing Markup  w/ Image:   
+  <div class="detail_cover_art_div">
+    <img 
+      src="https://secure.syndetics.com/index.aspx?type=xw12&amp;client=louislibnet&amp;upc=&amp;oclc=&amp;isbn=9781560983729/LC.JPG" 
+      alt="Cover image for " 
+      id="detailCover0" 
+      title="Cover image for " 
+      class="detail_cover_art">
+    <div class="facebook_like_detail"></div>
+    </div>
+
+Desktop Incoming Markup  w/o Image: 
+<div class="detail_cover_art_div">
+  <img 
+    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
+    alt="Cover image for " 
+    id="detailCover0" 
+    title="Cover image for " 
+    class="detail_cover_art">
+  <div 
+    style="display:none" 
+    title="Cover image for " 
+    class="no_image_text" 
+    id="detailCover0Title"></div>
+  <div class="facebook_like_detail"></div>
+</div>
+
+Desktop Outgoing Markup  w/o Image:   
+<div class="detail_cover_art_div" style="display: none;">
+  <img 
+    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
+    alt="Cover image for " 
+    id="detailCover0" 
+    title="Cover image for " 
+    class="detail_cover_art">
+  <div 
+    style="display: block;" 
+    title="Cover image for " 
+    class="no_image_text" 
+    id="detailCover0Title"></div>
+  <div class="facebook_like_detail"></div>
+</div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var hideMissingDetailBookImage = function () {
   /* this function sets all detail cover art images hidden.
      then, when the anonymous function in Enterprise reassigns the image src
@@ -122,6 +256,125 @@ var prepOpenAccordions = function () {
   setTimeout("openAccordions();", 300);
 }
 
+/*
+Purpose: Opens both the Holdings and Available table
+Desktop Incoming Markup: 
+
+  <div class="accordionHolder 
+              border-t 
+              bcolor-s4 
+              bcolor 
+              hidden 
+              ui-accordion 
+              bgcolor-white 
+              text-h4 
+              ui-widget 
+              ui-helper-reset" 
+    id="detail_accordion0" 
+    role="tablist">
+    <h3 
+      class="detailAccordionHeader 
+              items 
+              result0 
+              ui-accordion-header 
+              nm-bgcolor-p5 
+              nm-bgcolor-ada 
+              ui-state-default 
+              ui-accordion-header-active 
+              ui-state-active" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="true" 
+      aria-expanded="true" 
+      tabindex="0">
+      <i class="fa fa-caret-down"></i>
+      <a href="#">
+        <span class="availableLabel availableCountLabel">Available:</span>
+      </a>
+    </h3>    
+    <div class="detailAccordionContent 
+                items 
+                result0 
+                detailItemsDiv 
+                ui-accordion-content 
+                ui-corner-bottom 
+                text-p ui-helper-reset 
+                ui-widget-content 
+                ui-accordion-content-active" 
+      id="detailItemsDiv0" 
+      aria-labelledby="ui-id-1" 
+      role="tabpanel" 
+      aria-hidden="false" 
+      style="">
+      <div class="detailItems ">
+        ...
+      </div>
+    </div>
+    ...
+    
+  </div>
+
+
+
+Desktop Outgoing Markup:   
+  <div class="accordionHolder 
+              border-t 
+              bcolor-s4 
+              bcolor 
+              ui-accordion 
+              bgcolor-white 
+              text-h4 
+              ui-widget 
+              ui-helper-reset" 
+      id="detail_accordion0" 
+      role="tablist">
+    <h3 class="detailAccordionHeader 
+              items 
+              result0 
+              ui-accordion-header 
+              nm-bgcolor-p5 
+              nm-bgcolor-ada 
+              ui-state-default 
+              ui-accordion-header-active 
+              ui-state-active 
+              ui-corner-top" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="true" 
+      aria-expanded="true" 
+      tabindex="0">
+      <i class="fa fa-caret-down"></i>
+      <a href="#">
+        <span class="availableLabel availableCountLabel">Available:</span>
+      </a>
+    </h3>
+    <div class="detailAccordionContent 
+                items 
+                result0  
+                detailItemsDiv 
+                ui-accordion-content 
+                ui-corner-bottom 
+                text-p 
+                ui-helper-reset 
+                ui-widget-content 
+                ui-accordion-content-active" 
+      id="detailItemsDiv0" 
+      aria-labelledby="ui-id-1" 
+      role="tabpanel" 
+      aria-hidden="false" 
+      style="visibility: visible; display: block;">
+        <div class="detailItems ">
+        ...
+        </div>
+    </div>
+    ...
+  </div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var openAccordions = function () {
   $J('h3.ui-accordion-header').each(function (i, elem) {
     $J(elem)
@@ -351,6 +604,20 @@ var renameDueStatus = function () {
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
 
+
+var elecAccessIfUnavailable = function () {
+  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
+    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
+      var elecLink = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER a').not('.hidden');
+      if ($J(elem).text().trim() == 'Unavailable' && elecLink.length) {
+        $J(elem)
+          .text('')
+          .append(elecLink);
+      }
+    })
+  })
+}
+
 var makeRequestItemColumn = function () {
   $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
   $header = $availableTable.children('thead');
@@ -399,7 +666,7 @@ var makeRequestItemCells = function ($rows) {
 
 var hasElecAccess = function (row, callNumber) {
   var link = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1) || (callNumber.indexOf('AUTO') > -1);
+  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1);
   if (link && is_actionable) {
     return link;
   }
@@ -407,12 +674,13 @@ var hasElecAccess = function (row, callNumber) {
 }
 
 var makeElecAccess = function (row, link) {
+  console.log(link);
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
     .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
-      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Access Online' })));
+      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Request Item' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
-    $existingElem.attr('href', link);  // replace
+    $existingElem.attr('href', link.attr('href'));  // replace
   } else {
     row.append($elem[0]);  //create
   }
@@ -447,10 +715,10 @@ var isFakeCheckout = function (callNumber, curLocation, matType) {
 
 var makeFakeAvailable = function (row) {
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
-    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Ask the Reserve Desk" }));
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Available" }));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK');
   if ($existingElem.length) {
-    $existingElem.text("Ask the Reserve Desk");  // replace
+    $existingElem.text("Available");  // replace
   } else {
     row.append($elem[0]);  //create
   }
