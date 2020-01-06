@@ -1,6 +1,39 @@
 var BASEWSURL = 'https://lalutest.sirsi.net/lalutest_ilsws/';
 var CLIENTID = 'DS_CLIENT';
 
+/*
+  Desktop Markup Outline
+  <body class="nonmobile">
+    <input value="false" id="fbAvailableHidden" type="hidden" >
+    <div class="patronLogin hidden" id="loginModal">
+    <div class="loginDiv loginMessages">
+    <div class="header">
+    <div class="bcolor-s4 bcolor nm-bgcolor-p3 searchBoxWrapper" id="searchBoxWrapper">
+    <div class="quicksearchWrapper" id="quicksearchWrapper">	
+    <div id="content" class="nonmobile">        
+    <div class="footer_container bgcolor-p3 nm-bgcolor-p3 nm-ada-bgcolor-p3" id="footer">
+    <div id="SMtooltip">
+  </body>
+  Mobile Markup Outline
+  <body class="mobile bgcolor-s7 text-p">
+    <input value="false" id="fbAvailableHidden" type="hidden">
+    <div class="patronLogin hidden" id="loginModal">
+    <div id="bodyWrapper">
+      <div id="content" class="mobile">
+        <div class="header">
+        <div class="bcolor-s4 bcolor nm-bgcolor-p3 searchBoxWrapper" id="searchBoxWrapper">
+        <div class="emailModalDialogContainer" id="emailModalDialogContainer">
+        <div id="smsDialog">
+        <div id="placeHoldDialog">			
+        <div class="searchView bgcolor-s7" id="searchViewDISCOVERY_ALL">
+        <div class="bgcolor-s7" id="footerWrapper">
+      </div>
+    </div>
+  </body>		
+*/
+
+
+
 $J(document).ready(function () {
   doGenericTasks();
   if ($J('.detail_main').length) {
