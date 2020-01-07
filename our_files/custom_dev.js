@@ -292,7 +292,6 @@ var prepOpenAccordions = function () {
 /*
 Purpose: Opens both the Holdings and Available table
 Desktop Incoming Markup: 
-
   <div class="accordionHolder 
               border-t 
               bcolor-s4 
@@ -426,6 +425,35 @@ var openAccordions = function () {
   });
 }
 
+/*
+Purpose: Replaces Full path URL linke with “Access This Item”, and adds class to the A tag
+Desktop Incoming Markup: 
+  <div class="displayElementWrapper"
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a 
+      target="_blank"  
+      href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182?catkey=1631073">
+      http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182
+    </a>
+  </div>
+
+
+Desktop Outgoing Markup: 
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a 
+      target="_blank" 
+      href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182?catkey=1631073" 
+      class="detail_access_link">
+      Access This Item
+    </a>
+  </div>
+
+*/
 var detailChangeToAccessThisItem = function () {
   $J('.ELECTRONIC_ACCESS_label')
     .siblings()
