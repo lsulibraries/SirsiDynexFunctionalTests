@@ -453,6 +453,9 @@ Desktop Outgoing Markup:
     </a>
   </div>
 
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+
 */
 var detailChangeToAccessThisItem = function () {
   $J('.ELECTRONIC_ACCESS_label')
