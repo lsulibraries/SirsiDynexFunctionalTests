@@ -117,6 +117,8 @@ var customSearchLink = function () {
 //Detail View Tasks -- Independent
 /*
 Purpose: Replaces the format image with words
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=turtles&te=
+
 Desktop Incoming Markup: 
   <div id="formatContainer0" class="format_container">
     <div title="Book" class="formatType text-p">
@@ -206,6 +208,8 @@ var citationPopup = function (oclcNUM, oclcISBN, oclcISSN) {
 /*
 Purpose: Hide the default cover image; only shows the 
   image if it’s actually the book cover
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:18266/ada?qu=turtles
+
 Desktop Incoming Markup w/ Image: 
   <div class="detail_cover_art_div">
     <img 
@@ -291,6 +295,8 @@ var prepOpenAccordions = function () {
 
 /*
 Purpose: Opens both the Holdings and Available table
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:3568569/ada?qu=turtles&qf=FORMAT%09Format%09CR%09Print+Journal
+
 Desktop Incoming Markup: 
   <div class="accordionHolder 
               border-t 
@@ -427,6 +433,8 @@ var openAccordions = function () {
 
 /*
 Purpose: Replaces Full path URL linke with “Access This Item”, and adds class to the A tag
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
+
 Desktop Incoming Markup: 
   <div class="displayElementWrapper"
     <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
@@ -470,6 +478,8 @@ var detailChangeToAccessThisItem = function () {
 
 /*
 Purpose: Replaces Column header “Status” with “Current Location”
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
+
 Desktop Incoming Markup: 
   <th class="detailItemsTable_SD_ITEM_STATUS">
     <div class="detailItemTable_th">Status</div>
@@ -494,6 +504,8 @@ var replaceAvailableStatus = function () {
 
 /*
 Purpose: Renames item  Note Column Header
+Example URL: ???
+
 Desktop Incoming Markup: TBD
 Desktop Outgoing Markup: TBD
 Mobile Incoming Markup: TBD
@@ -507,6 +519,8 @@ var renameItemNoteColumn = function () {
 
 /*
 Purpose: Part of replacing holds with ILL feature
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1836309/ada?qu=turtle
+
 Desktop Incoming Markup:
   <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
     <div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
