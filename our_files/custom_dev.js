@@ -492,6 +492,15 @@ var replaceAvailableStatus = function () {
   $J(".detailItemTable_th:contains('Status')").text('Current Location')
 }
 
+/*
+Purpose: Renames item  Note Column Header
+Desktop Incoming Markup: TBD
+Desktop Outgoing Markup: TBD
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+
+// Is this needede? Potentially remove
+*/
 var renameItemNoteColumn = function () {
   $J('thead tr .detailItemsTable_ITEMNOTE .detailItemTable_th').text('Item Note');
 }
