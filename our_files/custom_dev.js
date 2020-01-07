@@ -855,7 +855,7 @@ var makeElecAccess = function (row, link) {
   console.log(link);
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
     .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
-      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Request Item' })));
+      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Access Online' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
     $existingElem.attr('href', link.attr('href'));  // replace
