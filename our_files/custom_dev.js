@@ -594,6 +594,18 @@ var replaceCallNumChildwithCallNum = function () {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
 }
 
+/*
+Covers next set of methods through fixNewBookShelf
+Purpose: Gets title and item data from API / Enables custom display of item info
+Example URL: ????
+
+Desktop Incoming Markup: TBD
+Desktop Outgoing Markup: TBD
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
+
 var titleInfoDict = {};
 var scheduleReplacePubNoteCells;
 var scheduleNewBookShelf;
@@ -713,6 +725,10 @@ var fixNewBookShelf = function () {
     clearInterval(scheduleNewBookShelf);
   }
 }
+
+/*
+  End Title Info Update methods
+*/
 
 var replaceDetailGovDocsLabel = function () {
   $J('.asyncFieldLIBRARY').ajaxComplete(function () {
