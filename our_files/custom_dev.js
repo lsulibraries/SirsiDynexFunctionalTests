@@ -893,10 +893,10 @@ var isFakeCheckout = function (callNumber, curLocation, matType) {
 
 var makeFakeAvailable = function (row) {
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
-    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Available" }));
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Ask the Reserve Desk" }));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK');
   if ($existingElem.length) {
-    $existingElem.text("Available");  // replace
+    $existingElem.text("Ask the Reserve Desk");  // replace
   } else {
     row.append($elem[0]);  //create
   }
