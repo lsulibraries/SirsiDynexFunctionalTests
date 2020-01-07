@@ -468,6 +468,26 @@ var detailChangeToAccessThisItem = function () {
     })
 }
 
+/*
+Purpose: Replaces Column header “Status” with “Current Location”
+Desktop Incoming Markup: 
+  <th class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="detailItemTable_th">Status</div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Desktop Outgoing Markup: 
+  <th class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="detailItemTable_th">Current Location</div>
+    <span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span>
+  </th>
+
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var replaceAvailableStatus = function () {
   $J(".detailItemTable_th:contains('Status')").text('Current Location')
 }
