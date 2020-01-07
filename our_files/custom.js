@@ -1,4 +1,4 @@
-var BASEWSURL = 'https://lalutest.sirsi.net/lalutest_ilsws/';
+var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
 var CLIENTID = 'DS_CLIENT';
 
 $J(document).ready(function () {
