@@ -549,6 +549,33 @@ var changeNamesAfterAjaxComplete = function () {
   })
 }
 
+/*
+Purpose: Wording change
+Example URL: ????
+
+Desktop Incoming Markup:
+  <th class="detailItemsTable_CALLNUMBER">
+    <div class="detailItemTable_th">
+      Call Number (Child)
+    </div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Desktop Outgoing Markup:
+  <th class="detailItemsTable_CALLNUMBER">
+    <div class="detailItemTable_th">
+      Call Number
+    </div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var replaceCallNumChildwithCallNum = function () {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
 }
