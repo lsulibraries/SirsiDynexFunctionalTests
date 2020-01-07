@@ -499,12 +499,40 @@ Desktop Outgoing Markup: TBD
 Mobile Incoming Markup: TBD
 Mobile Outgoing Markup: TBD
 
-// Is this needede? Potentially remove
+// Is this needed? Potentially remove
 */
 var renameItemNoteColumn = function () {
   $J('thead tr .detailItemsTable_ITEMNOTE .detailItemTable_th').text('Item Note');
 }
 
+/*
+Purpose: Part of replacing holds with ILL feature
+Desktop Incoming Markup:
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      <a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5331702/31518102334558/item_hold?qu=Hold&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5331702%7E%7E0');});">
+        Reserve This Copy
+      </a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      Unavailable
+    </div>
+  +</td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      <a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5331702/31518102334558/item_hold?qu=Hold&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5331702%7E%7E0');});">
+        Place Hold
+      </a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      Unavailable
+    </div>
+  </td>
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var renameItemHoldsColumn = function () {
   $J('.detailItemTable_th:contains("Item Holds")').text('Request Item');
   changeNamesAfterAjaxComplete();
