@@ -77,7 +77,6 @@ var doDetailViewTasks = function () {
   // ITEM_STATUS tasks
   renameDueStatus();
   // ITEM_HOLD_LINK tasks
-  // elecAccessIfUnavailable();
   makeRequestItemColumn();
 }
 
@@ -727,20 +726,6 @@ var renameDueStatus = function () {
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
 
-
-var elecAccessIfUnavailable = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var elecLink = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER a').not('.hidden');
-      if ($J(elem).text().trim() == 'Unavailable' && elecLink.length) {
-        $J(elem)
-          .text('')
-          .append(elecLink);
-      }
-    })
-  })
-}
-
 var makeRequestItemColumn = function () {
   $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
   $header = $availableTable.children('thead');
@@ -797,13 +782,12 @@ var hasElecAccess = function (row, callNumber) {
 }
 
 var makeElecAccess = function (row, link) {
-  console.log(link);
   $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
     .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
       .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Access Online' })));
   $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
   if ($existingElem.length) {
-    $existingElem.attr('href', link.attr('href'));  // replace
+    $existingElem.attr('href', link);  // replace
   } else {
     row.append($elem[0]);  //create
   }
