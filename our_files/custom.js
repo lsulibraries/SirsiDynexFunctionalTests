@@ -44,7 +44,7 @@ var doDetailViewTasks = function () {
   makePrecedingSucceedingLinks();
   deVSeriesLink();
   // ITEM_STATUS tasks
-  ILLIfCheckedOut();
+  scheduleILLIfCheckedOut = setInterval(ILLIfCheckedOut, 300);
   renameDueStatus();
   // ITEM_HOLD_LINK tasks
   aeonRequest();
@@ -386,9 +386,7 @@ var fixNewBookShelf = function () {
   }
 }
 var replaceDetailGovDocsLabel = function  () {
-	
   $J('.asyncFieldLIBRARY').ajaxComplete(function () {
-	
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
   });
 }
@@ -426,14 +424,13 @@ var deVSeriesLink = function () {
 
 //Detail View Tasks -- ITEM_STATUS tasks
 var ILLIfCheckedOut = function () {
-  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
-      return;
-    }
-    var illiadUrl = buildIlliadRequest();
-    addLinkILL(itemStati[0].id, illiadUrl)
-  });
+  var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
+  if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
+    return;
+  }
+  var illiadUrl = buildIlliadRequest();
+  addLinkILL(itemStati[0].id, illiadUrl);
+  clearInterval(scheduleILLIfCheckedOut);
 }
 
 var buildIlliadRequest = function () {
