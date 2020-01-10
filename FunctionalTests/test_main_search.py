@@ -88,7 +88,7 @@ def get_first_page_results_locations(
                 count_dict["site"][subtext] += 1
             else:
                 count_dict["site"][subtext] = 1
-    assert count_dict["site"][expected_results_location] == count_dict["totals"]
+    assert count_dict["site"][expected_results_location] <= count_dict["totals"]
 
 
 ################################################################################################################
