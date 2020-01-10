@@ -1,4 +1,4 @@
-var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
+var BASEWSURL = 'https://lalutest.sirsi.net/lalu_ilsws/';
 var CLIENTID = 'DS_CLIENT';
 
 $J(document).ready(function () {
@@ -182,6 +182,204 @@ var prepOpenAccordions = function () {
   setTimeout("openAccordions();", 300);
 }
 
+/*
+Purpose: Opens both the Holdings and Available table
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:3568569/ada?qu=turtles&qf=FORMAT%09Format%09CR%09Print+Journal
+
+Desktop Incoming Markup: 
+  <div class="accordionHolder 
+              border-t 
+              bcolor-s4 
+              bcolor 
+              hidden 
+              ui-accordion 
+              bgcolor-white 
+              text-h4 
+              ui-widget 
+              ui-helper-reset" 
+    id="detail_accordion0" 
+    role="tablist">
+    <h3 
+      class="detailAccordionHeader 
+              items 
+              result0 
+              ui-accordion-header 
+              nm-bgcolor-p5 
+              nm-bgcolor-ada 
+              ui-state-default 
+              ui-accordion-header-active 
+              ui-state-active" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="true" 
+      aria-expanded="true" 
+      tabindex="0">
+      <i class="fa fa-caret-down"></i>
+      <a href="#">
+        <span class="availableLabel availableCountLabel">Available:</span>
+      </a>
+    </h3>    
+    <div class="detailAccordionContent 
+                items 
+                result0 
+                detailItemsDiv 
+                ui-accordion-content 
+                ui-corner-bottom 
+                text-p ui-helper-reset 
+                ui-widget-content 
+                ui-accordion-content-active" 
+      id="detailItemsDiv0" 
+      aria-labelledby="ui-id-1" 
+      role="tabpanel" 
+      aria-hidden="false" 
+      style="">
+      <div class="detailItems ">
+        ...
+      </div>
+    </div>
+    ...
+    
+  </div>
+
+
+
+Desktop Outgoing Markup:   
+  <div class="accordionHolder 
+              border-t 
+              bcolor-s4 
+              bcolor 
+              ui-accordion 
+              bgcolor-white 
+              text-h4 
+              ui-widget 
+              ui-helper-reset" 
+      id="detail_accordion0" 
+      role="tablist">
+    <h3 class="detailAccordionHeader 
+              items 
+              result0 
+              ui-accordion-header 
+              nm-bgcolor-p5 
+              nm-bgcolor-ada 
+              ui-state-default 
+              ui-accordion-header-active 
+              ui-state-active 
+              ui-corner-top" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="true" 
+      aria-expanded="true" 
+      tabindex="0">
+      <i class="fa fa-caret-down"></i>
+      <a href="#">
+        <span class="availableLabel availableCountLabel">Available:</span>
+      </a>
+    </h3>
+    <div class="detailAccordionContent 
+                items 
+                result0  
+                detailItemsDiv 
+                ui-accordion-content 
+                ui-corner-bottom 
+                text-p 
+                ui-helper-reset 
+                ui-widget-content 
+                ui-accordion-content-active" 
+      id="detailItemsDiv0" 
+      aria-labelledby="ui-id-1" 
+      role="tabpanel" 
+      aria-hidden="false" 
+      style="visibility: visible; display: block;">
+        <div class="detailItems ">
+        ...
+        </div>
+    </div>
+    ...
+  </div>
+
+Mobile Incoming Markup:
+  <h3 class="detailAccordionHeader 
+              items 
+              result0 
+              ui-accordion-header 
+              nm-bgcolor-p5 
+              nm-bgcolor-ada 
+              ui-state-default 
+              ui-corner-top 
+              ui-accordion-header-collapsed 
+              ui-corner-all" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="false" 
+      aria-expanded="false" 
+      tabindex="-1">
+        <i class="fa fa-caret-right"></i>
+        <a href="#">
+          <span class="availableLabel availableCountLabel">Available:</span>
+        </a>
+  </h3>
+  <div class="detailAccordionContent 
+              items 
+              result0 
+              detailItemsDiv 
+              ui-accordion-content 
+              ui-corner-bottom 
+              text-p ui-helper-reset 
+              ui-widget-content" 
+    id="detailItemsDiv0" 
+    aria-labelledby="ui-id-1" 
+    role="tabpanel" 
+    aria-hidden="true" 
+    style="display: none; visibility: visible;"
+    >
+    ...
+</div>
+
+Mobile Outgoing Markup:
+  <h3 class="detailAccordionHeader 
+            items 
+            result0 
+            ui-accordion-header 
+            nm-bgcolor-p5 
+            nm-bgcolor-ada 
+            ui-state-default 
+            ui-corner-top 
+            ui-state-hover 
+            ui-accordion-header-active 
+            ui-state-active" 
+      role="tab" 
+      id="ui-id-1" 
+      aria-controls="detailItemsDiv0" 
+      aria-selected="true" 
+      aria-expanded="true" 
+      tabindex="0">
+    <i class="fa fa-caret-down"></i>
+    <a href="#">
+      <span class="availableLabel availableCountLabel">Available:</span>
+    </a>
+  </h3>
+  <div class="detailAccordionContent 
+              items 
+              result0 
+              detailItemsDiv 
+              ui-accordion-content 
+              ui-corner-bottom 
+              text-p 
+              ui-helper-reset 
+              ui-widget-content 
+              ui-accordion-content-active" 
+        id="detailItemsDiv0" 
+        aria-labelledby="ui-id-1" 
+        role="tabpanel" 
+        aria-hidden="false" 
+        style="display: block; visibility: visible;"
+      > 
+      ...
+  </div>
+*/
 var openAccordions = function () {
   $J('h3.ui-accordion-header').each(function (i, elem) {
     $J(elem)
