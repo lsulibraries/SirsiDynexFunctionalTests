@@ -3,6 +3,11 @@
 from selenium import webdriver
 import pytest
 
+from . import _conf_settings
+
+
+URL = _conf_settings.URL
+
 
 @pytest.fixture
 def load_driver(request):
@@ -12,9 +17,7 @@ def load_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/results')
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/dec2018_fork/search/results')
-    driver.get("https://lalutest.ent.sirsi.net/client/en_US/lsu/search/results")
+    driver.get(f"{URL}/search/results")
 
     def fin():
         print("teardown driver")
@@ -32,11 +35,7 @@ def load_access_page(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=Plaetner%2C+J%C3%B8rgen.&te=SD_LSU&rt=false%7C%7C%7CAUTHOR%7C%7C%7CAuthor')
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/Dec2018_fork/search/results?qu=Plaetner%2C+J%C3%B8rgen.&te=SD_LSU&rt=false%7C%7C%7CAUTHOR%7C%7C%7CAuthor')
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/search/results?qu=Plaetner%2C+J%C3%B8rgen.&te=SD_LSU&rt=false%7C%7C%7CAUTHOR%7C%7C%7CAuthor"
-    )
+    driver.get(f"{URL}/search/results?qu=Plaetner%2C+J%C3%B8rgen.&te=SD_LSU&rt=false%7C%7C%7CAUTHOR%7C%7C%7CAuthor")
 
     def fin():
         print("teardown driver")
@@ -70,6 +69,6 @@ def test_resultsViewIconReplace_adds_text(load_driver):
 
 def test_changeToAccessThisItem_changes_text(load_access_page):
     driver = load_access_page
-    for elem in driver.find_elements_by_tag_name("a"):
+    for elem in driver.find_elements_by_class_name("detail_access_link"):
         if elem.text == elem.get_attribute("href"):
             assert False

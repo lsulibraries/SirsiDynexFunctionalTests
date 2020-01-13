@@ -3,6 +3,11 @@
 from selenium import webdriver
 import pytest
 
+from . import _conf_settings
+
+
+URL = _conf_settings.URL
+
 
 @pytest.fixture
 def load_driver(request):
@@ -12,10 +17,7 @@ def load_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true')
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true"
-    )
+    driver.get(f"{URL}/?rm=MORE+SEARCH+OP0|||1|||0|||true")
 
     def fin():
         print("teardown driver")
