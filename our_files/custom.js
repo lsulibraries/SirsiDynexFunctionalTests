@@ -1,4 +1,4 @@
-https://raw.githubusercontent.com/lsulibraries/SirsiDynexFunctionalTests/feature/enterprise-upgrade/our_files/test.custom.jsvar BASEWSURL = "https://lalutest.sirsi.net/lalu_ilsws/";
+var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/";
 var CLIENTID = "DS_CLIENT";
 
 $J(document).ready(function() {
