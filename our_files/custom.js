@@ -30,7 +30,6 @@ var doGenericTasks = function () {
 var doDetailViewTasks = function () {
   // Isolated tasks
   detailViewIconReplace();
-  createCitationButton();
   hideMissingDetailBookImage();
   prepOpenAccordions();
   detailChangeToAccessThisItem();
@@ -38,21 +37,16 @@ var doDetailViewTasks = function () {
   renameItemNoteColumn();
   renameItemHoldsColumn();
   replaceCallNumChildwithCallNum();
-  linkAvailableOnlineCallNumber();
   replaceItemNote();
   replaceDetailGovDocsLabel();
   makePrecedingSucceedingLinks();
   deVSeriesLink();
   // ITEM_STATUS tasks
-  ILLIfCheckedOut();
   renameDueStatus();
   // ITEM_HOLD_LINK tasks
-  aeonRequest();
-  elecAccessIfUnavailable();
-  deUnavailablePermReserve();
-  DetaildeUnavailableWhiteReserve();
-  deUnavailableReferenceMaterial();
+  makeRequestItemColumn();
 }
+
 
 var scheduleConvertResultsStackMapToLink;
 var schedulechangeAvailableAfterSpinner;
@@ -100,59 +94,6 @@ var detailViewIconReplace = function () {
       format_containerDiv[0].firstElementChild.textContent = iconString;
     }
   }
-}
-
-var createCitationButton = function () {
-  // shortcircuit if "Cite As" field in object body
-  if ($J('.PREFCITE524').length) {
-    return;
-  }
-
-  var oclcNUM, oclcISBN, oclcISSN;
-
-  $J('#detail0_OCLC .OCLC_value').each(function () {
-    var oclc_value = $J(this).text().replace('(OCoLC)', '');
-    if (oclc_value.length && !isNaN(oclc_value)) {
-      oclcNUM = oclc_value;
-      return false;
-    }
-  });
-  $J('#detail0_ISBN .ISBN_value').each(function () {
-    var isbn_value = $J(this).text();
-    if (isbn_value.length) {
-      oclcISBN = isbn_value;
-      return false;
-    }
-  });
-  $J('#detail0_ISSN .ISSN_value').each(function () {
-    var issn_value = $J(this).text();
-    if (issn_value.length) {
-      oclcISSN = issn_value;
-      return false;
-    }
-  });
-
-  if (oclcNUM || oclcISBN || oclcISSN) {
-    var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
-      .click(function () {
-        citationPopup(oclcNUM, oclcISBN, oclcISSN);
-      });
-    var newDiv = $J('<div>', { id: 'CitationButton' });
-    $J('#detailActionsdetail0').append(newDiv.append(newButton));
-  }
-}
-
-var citationPopup = function (oclcNUM, oclcISBN, oclcISSN) {
-  if (oclcNUM != '') {
-    var myURL = 'http://www.worldcat.org/oclc/' + oclcNUM + '?page=citation';
-  } else if (oclcISBN != '') {
-    oclcISBN2 = oclcISBN.substr(0, 13);
-    var myURL = 'http://www.worldcat.org/isbn/' + oclcISBN2 + '?page=citation';
-  } else if (oclcISSN != '') {
-    oclcISSN2 = oclcISSN.substr(0, 8);
-    var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
-  }
-  window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
 }
 
 var hideMissingDetailBookImage = function () {
@@ -236,33 +177,6 @@ var changeNamesAfterAjaxComplete = function () {
 
 var replaceCallNumChildwithCallNum = function () {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
-}
-
-var linkAvailableOnlineCallNumber = function () {
-  hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
-  if (!hrefElectronicAccess) {
-    return;
-  }
-  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
-      new_div.append(new_p);
-      new_div.append(new_href);
-      new_div.appendTo(elem);
-    })
-  $J('td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
-      new_div.append(new_p);
-      new_div.append(new_href);
-      new_div.appendTo(elem);
-    })
 }
 
 var titleInfoDict = {};
@@ -423,20 +337,140 @@ var deVSeriesLink = function () {
 }
 
 //Detail View Tasks -- ITEM_STATUS tasks
-var ILLIfCheckedOut = function () {
+
+
+var renameDueStatus = function () {
   $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
     var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
-      return;
+    if (itemStati.length && itemStati[0].childNodes.length) {
+      var newText = itemStati[0].childNodes[0].nodeValue.replace('Due ', 'Checked Out -- Due: ');
+      itemStati[0].childNodes[0].nodeValue = newText;
     }
-    var illiadUrl = buildIlliadRequest();
-    addLinkILL(itemStati[0].id, illiadUrl)
   });
 }
 
-var buildIlliadRequest = function () {
+//Detail View Tasks -- ITEM_HOLD_LINK tasks
+
+var makeRequestItemColumn = function () {
+  $availableTable = $J('.detailItemsTable_SD_ITEM_STATUS').first().parentsUntil('div .detailItems').filter('table');
+  $header = $availableTable.children('thead');
+  $rows = $availableTable.children('tbody');
+  makeRequestItemHeader($header);
+  makeRequestItemCells($rows);
+}
+
+var makeRequestItemHeader = function ($header) {
+  $newHeader = $J('<th>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" });
+  $newHeaderChild = $J('<div>', { class: "detailItemTable_th", text: "Request Item" });
+  $newHeader.append($newHeaderChild);
+  $sortButton = $J('<span>', { class: "sortable_sortAnyInd" })
+    .append($J('<img>', { src: "/client/images/account-icons/sortable.png", class: "checkoutsIcons", alt: "Click to Sort" }));
+  $newHeader.append($sortButton);
+  $header.children().filter('tr').append($newHeader);
+}
+
+var makeRequestItemCells = function ($rows) {
+  $rows.children('tr').each(function (i, row) {
+    $J(row).find('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
+      var callNumber = $J(row).find('.detailItemsTable_CALLNUMBER').text().replace(/\n/g, '');
+      var curLocation = $J(row).find('.asyncFieldSD_ITEM_STATUS').first().text().replace(/\n/g, '');
+      var matType = $J(row).find('.detailItemsTable_ITYPE').text().replace(/\n/g, '')
+      var itemType = $J(row).find('.detailItemsTable_ITYPE').text().replace(/\n/g, '');
+      var libz = $J(row).find('.asyncFieldLIBRARY').not('.hidden');
+      var library = libz.text().replace(/\n/g, '');
+      var fakeCheckout = isFakeCheckout(callNumber, curLocation, matType);
+      var elecAccessLink = hasElecAccess(row, callNumber);
+      if (elecAccessLink && elecAccessLink.length) {
+        makeElecAccess(row, elecAccessLink);
+        removeCallNumAccessthisitem(row);
+      } else if (fakeCheckout === true) {
+        makeFakeAvailable(row);
+      } else {
+        if (library == 'Special Collections') {
+          var url = buildAeonRequest(callNumber, curLocation, itemType, library);
+        } else {
+          var url = buildIlliadRequest(callNumber);
+        }
+        replaceOrCreate(row, url);
+      };
+    })
+  })
+}
+
+var hasElecAccess = function (row, callNumber) {
+  var link = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+  var is_actionable = (callNumber.indexOf('AVAILABLE ONLINE') > -1) || (callNumber.indexOf('VETERINARY MEDICINE LIBRARY') > -1) || (callNumber.indexOf('AUTO') > -1);
+  if (link && is_actionable) {
+    return link;
+  }
+  return false;
+}
+
+var makeElecAccess = function (row, link) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
+      .append($J('<a>', { href: link, class: 'RequestLinkUrl', text: 'Access Online' })));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
+  if ($existingElem.length) {
+    $existingElem.attr('href', link);  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
+}
+
+var removeCallNumAccessthisitem = function (row) {
+  $J(row).find('.detailItemsTable_CALLNUMBER a').remove()
+}
+
+var isFakeCheckout = function (callNumber, curLocation, matType) {
+  // libraries are using checkout to move items to reserves
+  // instead of creating new locations like "Reserves".
+  // These 'callNumbers' items are actually probably
+  // in the library, so we hack them to report "Available"
+  // They lost the ability to track items checked out from
+  // reserve locations, so we have to pretend the item
+  // is probably present in the reserve location with this hack.
+  if (callNumber == 'WHITE RESV.') {
+    return true;
+  }
+  if (matType == 'Reference Material') {
+    return true;
+  }
+  if (matType == 'Permanent Reserve') {
+    return true;
+  }
+  if (curLocation.indexOf('Middleton Library Reserve Desk') > -1) {
+    return true;
+  }
+  return false;
+}
+
+var makeFakeAvailable = function (row) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK", text: "Ask the Reserve Desk" }));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK');
+  if ($existingElem.length) {
+    $existingElem.text("Ask the Reserve Desk");  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
+}
+
+var replaceOrCreate = function (row, url) {
+  $elem = $J('<td>', { class: "detailItemsTable_SD_ITEM_HOLD_LINK" })
+    .append($J('<div>', { class: "asyncFieldSD_ITEM_HOLD_LINK" })
+      .append($J('<a>', { href: url, class: 'RequestLinkUrl', text: 'Request Item' })));
+  $existingElem = $J(row).find('.detailItemsTable_SD_ITEM_HOLD_LINK .asyncFieldSD_ITEM_HOLD_LINK a');
+  if ($existingElem.length) {
+    $existingElem.attr('href', url);  // replace
+  } else {
+    row.append($elem[0]);  //create
+  }
+}
+
+var buildIlliadRequest = function (callNumber) {
   var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750);
+  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
   var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
   var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
   var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
@@ -451,126 +485,32 @@ var buildIlliadRequest = function () {
     var requestType = 'loan';
     var oslISXN = oslISBN;
   }
-  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
+  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace + '&Notes=' + callNumber + '&CallNumber' + 'testingtesting');
   return illiadUrl;
 }
 
-var addLinkILL = function (itemId, illiadUrl) {
-  var dueElem = $J('#' + itemId);
-  if (dueElem.siblings('.illiadLink').length) {
-    return;
-  }
-  var illiadNode = $J('<div>', { class: 'illiadLink' }).appendTo(dueElem);
-  var illiadHref = $J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan' }).appendTo(illiadNode);
-}
-
-var renameDueStatus = function () {
-  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (itemStati.length && itemStati[0].childNodes.length) {
-      var newText = itemStati[0].childNodes[0].nodeValue.replace('Due ', 'Checked Out -- Due: ');
-      itemStati[0].childNodes[0].nodeValue = newText;
-    }
-  });
-}
-
-//Detail View Tasks -- ITEM_HOLD_LINK tasks
-var aeonRequest = function () {
+var buildAeonRequest = function (callNumber, curLocation, itemType, library) {
   var SPEC_COLL = 'Special Collections';
   var ALT_SPEC_COLL = 'Special Collections, Hill Memorial Library';
   var REMOTE = 'LLMVC - Remote Storage';
   var REQUEST_MATERIAL = 'Request Item';
-  var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
+  var itemTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0, 750);
+  var itemAuthor = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text();
+  var itemPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
+  var itemPub = $J('#detail0_PUBLISHER .PUBLISHER_value').first().text();
+  var itemPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').first().text().split(':')[0];
+  var itemRefnum = $J('#detail0_DOC_ID .DOC_ID_value').text().split(':')[1];
+  var itemEdition = $J('#detail0_EDITION .EDITION_value').text();
+  var itemInfo1 = $J('#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value').text();
   var requestType;
-  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750));
-  var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
-  var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
-  var itemPub = '&ItemPublisher=' + encodeURIComponent(jQuery('#detail0_PUBLISHER .PUBLISHER_value').first().text());
-  var itemPlace = '&ItemPlace=' + encodeURIComponent(jQuery('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').first().text().split(':')[0]);
-  var itemRefnum = '&ReferenceNumber=' + encodeURIComponent(jQuery('#detail0_DOC_ID .DOC_ID_value').text().split(':')[1]);
-  var itemEdition = '&ItemEdition=' + encodeURIComponent(jQuery('#detail0_EDITION .EDITION_value').text());
-  var itemInfo1 = '&ItemInfo1=' + encodeURIComponent(jQuery('#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value').text());
-  setTimeout(function () {
-    jQuery('.detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow').each(function () {
-      var libr = jQuery(this).find('.asyncFieldLIBRARY').first().text();
-      var itemDocType = '&DocumentType=' + encodeURIComponent(jQuery(this).find('.detailItemsTable_ITYPE').text().replace(/\n/g, ''));
-      var itemCall = '&CallNumber=' + encodeURIComponent(jQuery(this).find('.detailItemsTable_CALLNUMBER').text().replace(/\n/g, ''));
-      var curLocation = jQuery(this).find('.asyncFieldSD_ITEM_STATUS').first().text();
-      var itemLocation = '&Location=' + encodeURIComponent(curLocation);
-      if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
-        if (curLocation == REMOTE) {
-          requestType = '&Value=GenericRequestAllIronMountain';
-        } else {
-          requestType = '&Value=GenericRequestAll';
-        }
-        var aeonElem = $J('<td class="detailItemsAeonRequest"><a target="_blank" href="' + baseURL + requestType + itemRefnum + itemDocType + itemTitle + itemAuthor + itemEdition + itemCall + itemPub + itemPubDate + itemLocation + itemPlace + itemInfo1 + '">' + REQUEST_MATERIAL + '</a></td>');
-        var destElem = $J(this).find('.detailItemsTable_SD_ITEM_HOLD_LINK').not('.hidden');
-        replaceItemHoldsElem(aeonElem, destElem);
-      }
-    });
-  }, 500);
+  if (curLocation == REMOTE) {
+    requestType = 'GenericRequestAllIronMountain';
+  } else {
+    requestType = 'GenericRequestAll';
+  };
+  var aeonUrl = encodeURI('https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20' + '&Value=' + requestType + '&ReferenceNumber=' + itemRefnum + '&DocumentType=' + itemType + '&ItemTitle=' + itemTitle + '&ItemAuthor=' + itemAuthor + '&ItemEdition=' + itemEdition + '&CallNumber=' + callNumber + '&ItemPublisher=' + itemPub + '&ItemDate=' + itemPubDate + '&Location=' + curLocation + '&ItemPlace=' + itemPlace + '&ItemInfo1=' + itemInfo1);
+  return aeonUrl;
 }
-
-var replaceItemHoldsElem = function (aeonElem, destElem) {
-  if (aeonElem.length) {
-    $J(destElem).empty();
-    $J(destElem).addClass($J(aeonElem).attr('class'));
-    $J(destElem).append($J(aeonElem).children(":first-child"));
-  }
-}
-
-var elecAccessIfUnavailable = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var elecLink = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER a').not('.hidden');
-      if ($J(elem).text().trim() == 'Unavailable' && elecLink.length) {
-        $J(elem)
-          .text('')
-          .append(elecLink);
-      }
-    })
-  })
-}
-
-var deUnavailablePermReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Permanent Reserve') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
-
-var DetaildeUnavailableWhiteReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (callNumText.trim() == 'WHITE RESV.') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
-
-var deUnavailableReferenceMaterial = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Reference Material') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
-
 
 //Results View tasks
 var friendlyizeNoResults = function () {
