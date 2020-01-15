@@ -1,5 +1,36 @@
-var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/";
+var BASEWSURL = "https://lalutest.sirsi.net/lalu_ilsws/";
 var CLIENTID = "DS_CLIENT";
+
+/*
+  Desktop Markup Outline
+  <body class="nonmobile">
+    <input value="false" id="fbAvailableHidden" type="hidden" >
+    <div class="patronLogin hidden" id="loginModal">
+    <div class="loginDiv loginMessages">
+    <div class="header">
+    <div class="bcolor-s4 bcolor nm-bgcolor-p3 searchBoxWrapper" id="searchBoxWrapper">
+    <div class="quicksearchWrapper" id="quicksearchWrapper">	
+    <div id="content" class="nonmobile">        
+    <div class="footer_container bgcolor-p3 nm-bgcolor-p3 nm-ada-bgcolor-p3" id="footer">
+    <div id="SMtooltip">
+  </body>
+  Mobile Markup Outline
+  <body class="mobile bgcolor-s7 text-p">
+    <input value="false" id="fbAvailableHidden" type="hidden">
+    <div class="patronLogin hidden" id="loginModal">
+    <div id="bodyWrapper">
+      <div id="content" class="mobile">
+        <div class="header">
+        <div class="bcolor-s4 bcolor nm-bgcolor-p3 searchBoxWrapper" id="searchBoxWrapper">
+        <div class="emailModalDialogContainer" id="emailModalDialogContainer">
+        <div id="smsDialog">
+        <div id="placeHoldDialog">			
+        <div class="searchView bgcolor-s7" id="searchViewDISCOVERY_ALL">
+        <div class="bgcolor-s7" id="footerWrapper">
+      </div>
+    </div>
+  </body>		
+*/
 
 $J(document).ready(function() {
   doGenericTasks();
@@ -95,6 +126,26 @@ var customSearchLink = function() {
 };
 
 //Detail View Tasks -- Independent
+/*
+Purpose: Replaces the format image with words
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=turtles&te=
+
+Desktop Incoming Markup: 
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">
+      <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-BOOK icon-p"></span>
+      <span class="formatText">Book</span>
+    </div>
+  </div>
+
+Desktop Outgoing Markup:   
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">Book</div>
+  </div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var detailViewIconReplace = function() {
   var format_containerDiv = document.getElementsByClassName("format_container");
   var iconTexts = Array();
@@ -175,6 +226,68 @@ var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
   );
 };
 
+/*
+Purpose: Hide the default cover image; only shows the 
+  image if it’s actually the book cover
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:18266/ada?qu=turtles
+
+Desktop Incoming Markup w/ Image: 
+  <div class="detail_cover_art_div">
+    <img 
+      src="https://secure.syndetics.com/index.aspx?type=xw12&amp;client=louislibnet&amp;upc=&amp;oclc=&amp;isbn=9781560983729/LC.JPG" 
+      alt="Cover image for " 
+      id="detailCover0" 
+      title="Cover image for " 
+      class="detail_cover_art">
+  <div class="facebook_like_detail"></div>
+  </div>
+
+Desktop Outgoing Markup  w/ Image:   
+  <div class="detail_cover_art_div">
+    <img 
+      src="https://secure.syndetics.com/index.aspx?type=xw12&amp;client=louislibnet&amp;upc=&amp;oclc=&amp;isbn=9781560983729/LC.JPG" 
+      alt="Cover image for " 
+      id="detailCover0" 
+      title="Cover image for " 
+      class="detail_cover_art">
+    <div class="facebook_like_detail"></div>
+    </div>
+
+Desktop Incoming Markup  w/o Image: 
+<div class="detail_cover_art_div">
+  <img 
+    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
+    alt="Cover image for " 
+    id="detailCover0" 
+    title="Cover image for " 
+    class="detail_cover_art">
+  <div 
+    style="display:none" 
+    title="Cover image for " 
+    class="no_image_text" 
+    id="detailCover0Title"></div>
+  <div class="facebook_like_detail"></div>
+</div>
+
+Desktop Outgoing Markup  w/o Image:   
+<div class="detail_cover_art_div" style="display: none;">
+  <img 
+    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
+    alt="Cover image for " 
+    id="detailCover0" 
+    title="Cover image for " 
+    class="detail_cover_art">
+  <div 
+    style="display: block;" 
+    title="Cover image for " 
+    class="no_image_text" 
+    id="detailCover0Title"></div>
+  <div class="facebook_like_detail"></div>
+</div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var hideMissingDetailBookImage = function() {
   /* this function sets all detail cover art images hidden.
      then, when the anonymous function in Enterprise reassigns the image src
@@ -436,6 +549,40 @@ var openAccordions = function() {
   });
 };
 
+/*
+Purpose: Replaces Full path URL linke with “Access This Item”, and adds class to the A tag
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
+
+Desktop Incoming Markup: 
+  <div class="displayElementWrapper"
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a 
+      target="_blank"  
+      href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182?catkey=1631073">
+      http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182
+    </a>
+  </div>
+
+
+Desktop Outgoing Markup: 
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a 
+      target="_blank" 
+      href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182?catkey=1631073" 
+      class="detail_access_link">
+      Access This Item
+    </a>
+  </div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+
+*/
 var detailChangeToAccessThisItem = function() {
   $J(".ELECTRONIC_ACCESS_label")
     .siblings()
@@ -451,17 +598,79 @@ var detailChangeToAccessThisItem = function() {
       }
     });
 };
+/*
+Purpose: Replaces Column header “Status” with “Current Location”
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
 
+Desktop Incoming Markup: 
+  <th class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="detailItemTable_th">Status</div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Desktop Outgoing Markup: 
+  <th class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="detailItemTable_th">Current Location</div>
+    <span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span>
+  </th>
+
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var replaceAvailableStatus = function() {
   $J(".detailItemTable_th:contains('Status')").text("Current Location");
 };
 
+/*
+Purpose: Renames item  Note Column Header
+Example URL: ???
+
+Desktop Incoming Markup: TBD
+Desktop Outgoing Markup: TBD
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+
+// Is this needed? Potentially remove
+*/
 var renameItemNoteColumn = function() {
   $J("thead tr .detailItemsTable_ITEMNOTE .detailItemTable_th").text(
     "Item Note"
   );
 };
 
+/*
+Purpose: Part of replacing holds with ILL feature
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1836309/ada?qu=turtle
+
+Desktop Incoming Markup:
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      <a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5331702/31518102334558/item_hold?qu=Hold&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5331702%7E%7E0');});">
+        Reserve This Copy
+      </a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      Unavailable
+    </div>
+  +</td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      <a href="javascript:com_sirsi_ent_login.loginFirst(function(reload){placeItemHold(reload, '/client/en_US/lsu/search/placehold/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5331702/31518102334558/item_hold?qu=Hold&amp;d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5331702%7E%7E0');});">
+        Place Hold
+      </a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518102334558">
+      Unavailable
+    </div>
+  </td>
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var renameItemHoldsColumn = function() {
   $J('.detailItemTable_th:contains("Item Holds")').text("Request Item");
   changeNamesAfterAjaxComplete();
@@ -478,6 +687,33 @@ var changeNamesAfterAjaxComplete = function() {
   });
 };
 
+/*
+Purpose: Wording change
+Example URL: ????
+
+Desktop Incoming Markup:
+  <th class="detailItemsTable_CALLNUMBER">
+    <div class="detailItemTable_th">
+      Call Number (Child)
+    </div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Desktop Outgoing Markup:
+  <th class="detailItemsTable_CALLNUMBER">
+    <div class="detailItemTable_th">
+      Call Number
+    </div>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
+  </th>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var replaceCallNumChildwithCallNum = function() {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text("Call Number");
 };
@@ -521,6 +757,17 @@ var linkAvailableOnlineCallNumber = function() {
   });
 };
 
+/*
+Covers next set of methods through fixNewBookShelf
+Purpose: Gets title and item data from API / Enables custom display of item info
+Example URL: ????
+
+Desktop Incoming Markup: TBD
+Desktop Outgoing Markup: TBD
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
 var titleInfoDict = {};
 var scheduleReplacePubNoteCells;
 var scheduleNewBookShelf;
@@ -675,6 +922,11 @@ var fixNewBookShelf = function() {
     clearInterval(scheduleNewBookShelf);
   }
 };
+
+/*
+  End Title Info Update methods
+*/
+
 var replaceDetailGovDocsLabel = function() {
   $J(".asyncFieldLIBRARY").ajaxComplete(function() {
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(

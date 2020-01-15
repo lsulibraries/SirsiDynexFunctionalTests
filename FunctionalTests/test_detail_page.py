@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,8 +9,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 import pytest
 
+from . import _conf_settings
 
-import time
+
+URL = _conf_settings.URL
 
 
 @pytest.fixture
@@ -19,10 +23,7 @@ def load_hello_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello')
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user"
-    )
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello")
 
     def fin():
         print("teardown driver")
@@ -33,17 +34,14 @@ def load_hello_driver(request):
 
 
 @pytest.fixture
-def load_observing_driver(request):
+def load_checkedout_driver(request):
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user')
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/ada?qu=observing+the+user"
-    )
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one")
 
     def fin():
         print("teardown driver")
@@ -61,11 +59,7 @@ def load_specials_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript"
-    )
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1556136/one")
 
     def fin():
         print("teardown driver")
@@ -83,13 +77,7 @@ def load_book_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     driver = webdriver.Firefox()
     # driver.delete_all_cookies()
-    # driver.get('https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1695928/ada?qf=ITYPE%09Type%0921%3AARCH-MSS%09Archive%2FManuscript')
-    # driver.get(
-    #     "https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:179060/one"
-    # )
-    driver.get(
-        "https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:179060/one"
-    )
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/one")
 
     def fin():
         print("teardown driver")
@@ -99,7 +87,7 @@ def load_book_driver(request):
     return driver
 
 
-################################################################################
+###############################################################################
 
 
 def test_detailViewIconReplace(load_hello_driver):
@@ -124,8 +112,8 @@ def test_hideMissingDetailBookImage(load_hello_driver):
     )
 
 
-def test_ILLIfCheckedOut(load_observing_driver):
-    driver = load_observing_driver
+def test_ILLIfCheckedOut(load_checkedout_driver):
+    driver = load_checkedout_driver
     wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.CLASS_NAME, "asyncFieldSD_ITEM_STATUS"))
@@ -138,14 +126,13 @@ def test_ILLIfCheckedOut(load_observing_driver):
     assert len(illiad_link) > 0
 
 
-def test_prepOpenAccordions(load_observing_driver):
-    driver = load_observing_driver
+def test_prepOpenAccordions(load_checkedout_driver):
+    driver = load_checkedout_driver
+    time.sleep(1)
     accordian_h3s = driver.find_elements_by_class_name("ui-accordion-header")
-    assert len(accordian_h3s) == 3
     for accordian_h3 in accordian_h3s:
         assert accordian_h3.get_attribute("aria-expanded") == "true"
         assert accordian_h3.get_attribute("aria-selected") == "true"
-        assert "ui-corner-top" in accordian_h3.get_attribute("class")
 
 
 def test_linkAvailableOnlineCallNumber(load_hello_driver):
@@ -174,6 +161,7 @@ def test_aeonLink(load_specials_driver):
                 break
         except:
             retries = retries - 1
+            time.sleep(3)
     assert aeon_td.text == "Request Item"
 
 
@@ -187,6 +175,7 @@ def test_stackmap(load_book_driver):
                 break
         except NoSuchElementException:
             retries = retries - 1
+            time.sleep(3)
     assert stackmap_a.text == "Find in the Library"
 
 
