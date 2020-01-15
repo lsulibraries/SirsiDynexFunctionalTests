@@ -525,14 +525,25 @@ var openAccordions = function() {
     $J(elem)
       .removeClass("ui-corner-all")
       .addClass("ui-corner-top")
+      .removeClass("ui-accordion-header-collapsed")
+      .addClass("ui-accordion-header-active")
       .attr("aria-expanded", "true")
-      .attr("aria-selected", "true")
+      .attr("aria-selected", "true");
+
+    $J(elem)
+      .find("i.fa")
+      .removeClass("fa-caret-right")
+      .addClass("fa-caret-down");
+
+    $J(elem)
       .find("span.ui-icon")
       .removeClass("ui-icon-triangle-1-e")
       .addClass("ui-icon-triangle-1-s");
   });
   $J("div.ui-accordion-content").each(function(i, elem) {
     $J(elem)
+      .addClass("ui-accordion-content-active")
+      .attr("aria-hidden", "false")
       .css("visibility", "visible")
       .css("display", "block");
   });
@@ -587,7 +598,6 @@ var detailChangeToAccessThisItem = function() {
       }
     });
 };
-
 /*
 Purpose: Replaces Column header “Status” with “Current Location”
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
