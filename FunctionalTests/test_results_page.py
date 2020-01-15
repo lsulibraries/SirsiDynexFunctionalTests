@@ -7,6 +7,7 @@ from . import _conf_settings
 
 
 URL = _conf_settings.URL
+USER_AGENT = _conf_settings.USER_AGENT
 
 
 @pytest.fixture
@@ -15,8 +16,8 @@ def load_driver(request):
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
-    driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
     driver.get(f"{URL}/search/results")
 
     def fin():
