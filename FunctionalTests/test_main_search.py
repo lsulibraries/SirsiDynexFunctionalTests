@@ -10,6 +10,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import pytest
 
+from . import _conf_settings
+
+
+USER_AGENT = _conf_settings.USER_AGENT
+
 
 @pytest.fixture
 def load_driver(request):
@@ -18,8 +23,8 @@ def load_driver(request):
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.cache.offline.enable", False)
     profile.set_preference("network.http.use-cache", False)
-    driver = webdriver.Firefox(profile)
-    driver.delete_all_cookies()
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
     driver.get("https://www.lib.lsu.edu/?")
 
     def fin():
