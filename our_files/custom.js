@@ -1112,7 +1112,30 @@ Desktop Outgoing Markup:
   </table>
 </div>
 
-Mobile Incoming Markup: TBD
+Mobile Incoming Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+        <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+            id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2805471-2001">
+            Unavailable
+          </div>
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK hidden" 
+            id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2805471-2001">
+            Unavailable
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 Mobile Outgoing Markup: TBD
 */
 
@@ -1144,6 +1167,7 @@ var aeonRequest = function() {
     encodeURIComponent(
       jQuery("#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value").text()
     );
+  var item;
   var itemPub =
     "&ItemPublisher=" +
     encodeURIComponent(
@@ -1175,66 +1199,101 @@ var aeonRequest = function() {
       jQuery("#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value").text()
     );
   aeonIntervalPlaceholder = setInterval(function() {
-    jQuery(
-      ".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow"
-    ).each(function() {
-      var libr = jQuery(this)
-        .find(".asyncFieldLIBRARY")
-        .first()
-        .text();
-      var itemDocType =
-        "&DocumentType=" +
-        encodeURIComponent(
-          jQuery(this)
-            .find(".detailItemsTable_ITYPE")
-            .text()
-            .replace(/\n/g, "")
-        );
-      var itemCall =
-        "&CallNumber=" +
-        encodeURIComponent(
-          jQuery(this)
-            .find(".detailItemsTable_CALLNUMBER")
-            .text()
-            .replace(/\n/g, "")
-        );
-      var curLocation = jQuery(this)
-        .find(".asyncFieldSD_ITEM_STATUS")
-        .first()
-        .text();
-      var itemLocation = "&Location=" + encodeURIComponent(curLocation);
-      if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
-        if (curLocation == REMOTE) {
-          requestType = "&Value=GenericRequestAllIronMountain";
-        } else {
-          requestType = "&Value=GenericRequestAll";
+    jQuery(".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow")
+      .add(".detailItems .detailItemTable .detailChildRecord")
+      .each(function() {
+        const mobileMOdifier = jQuery(this).hasClass("detailChildRecord")
+          ? ".fieldValue"
+          : "";
+
+        var libr = jQuery(this)
+          .find(".asyncFieldLIBRARY")
+          .first()
+          .text();
+        var itemDocType =
+          "&DocumentType=" +
+          encodeURIComponent(
+            jQuery(this)
+              .find(".detailItemsTable_ITYPE" + mobileMOdifier)
+              .text()
+              .replace(/\n/g, "")
+          );
+        var itemCall =
+          "&CallNumber=" +
+          encodeURIComponent(
+            jQuery(this)
+              .find(".detailItemsTable_CALLNUMBER" + mobileMOdifier)
+              .text()
+              .replace(/\n/g, "")
+          );
+        var curLocation = jQuery(this)
+          .find(".asyncFieldSD_ITEM_STATUS")
+          .first()
+          .text();
+        var itemLocation = "&Location=" + encodeURIComponent(curLocation);
+        if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
+          if (curLocation == REMOTE) {
+            requestType = "&Value=GenericRequestAllIronMountain";
+          } else {
+            requestType = "&Value=GenericRequestAll";
+          }
+
+          if (jQuery(this).hasClass("detailItemsTableRow")) {
+            var aeonElem = $J(
+              '<td class="detailItemsAeonRequest"><a target="_blank" href="' +
+                baseURL +
+                requestType +
+                itemRefnum +
+                itemDocType +
+                itemTitle +
+                itemAuthor +
+                itemEdition +
+                itemCall +
+                itemPub +
+                itemPubDate +
+                itemLocation +
+                itemPlace +
+                itemInfo1 +
+                '">' +
+                REQUEST_MATERIAL +
+                "</a></td>"
+            );
+
+            var destElem = $J(this)
+              .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
+              .not(".hidden");
+            replaceItemHoldsElem(aeonElem, destElem);
+          } else if (jQuery(this).hasClass("detailChildRecord")) {
+            var aeonElem = $J(
+              '<div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK"><a target="_blank" href="' +
+                baseURL +
+                requestType +
+                itemRefnum +
+                itemDocType +
+                itemTitle +
+                itemAuthor +
+                itemEdition +
+                itemCall +
+                itemPub +
+                itemPubDate +
+                itemLocation +
+                itemPlace +
+                itemInfo1 +
+                '">' +
+                REQUEST_MATERIAL +
+                "</div>"
+            );
+
+            var destElem = $J(this)
+              .find(".asyncFieldSD_ITEM_HOLD_LINK")
+              .not(".hidden");
+
+            replaceItemHoldsElem(aeonElem, destElem);
+          }
+
+          clearInterval(aeonIntervalPlaceholder);
         }
-        var aeonElem = $J(
-          '<td class="detailItemsAeonRequest"><a target="_blank" href="' +
-            baseURL +
-            requestType +
-            itemRefnum +
-            itemDocType +
-            itemTitle +
-            itemAuthor +
-            itemEdition +
-            itemCall +
-            itemPub +
-            itemPubDate +
-            itemLocation +
-            itemPlace +
-            itemInfo1 +
-            '">' +
-            REQUEST_MATERIAL +
-            "</a></td>"
-        );
-        var destElem = $J(this)
-          .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
-          .not(".hidden");
-        replaceItemHoldsElem(aeonElem, destElem);
-        clearInterval(aeonIntervalPlaceholder);
-      }
-    });
+      });
   }, 500);
 };
 
