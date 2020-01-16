@@ -668,11 +668,24 @@ Desktop Outgoing Markup:
       Unavailable
     </div>
   </td>
-Mobile Incoming Markup: TBD
+Mobile Incoming Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 Mobile Outgoing Markup: TBD
 */
 var renameItemHoldsColumn = function() {
-  $J('.detailItemTable_th:contains("Item Holds")').text("Request Item");
+  $J('.detailItemTable_th:contains("Item Holds")')
+    .add(".detailItems .detailItemsTable_SD_ITEM_HOLD_LINK.label")
+    .text("Request Item");
   changeNamesAfterAjaxComplete();
 };
 
