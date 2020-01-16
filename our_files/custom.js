@@ -1136,7 +1136,31 @@ Mobile Incoming Markup:
   </div>
 </div>
 
-Mobile Outgoing Markup: TBD
+Mobile Outgoing Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+        <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+            id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+            <a target="_blank" href="https://specialcollections.lib.lsu.edu/Logon/?Action=10&amp;Form=20&amp;Value=GenericRequestAll&amp;ReferenceNumber=2805471&amp;DocumentType=Archive%2FManuscript&amp;ItemTitle=Gay-Butler-Plater%20family%20papers%2C&amp;ItemAuthor=Gay%20family.&amp;ItemEdition=&amp;CallNumber=G%3A43-85&amp;ItemPublisher=&amp;ItemDate=&amp;Location=Louisiana%20and%20Lower%20Mississippi%20Valley%20Collections&amp;ItemPlace=&amp;ItemInfo1=Some%20items%20have%20been%20removed%20due%20to%20restrictions%20placed%20by%20the%20donor%20and%20are%20available%20only%20to%20predetermined%20family%20members%20until%20such%20time%20as%20the%20restrictions%20expire.%20Access%20to%20photographic%20negatives%20requires%20permission%20of%20the%20curator.">
+              Request Item
+            </a>
+          </div>
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK hidden" 
+            id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+            Unavailable
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 */
 
 let aeonIntervalPlaceholder;
