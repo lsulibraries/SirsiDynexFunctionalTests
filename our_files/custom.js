@@ -1061,6 +1061,7 @@ var renameDueStatus = function() {
 /*
 Purpose: Built the request item link for items in Special Collections
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2805471/ada?qu=gay+family
+Test: test_detail_page.py -> test_aeonLink
 
 Desktop Incoming Markup:
 <div class="detailItems ">
