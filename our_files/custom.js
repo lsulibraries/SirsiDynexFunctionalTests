@@ -1092,6 +1092,7 @@ Desktop Incoming Markup:
     ...
   </table>
 </div>
+
 Desktop Outgoing Markup:
 <div class="detailItems ">
   <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
@@ -1114,6 +1115,8 @@ Desktop Outgoing Markup:
 Mobile Incoming Markup: TBD
 Mobile Outgoing Markup: TBD
 */
+
+let aeonIntervalPlaceholder;
 var aeonRequest = function() {
   var SPEC_COLL = "Special Collections";
   var ALT_SPEC_COLL = "Special Collections, Hill Memorial Library";
@@ -1171,7 +1174,7 @@ var aeonRequest = function() {
     encodeURIComponent(
       jQuery("#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value").text()
     );
-  setTimeout(function() {
+  aeonIntervalPlaceholder = setInterval(function() {
     jQuery(
       ".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow"
     ).each(function() {
@@ -1229,6 +1232,7 @@ var aeonRequest = function() {
           .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
           .not(".hidden");
         replaceItemHoldsElem(aeonElem, destElem);
+        clearInterval(aeonIntervalPlaceholder);
       }
     });
   }, 500);
