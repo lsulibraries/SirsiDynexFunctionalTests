@@ -689,7 +689,7 @@ var changeNamesAfterAjaxComplete = function() {
 
 /*
 Purpose: Wording change
-Example URL: ????
+Example URL: ???
 
 Desktop Incoming Markup:
   <th class="detailItemsTable_CALLNUMBER">
@@ -712,12 +712,103 @@ Desktop Outgoing Markup:
   </th>
 
 Mobile Incoming Markup: TBD
+
 Mobile Outgoing Markup: TBD
 */
 var replaceCallNumChildwithCallNum = function() {
   $J('.detailItemTable_th:contains("Call Number (Child)")').text("Call Number");
 };
 
+/*
+Purpose: Adds link to page if available online
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello+again
+Test: test_detail_page.py > test_linkAvailableOnlineCallNumber
+
+Desktop Incoming Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div> 
+    <a target="_blank" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182" class="detail_access_link">Access This Item</a>
+  </div>
+  ...
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...  
+          <td class="detailItemsTable_CALLNUMBER">
+            AVAILABLE ONLINE
+          </td>
+          ...
+        </tr>
+      </tbody>
+      ...
+    </table>
+  </div>
+
+
+Desktop Outgoing Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div> 
+    <a target="_blank" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182" class="detail_access_link">Access This Item</a>
+  </div>
+  ...
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      <tbody>
+        <tr class="detailItemsTableRow  sm-checked">
+          ...  
+          <td class="detailItemsTable_CALLNUMBER">
+            <div>
+              <p>Available Online</p>
+              <a title="Access this item" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182">Access this item</a>
+            </div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+      ...
+    </table>
+  </div>
+
+Mobile Incoming Markup: 
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a target="_blank" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030" class="detail_access_link">Access This Item</a>
+  </div>
+  ...
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_CALLNUMBER">
+      Call Number
+    </div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+      AVAILABLE ONLINE
+    </div>
+  </div>
+
+Mobile Outgoing Markup: 
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a target="_blank" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030" class="detail_access_link">Access This Item</a>
+  </div>
+  ...
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_CALLNUMBER">
+      Call Number
+    </div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+      AVAILABLE ONLINE
+    </div>
+  </div>
+*/
 var linkAvailableOnlineCallNumber = function() {
   hrefElectronicAccess = $J(".ELECTRONIC_ACCESS_label")
     .siblings("a:first")
@@ -725,8 +816,12 @@ var linkAvailableOnlineCallNumber = function() {
   if (!hrefElectronicAccess) {
     return;
   }
-  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")').each(
-    function(i, elem) {
+  $J('.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
+    .add(
+      'td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")'
+    )
+    //  .add('td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
+    .each(function(i, elem) {
       elem.innerHTML = "";
       new_div = $J("<div>");
       new_p = $J("<p>", { text: "Available Online" });
@@ -738,23 +833,7 @@ var linkAvailableOnlineCallNumber = function() {
       new_div.append(new_p);
       new_div.append(new_href);
       new_div.appendTo(elem);
-    }
-  );
-  $J(
-    'td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")'
-  ).each(function(i, elem) {
-    elem.innerHTML = "";
-    new_div = $J("<div>");
-    new_p = $J("<p>", { text: "Available Online" });
-    new_href = $J("<a>", {
-      text: "Access this item",
-      title: "Access this item",
-      href: hrefElectronicAccess
     });
-    new_div.append(new_p);
-    new_div.append(new_href);
-    new_div.appendTo(elem);
-  });
 };
 
 /*
