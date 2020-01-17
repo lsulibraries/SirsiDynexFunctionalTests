@@ -741,6 +741,11 @@ Desktop Incoming Markup:
           <td class="detailItemsTable_CALLNUMBER">
             AVAILABLE ONLINE
           </td>
+          OR
+          <td class="detailItemsTable_CALLNUMBER">
+            VETERINARY MEDICINE LIBRARY
+          </td>
+
           ...
         </tr>
       </tbody>
@@ -788,7 +793,11 @@ Mobile Incoming Markup:
       Call Number
     </div>
     <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
-      AVAILABLE ONLINE
+      AVAILABLE ONLINE 
+    </div>
+    OR
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+      VETERINARY MEDICINE LIBRARY
     </div>
   </div>
 
