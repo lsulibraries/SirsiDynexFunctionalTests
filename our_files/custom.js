@@ -668,11 +668,24 @@ Desktop Outgoing Markup:
       Unavailable
     </div>
   </td>
-Mobile Incoming Markup: TBD
+Mobile Incoming Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 Mobile Outgoing Markup: TBD
 */
 var renameItemHoldsColumn = function() {
-  $J('.detailItemTable_th:contains("Item Holds")').text("Request Item");
+  $J('.detailItemTable_th:contains("Item Holds")')
+    .add(".detailItems .detailItemsTable_SD_ITEM_HOLD_LINK.label")
+    .text("Request Item");
   changeNamesAfterAjaxComplete();
 };
 
@@ -1143,6 +1156,112 @@ var renameDueStatus = function() {
 };
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
+/*
+Purpose: Built the request item link for items in Special Collections
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2805471/ada?qu=gay+family
+Test: test_detail_page.py -> test_aeonLink
+
+Desktop Incoming Markup:
+<div class="detailItems ">
+  <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+    ...
+    <tbody>
+      <tr class="detailItemsTableRow ">
+        <td class="detailItemsTable_LIBRARY">
+          <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY2805471-1001">Special Collections</div>
+          <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY2805471-1001">Special Collections</div
+        </td>
+        ...
+        <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+            id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+              Unavailable
+          </div>
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK hidden" 
+            id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+              Unavailable
+          </div>
+        </td>
+      </tr>
+      ...
+    </tbody>
+    ...
+  </table>
+</div>
+
+Desktop Outgoing Markup:
+<div class="detailItems ">
+  <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+    <tbody>
+      <tr class="detailItemsTableRow  sm-checked">
+        <td class="detailItemsTable_LIBRARY">
+          <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY2805471-1001">Special Collections</div>
+          <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY2805471-1001">Special Collections</div>
+        </td>
+        ...
+        <td class="detailItemsTable_SD_ITEM_HOLD_LINK detailItemsAeonRequest">
+          <a target="_blank" href="https://specialcollections.lib.lsu.edu/Logon/?Action=10&amp;Form=20&amp;Value=GenericRequestAll&amp;ReferenceNumber=2805471&amp;DocumentType=Archive%2FManuscript&amp;ItemTitle=Gay-Butler-Plater%20family%20papers%2C&amp;ItemAuthor=Gay%20family.&amp;ItemEdition=&amp;CallNumber=G%3A43-85&amp;ItemPublisher=&amp;ItemDate=&amp;Location=Louisiana%20and%20Lower%20Mississippi%20Valley%20Collections&amp;ItemPlace=&amp;ItemInfo1=Some%20items%20have%20been%20removed%20due%20to%20restrictions%20placed%20by%20the%20donor%20and%20are%20available%20only%20to%20predetermined%20family%20members%20until%20such%20time%20as%20the%20restrictions%20expire.%20Access%20to%20photographic%20negatives%20requires%20permission%20of%20the%20curator.">Request Item</a>
+        </td>
+      </tr>
+      ...
+    </tbody>
+  </table>
+</div>
+
+Mobile Incoming Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+        <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+            id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2805471-2001">
+            Unavailable
+          </div>
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK hidden" 
+            id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2805471-2001">
+            Unavailable
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+Mobile Outgoing Markup: 
+<div class="detailItems ">
+  <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+    <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+      ...
+      <div class="detailChildField field">
+        <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Item Holds</div>
+        <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+            id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+            <a target="_blank" href="https://specialcollections.lib.lsu.edu/Logon/?Action=10&amp;Form=20&amp;Value=GenericRequestAll&amp;ReferenceNumber=2805471&amp;DocumentType=Archive%2FManuscript&amp;ItemTitle=Gay-Butler-Plater%20family%20papers%2C&amp;ItemAuthor=Gay%20family.&amp;ItemEdition=&amp;CallNumber=G%3A43-85&amp;ItemPublisher=&amp;ItemDate=&amp;Location=Louisiana%20and%20Lower%20Mississippi%20Valley%20Collections&amp;ItemPlace=&amp;ItemInfo1=Some%20items%20have%20been%20removed%20due%20to%20restrictions%20placed%20by%20the%20donor%20and%20are%20available%20only%20to%20predetermined%20family%20members%20until%20such%20time%20as%20the%20restrictions%20expire.%20Access%20to%20photographic%20negatives%20requires%20permission%20of%20the%20curator.">
+              Request Item
+            </a>
+          </div>
+          <div 
+            class="asyncFieldSD_ITEM_HOLD_LINK hidden" 
+            id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2805471-1001">
+            Unavailable
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+*/
+
+let aeonIntervalPlaceholder;
 var aeonRequest = function() {
   var SPEC_COLL = "Special Collections";
   var ALT_SPEC_COLL = "Special Collections, Hill Memorial Library";
@@ -1170,6 +1289,7 @@ var aeonRequest = function() {
     encodeURIComponent(
       jQuery("#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value").text()
     );
+  var item;
   var itemPub =
     "&ItemPublisher=" +
     encodeURIComponent(
@@ -1200,66 +1320,102 @@ var aeonRequest = function() {
     encodeURIComponent(
       jQuery("#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value").text()
     );
-  setTimeout(function() {
-    jQuery(
-      ".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow"
-    ).each(function() {
-      var libr = jQuery(this)
-        .find(".asyncFieldLIBRARY")
-        .first()
-        .text();
-      var itemDocType =
-        "&DocumentType=" +
-        encodeURIComponent(
-          jQuery(this)
-            .find(".detailItemsTable_ITYPE")
-            .text()
-            .replace(/\n/g, "")
-        );
-      var itemCall =
-        "&CallNumber=" +
-        encodeURIComponent(
-          jQuery(this)
-            .find(".detailItemsTable_CALLNUMBER")
-            .text()
-            .replace(/\n/g, "")
-        );
-      var curLocation = jQuery(this)
-        .find(".asyncFieldSD_ITEM_STATUS")
-        .first()
-        .text();
-      var itemLocation = "&Location=" + encodeURIComponent(curLocation);
-      if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
-        if (curLocation == REMOTE) {
-          requestType = "&Value=GenericRequestAllIronMountain";
-        } else {
-          requestType = "&Value=GenericRequestAll";
+  aeonIntervalPlaceholder = setInterval(function() {
+    jQuery(".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow")
+      .add(".detailItems .detailItemTable .detailChildRecord")
+      .each(function() {
+        const mobileMOdifier = jQuery(this).hasClass("detailChildRecord")
+          ? ".fieldValue"
+          : "";
+
+        var libr = jQuery(this)
+          .find(".asyncFieldLIBRARY")
+          .first()
+          .text();
+        var itemDocType =
+          "&DocumentType=" +
+          encodeURIComponent(
+            jQuery(this)
+              .find(".detailItemsTable_ITYPE" + mobileMOdifier)
+              .text()
+              .replace(/\n/g, "")
+          );
+        var itemCall =
+          "&CallNumber=" +
+          encodeURIComponent(
+            jQuery(this)
+              .find(".detailItemsTable_CALLNUMBER" + mobileMOdifier)
+              .text()
+              .replace(/\n/g, "")
+          );
+        var curLocation = jQuery(this)
+          .find(".asyncFieldSD_ITEM_STATUS")
+          .first()
+          .text();
+        var itemLocation = "&Location=" + encodeURIComponent(curLocation);
+        if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
+          if (curLocation == REMOTE) {
+            requestType = "&Value=GenericRequestAllIronMountain";
+          } else {
+            requestType = "&Value=GenericRequestAll";
+          }
+
+          if (jQuery(this).hasClass("detailItemsTableRow")) {
+            var aeonElem = $J(
+              '<td class="detailItemsAeonRequest"><a target="_blank" href="' +
+                baseURL +
+                requestType +
+                itemRefnum +
+                itemDocType +
+                itemTitle +
+                itemAuthor +
+                itemEdition +
+                itemCall +
+                itemPub +
+                itemPubDate +
+                itemLocation +
+                itemPlace +
+                itemInfo1 +
+                '">' +
+                REQUEST_MATERIAL +
+                "</a></td>"
+            );
+
+            var destElem = $J(this)
+              .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
+              .not(".hidden");
+            replaceItemHoldsElem(aeonElem, destElem);
+          } else if (jQuery(this).hasClass("detailChildRecord")) {
+            var aeonElem = $J(
+              '<div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK"><a target="_blank" href="' +
+                baseURL +
+                requestType +
+                itemRefnum +
+                itemDocType +
+                itemTitle +
+                itemAuthor +
+                itemEdition +
+                itemCall +
+                itemPub +
+                itemPubDate +
+                itemLocation +
+                itemPlace +
+                itemInfo1 +
+                '">' +
+                REQUEST_MATERIAL +
+                "</div>"
+            );
+
+            var destElem = $J(this)
+              .find(".asyncFieldSD_ITEM_HOLD_LINK")
+              .not(".hidden");
+
+            replaceItemHoldsElem(aeonElem, destElem);
+          }
+
+          clearInterval(aeonIntervalPlaceholder);
         }
-        var aeonElem = $J(
-          '<td class="detailItemsAeonRequest"><a target="_blank" href="' +
-            baseURL +
-            requestType +
-            itemRefnum +
-            itemDocType +
-            itemTitle +
-            itemAuthor +
-            itemEdition +
-            itemCall +
-            itemPub +
-            itemPubDate +
-            itemLocation +
-            itemPlace +
-            itemInfo1 +
-            '">' +
-            REQUEST_MATERIAL +
-            "</a></td>"
-        );
-        var destElem = $J(this)
-          .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
-          .not(".hidden");
-        replaceItemHoldsElem(aeonElem, destElem);
-      }
-    });
+      });
   }, 500);
 };
 
