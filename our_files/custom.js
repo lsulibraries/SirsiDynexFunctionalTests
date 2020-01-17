@@ -826,10 +826,7 @@ var linkAvailableOnlineCallNumber = function() {
     return;
   }
   $J('.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
-    .add(
-      'td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")'
-    )
-    //  .add('td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
+    .add('.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
     .each(function(i, elem) {
       elem.innerHTML = "";
       new_div = $J("<div>");
