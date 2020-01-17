@@ -1,33 +1,33 @@
-var BASEWSURL = 'https://lalu.sirsi.net/lalu_ilsws/';
-var CLIENTID = 'DS_CLIENT';
+var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/";
+var CLIENTID = "DS_CLIENT";
 
-$J(document).ready(function () {
+$J(document).ready(function() {
   doGenericTasks();
-  if ($J('.detail_main').length) {
+  if ($J(".detail_main").length) {
     doDetailViewTasks();
-  } else if ($J('.searchView').length) {
+  } else if ($J(".searchView").length) {
     doResultsViewTasks();
-  } else if ($J('.customAdvancedSearch').length) {
+  } else if ($J(".customAdvancedSearch").length) {
     doAdvancedSearchViewTasks();
-  } else if ($J('#myAccount').length) {
+  } else if ($J("#myAccount").length) {
     doAccountPageTasks();
-  } else if (jQuery('.framedPage').length) {
+  } else if (jQuery(".framedPage").length) {
     //pass
   }
 });
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
   if (window.location.href.indexOf("lsu.ent.sirsi.net") > -1) {
-    jQuery('#frame_content').removeAttr('seamless');
-    jQuery('#frame_content').attr('scrolling', 'yes');
+    jQuery("#frame_content").removeAttr("seamless");
+    jQuery("#frame_content").attr("scrolling", "yes");
   }
 });
 
-var doGenericTasks = function () {
+var doGenericTasks = function() {
   customSearchLink();
-}
+};
 
-var doDetailViewTasks = function () {
+var doDetailViewTasks = function() {
   // Isolated tasks
   detailViewIconReplace();
   createCitationButton();
@@ -53,79 +53,90 @@ var doDetailViewTasks = function () {
   DetaildeUnavailableWhiteReserve();
   deUnavailableReferenceMaterial();
   deUnavailableReserveDesk();
-}
+};
 
 var scheduleConvertResultsStackMapToLink;
 var schedulechangeAvailableAfterSpinner;
 
-var doResultsViewTasks = function () {
+var doResultsViewTasks = function() {
   friendlyizeNoResults();
   resultsChangeToAccessThisItem();
   resultsViewIconReplace();
   classifyElecAccessLinks();
   replaceGovDocsLabel();
-  scheduleConvertResultsStackMapToLink = setInterval(convertResultsStackMapToLink, 300);
-  schedulechangeAvailableAfterSpinner = setInterval(changeAvailableAfterSpinner, 300);
-}
+  scheduleConvertResultsStackMapToLink = setInterval(
+    convertResultsStackMapToLink,
+    300
+  );
+  schedulechangeAvailableAfterSpinner = setInterval(
+    changeAvailableAfterSpinner,
+    300
+  );
+};
 
-var doAdvancedSearchViewTasks = function () {
+var doAdvancedSearchViewTasks = function() {
   hideBasicSearch();
-}
+};
 
-var doAccountPageTasks = function () {
+var doAccountPageTasks = function() {
   changeSMSText();
   changeSMSPopupLabel();
   changeSMSPopupTitle();
-}
+};
 
 // Generic Tasks
-var customSearchLink = function () {
+var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr("href", "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true")
-    .text('More Search Options');
-}
+    .attr(
+      "href",
+      "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true"
+    )
+    .text("More Search Options");
+};
 
 //Detail View Tasks -- Independent
-var detailViewIconReplace = function () {
-  var format_containerDiv = document.getElementsByClassName('format_container');
+var detailViewIconReplace = function() {
+  var format_containerDiv = document.getElementsByClassName("format_container");
   var iconTexts = Array();
   for (var i = 0; i < format_containerDiv.length; i++) {
     var formatTypeDiv = format_containerDiv[i].firstElementChild;
-    var iconText = formatTypeDiv.getAttribute('title');
-    if (iconText && iconText != 'Other') {
+    var iconText = formatTypeDiv.getAttribute("title");
+    if (iconText && iconText != "Other") {
       iconTexts.push(iconText);
     }
-    formatTypeDiv.textContent = '';
+    formatTypeDiv.textContent = "";
     if (i == format_containerDiv.length - 1) {
-      var iconString = iconTexts.join(', ');
+      var iconString = iconTexts.join(", ");
       format_containerDiv[0].firstElementChild.textContent = iconString;
     }
   }
-}
+};
 
-var createCitationButton = function () {
+var createCitationButton = function() {
   // shortcircuit if "Cite As" field in object body
-  if ($J('.PREFCITE524').length) {
+  if ($J(".PREFCITE524").length) {
     return;
   }
 
   var oclcNUM, oclcISBN, oclcISSN;
 
-  $J('#detail0_OCLC .OCLC_value').each(function () {
-    var oclc_value = $J(this).text().replace('(OCoLC)', '');
+  $J("#detail0_OCLC .OCLC_value").each(function() {
+    var oclc_value = $J(this)
+      .text()
+      .replace("(OCoLC)", "");
     if (oclc_value.length && !isNaN(oclc_value)) {
       oclcNUM = oclc_value;
       return false;
     }
   });
-  $J('#detail0_ISBN .ISBN_value').each(function () {
+  $J("#detail0_ISBN .ISBN_value").each(function() {
     var isbn_value = $J(this).text();
     if (isbn_value.length) {
       oclcISBN = isbn_value;
       return false;
     }
   });
-  $J('#detail0_ISSN .ISSN_value').each(function () {
+  $J("#detail0_ISSN .ISSN_value").each(function() {
     var issn_value = $J(this).text();
     if (issn_value.length) {
       oclcISSN = issn_value;
@@ -134,584 +145,857 @@ var createCitationButton = function () {
   });
 
   if (oclcNUM || oclcISBN || oclcISSN) {
-    var newButton = $J('<input>', { 'class': 'button', title: 'Citation', value: 'Citation', type: 'button' })
-      .click(function () {
-        citationPopup(oclcNUM, oclcISBN, oclcISSN);
-      });
-    var newDiv = $J('<div>', { id: 'CitationButton' });
-    $J('#detailActionsdetail0').append(newDiv.append(newButton));
+    var newButton = $J("<input>", {
+      class: "button",
+      title: "Citation",
+      value: "Citation",
+      type: "button"
+    }).click(function() {
+      citationPopup(oclcNUM, oclcISBN, oclcISSN);
+    });
+    var newDiv = $J("<div>", { id: "CitationButton" });
+    $J("#detailActionsdetail0").append(newDiv.append(newButton));
   }
-}
+};
 
-var citationPopup = function (oclcNUM, oclcISBN, oclcISSN) {
-  if (oclcNUM != '') {
-    var myURL = 'http://www.worldcat.org/oclc/' + oclcNUM + '?page=citation';
-  } else if (oclcISBN != '') {
+var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
+  if (oclcNUM != "") {
+    var myURL = "http://www.worldcat.org/oclc/" + oclcNUM + "?page=citation";
+  } else if (oclcISBN != "") {
     oclcISBN2 = oclcISBN.substr(0, 13);
-    var myURL = 'http://www.worldcat.org/isbn/' + oclcISBN2 + '?page=citation';
-  } else if (oclcISSN != '') {
+    var myURL = "http://www.worldcat.org/isbn/" + oclcISBN2 + "?page=citation";
+  } else if (oclcISSN != "") {
     oclcISSN2 = oclcISSN.substr(0, 8);
-    var myURL = 'http://www.worldcat.org/issn/' + oclcISSN2 + '?page=citation';
+    var myURL = "http://www.worldcat.org/issn/" + oclcISSN2 + "?page=citation";
   }
-  window.open("" + myURL, "mywindow", "location=1,scrollbars=1,resizable=1,width=800, height=400");
-}
+  window.open(
+    "" + myURL,
+    "mywindow",
+    "location=1,scrollbars=1,resizable=1,width=800, height=400"
+  );
+};
 
-var hideMissingDetailBookImage = function () {
+var hideMissingDetailBookImage = function() {
   /* this function sets all detail cover art images hidden.
      then, when the anonymous function in Enterprise reassigns the image src
      an event listen is here in place to observe a change.
      A changed image_cover_art is then set to display.
   */
   if ($J('.detail_cover_art[src*="no_image.png"]').length) {
-    $J('.detail_cover_art').parent().css('display', 'none');
-    $J('.detail_biblio').css('width', '550px');
-    var mutationObserver = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        if (mutation.type == 'attributes' && mutation.target.className == 'detail_cover_art') {
+    $J(".detail_cover_art")
+      .parent()
+      .css("display", "none");
+    $J(".detail_biblio").css("width", "550px");
+    var mutationObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (
+          mutation.type == "attributes" &&
+          mutation.target.className == "detail_cover_art"
+        ) {
           mutationObserver.disconnect();
-          $J('.detail_cover_art').parent().css('display', '');
-          $J('.detail_biblio').css('width', '');
+          $J(".detail_cover_art")
+            .parent()
+            .css("display", "");
+          $J(".detail_biblio").css("width", "");
         }
       });
     });
-    mutationObserver.observe($J('#detailCover0').get(0), { attributes: true });
+    mutationObserver.observe($J("#detailCover0").get(0), { attributes: true });
   }
-}
+};
 
-var prepOpenAccordions = function () {
+var prepOpenAccordions = function() {
   setTimeout("openAccordions();", 300);
-}
+};
 
-var openAccordions = function () {
-  $J('h3.ui-accordion-header').each(function (i, elem) {
+var openAccordions = function() {
+  $J("h3.ui-accordion-header").each(function(i, elem) {
     $J(elem)
       .removeClass("ui-corner-all")
       .addClass("ui-corner-top")
       .attr("aria-expanded", "true")
       .attr("aria-selected", "true")
-      .find('span.ui-icon')
+      .find("span.ui-icon")
       .removeClass("ui-icon-triangle-1-e")
       .addClass("ui-icon-triangle-1-s");
   });
-  $J('div.ui-accordion-content').each(function (i, elem) {
+  $J("div.ui-accordion-content").each(function(i, elem) {
     $J(elem)
       .css("visibility", "visible")
       .css("display", "block");
   });
-}
+};
 
-var detailChangeToAccessThisItem = function () {
-  $J('.ELECTRONIC_ACCESS_label')
+var detailChangeToAccessThisItem = function() {
+  $J(".ELECTRONIC_ACCESS_label")
     .siblings()
-    .each(function (i, elem) {
-      if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
-        $J(elem).text('Access This Item');
-        $J(elem).addClass('detail_access_link');
+    .each(function(i, elem) {
+      if (
+        $J(elem).attr("href") &&
+        $J(elem)
+          .attr("href")
+          .includes($J(elem).text())
+      ) {
+        $J(elem).text("Access This Item");
+        $J(elem).addClass("detail_access_link");
       }
-    })
-}
+    });
+};
 
-var replaceAvailableStatus = function () {
-  $J(".detailItemTable_th:contains('Status')").text('Current Location')
-}
+var replaceAvailableStatus = function() {
+  $J(".detailItemTable_th:contains('Status')").text("Current Location");
+};
 
-var renameItemNoteColumn = function () {
-  $J('thead tr .detailItemsTable_ITEMNOTE .detailItemTable_th').text('Item Note');
-}
+var renameItemNoteColumn = function() {
+  $J("thead tr .detailItemsTable_ITEMNOTE .detailItemTable_th").text(
+    "Item Note"
+  );
+};
 
-var renameItemHoldsColumn = function () {
-  $J('.detailItemTable_th:contains("Item Holds")').text('Request Item');
+var renameItemHoldsColumn = function() {
+  $J('.detailItemTable_th:contains("Item Holds")').text("Request Item");
   changeNamesAfterAjaxComplete();
-}
+};
 
-var changeNamesAfterAjaxComplete = function () {
-  $J(document).bind("ajaxComplete", function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').each(function (iter, elem) {
+var changeNamesAfterAjaxComplete = function() {
+  $J(document).bind("ajaxComplete", function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK").each(function(iter, elem) {
       var childDiv = $J(elem).children(":first-child");
-      if ($J(childDiv).text() == 'Reserve This Copy') {
-        $J(childDiv).text('Place Hold');
+      if ($J(childDiv).text() == "Reserve This Copy") {
+        $J(childDiv).text("Place Hold");
       }
-    })
-  })
-}
+    });
+  });
+};
 
-var replaceCallNumChildwithCallNum = function () {
-  $J('.detailItemTable_th:contains("Call Number (Child)")').text('Call Number');
-}
+var replaceCallNumChildwithCallNum = function() {
+  $J('.detailItemTable_th:contains("Call Number (Child)")').text("Call Number");
+};
 
-var linkAvailableOnlineCallNumber = function () {
-  hrefElectronicAccess = $J('.ELECTRONIC_ACCESS_label').siblings('a:first').attr('href');
+var linkAvailableOnlineCallNumber = function() {
+  hrefElectronicAccess = $J(".ELECTRONIC_ACCESS_label")
+    .siblings("a:first")
+    .attr("href");
   if (!hrefElectronicAccess) {
     return;
   }
-  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
+  $J('td.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")').each(
+    function(i, elem) {
+      elem.innerHTML = "";
+      new_div = $J("<div>");
+      new_p = $J("<p>", { text: "Available Online" });
+      new_href = $J("<a>", {
+        text: "Access this item",
+        title: "Access this item",
+        href: hrefElectronicAccess
+      });
       new_div.append(new_p);
       new_div.append(new_href);
       new_div.appendTo(elem);
-    })
-  $J('td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
-    .each(function (i, elem) {
-      elem.innerHTML = '';
-      new_div = $J('<div>');
-      new_p = $J('<p>', { text: 'Available Online' });
-      new_href = $J('<a>', { text: 'Access this item', title: 'Access this item', href: hrefElectronicAccess });
-      new_div.append(new_p);
-      new_div.append(new_href);
-      new_div.appendTo(elem);
-    })
-}
+    }
+  );
+  $J(
+    'td.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")'
+  ).each(function(i, elem) {
+    elem.innerHTML = "";
+    new_div = $J("<div>");
+    new_p = $J("<p>", { text: "Available Online" });
+    new_href = $J("<a>", {
+      text: "Access this item",
+      title: "Access this item",
+      href: hrefElectronicAccess
+    });
+    new_div.append(new_p);
+    new_div.append(new_href);
+    new_div.appendTo(elem);
+  });
+};
 
 var titleInfoDict = {};
 var scheduleReplacePubNoteCells;
 var scheduleNewBookShelf;
-var replaceItemNote = function () {
+var replaceItemNote = function() {
   getTitleInfo();
   scheduleReplacePubNoteCells = setInterval(replacePubNoteCells, 300);
   scheduleNewBookShelf = setInterval(fixNewBookShelf, 300);
-}
+};
 
-var getTitleInfo = function () {
-  var titleID = $J("#" + 'detail0' + "_DOC_ID .DOC_ID_value").text().split(":")[1];
-  var titleInfoWsURL = BASEWSURL + "rest/standard/lookupTitleInfo?clientID=" + CLIENTID + "&titleID=" + titleID + "&includeItemInfo=true&json=true";
+var getTitleInfo = function() {
+  var titleID = $J("#" + "detail0" + "_DOC_ID .DOC_ID_value")
+    .text()
+    .split(":")[1];
+  var titleInfoWsURL =
+    BASEWSURL +
+    "rest/standard/lookupTitleInfo?clientID=" +
+    CLIENTID +
+    "&titleID=" +
+    titleID +
+    "&includeItemInfo=true&json=true";
   $J.ajax({
     dataType: "json",
     url: titleInfoWsURL,
-    success: function (data) {
+    success: function(data) {
       titleInfoDict = parseTitleInfo(data);
     }
-  })
-}
+  });
+};
 
-var parseTitleInfo = function (data) {
+var parseTitleInfo = function(data) {
   var interestingData = {};
   var CallInfo = data["TitleInfo"][0]["CallInfo"];
   for (var i = 0; i < CallInfo.length; i++) {
     var callNumber = CallInfo[i]["callNumber"];
     interestingData[callNumber] = {};
     interestingData[callNumber]["libraryID"] = CallInfo[i]["libraryID"];
-    interestingData[callNumber]["numberOfCopies"] = CallInfo[i]["numberOfCopies"];
+    interestingData[callNumber]["numberOfCopies"] =
+      CallInfo[i]["numberOfCopies"];
     interestingData[callNumber]["callNumber"] = CallInfo[i]["callNumber"];
-    interestingData[callNumber]["itemTypeID"] = CallInfo[i]["ItemInfo"][0]["itemTypeID"];
-    interestingData[callNumber]["currentLocationID"] = CallInfo[i]["ItemInfo"][0]["currentLocationID"];
-    interestingData[callNumber]["publicNote"] = CallInfo[i]["ItemInfo"][0]["publicNote"];
-    interestingData[callNumber]["dueDate"] = parseDueDate(CallInfo[i]["ItemInfo"][0]["dueDate"]);
-  };
+    interestingData[callNumber]["itemTypeID"] =
+      CallInfo[i]["ItemInfo"][0]["itemTypeID"];
+    interestingData[callNumber]["currentLocationID"] =
+      CallInfo[i]["ItemInfo"][0]["currentLocationID"];
+    interestingData[callNumber]["publicNote"] =
+      CallInfo[i]["ItemInfo"][0]["publicNote"];
+    interestingData[callNumber]["dueDate"] = parseDueDate(
+      CallInfo[i]["ItemInfo"][0]["dueDate"]
+    );
+  }
   return interestingData;
-}
+};
 
-var parseDueDate = function (reportedDate) {
+var parseDueDate = function(reportedDate) {
   if (reportedDate) {
     var epochDue = new Date(reportedDate);
-    var dueDate = epochDue.getMonth() + 1 + "/" + epochDue.getDate() + "/" + epochDue.getFullYear()
+    var dueDate =
+      epochDue.getMonth() +
+      1 +
+      "/" +
+      epochDue.getDate() +
+      "/" +
+      epochDue.getFullYear();
   } else {
     var dueDate = "";
   }
   return dueDate;
-}
+};
 
-var replacePubNoteCells = function () {
-  if (Object.keys(titleInfoDict).length && titleInfoDict.constructor === Object) {
+var replacePubNoteCells = function() {
+  if (
+    Object.keys(titleInfoDict).length &&
+    titleInfoDict.constructor === Object
+  ) {
     var hasValues = false;
-    //  loop through the Available Table rows & replace PublicNote cell text    
-    $J('tr.detailItemsTableRow').each(function (index, elem) {
-      var isAvailTable = $J(elem).closest('#detailItemsDiv0').length;
+    //  loop through the Available Table rows & replace PublicNote cell text
+    $J("tr.detailItemsTableRow").each(function(index, elem) {
+      var isAvailTable = $J(elem).closest("#detailItemsDiv0").length;
       if (!isAvailTable) {
         return;
       }
-      var callNoElem = $J(elem).find('.detailItemsTable_CALLNUMBER');
+      var callNoElem = $J(elem).find(".detailItemsTable_CALLNUMBER");
       if (callNoElem.length) {
-        var callNo = $J(callNoElem).text().trim();
+        var callNo = $J(callNoElem)
+          .text()
+          .trim();
       } else {
-        var callNo = ''
+        var callNo = "";
       }
       var correctItemDict = titleInfoDict[callNo];
       if (correctItemDict === undefined) {
         return;
       }
       if (Object.keys(correctItemDict).length) {
-        var correctItemPubNote = correctItemDict['publicNote'] || '';
+        var correctItemPubNote = correctItemDict["publicNote"] || "";
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctItemPubNote) {
           hasValues = true;
         }
       } else {
-        var correctItemPubNote = '';
+        var correctItemPubNote = "";
       }
-      var currentPubNote = $J(elem).find('.detailItemsTable_ITEMNOTE');
+      var currentPubNote = $J(elem).find(".detailItemsTable_ITEMNOTE");
       currentPubNote.text(correctItemPubNote);
-    })
+    });
     if (!hasValues) {
-      $J('.detailItemsTable_ITEMNOTE').remove();
+      $J(".detailItemsTable_ITEMNOTE").remove();
     }
     clearInterval(scheduleReplacePubNoteCells);
   }
-}
+};
 
-var fixNewBookShelf = function () {
-  if (Object.keys(titleInfoDict).length && titleInfoDict.constructor === Object) {
-    //  loop through the Available Table rows & replace PublicNote cell text    
-    $J('tr.detailItemsTableRow').each(function (index, elem) {
-      var isAvailTable = $J(elem).closest('#detailItemsDiv0').length;
+var fixNewBookShelf = function() {
+  if (
+    Object.keys(titleInfoDict).length &&
+    titleInfoDict.constructor === Object
+  ) {
+    //  loop through the Available Table rows & replace PublicNote cell text
+    $J("tr.detailItemsTableRow").each(function(index, elem) {
+      var isAvailTable = $J(elem).closest("#detailItemsDiv0").length;
       if (!isAvailTable) {
         return;
       }
-      var callNoElem = $J(elem).find('.detailItemsTable_CALLNUMBER');
+      var callNoElem = $J(elem).find(".detailItemsTable_CALLNUMBER");
       if (callNoElem.length) {
-        var callNo = $J(callNoElem).text().trim();
+        var callNo = $J(callNoElem)
+          .text()
+          .trim();
       } else {
-        var callNo = ''
+        var callNo = "";
       }
       var correctItemDict = titleInfoDict[callNo];
       if (correctItemDict === undefined) {
         return;
       }
       if (Object.keys(correctItemDict).length) {
-        var correctLocation = correctItemDict['currentLocationID'];
+        var correctLocation = correctItemDict["currentLocationID"];
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctLocation == "NEWBOOKS") {
-          var locationCell = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS');
-          locationCell.empty().text('New Books Display');
-          var holdsCell = $J(elem).closest('tr').find('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden');
-          holdsCell.empty().text('Available');
+          var locationCell = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_SD_ITEM_STATUS");
+          locationCell.empty().text("New Books Display");
+          var holdsCell = $J(elem)
+            .closest("tr")
+            .find(".asyncFieldSD_ITEM_HOLD_LINK")
+            .not(".hidden");
+          holdsCell.empty().text("Available");
           clearInterval(scheduleNewBookShelf);
         }
       }
     });
     clearInterval(scheduleNewBookShelf);
   }
-}
-var replaceDetailGovDocsLabel = function  () {
-	
-  $J('.asyncFieldLIBRARY').ajaxComplete(function () {
-	
-    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
+};
+var replaceDetailGovDocsLabel = function() {
+  $J(".asyncFieldLIBRARY").ajaxComplete(function() {
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
+      "Government Documents - (Currently Closed to Public - See Access Services)"
+    );
   });
-}
+};
 
-var makePrecedingSucceedingLinks = function () {
-  var succeedingEntryElem = $J('.displayElementText.SUCCENTRY');
-  var precedingEntryElem = $J('.displayElementText.PRECENTRY');
+var makePrecedingSucceedingLinks = function() {
+  var succeedingEntryElem = $J(".displayElementText.SUCCENTRY");
+  var precedingEntryElem = $J(".displayElementText.PRECENTRY");
   replaceEntryWithLink(succeedingEntryElem);
   replaceEntryWithLink(precedingEntryElem);
-}
+};
 
-var replaceEntryWithLink = function (entryElem) {
+var replaceEntryWithLink = function(entryElem) {
   var formattedText = entryElem.text().strip();
-  while (formattedText.includes(' ')) {
-    formattedText = formattedText.replace(' ', '+');
+  while (formattedText.includes(" ")) {
+    formattedText = formattedText.replace(" ", "+");
   }
   var entryLink = $J("<a />", {
     class: "EntryLink",
     alt: entryElem.text(),
     title: entryElem.text(),
-    href: "/client/en_US/lsu/search/results?rt=false%7C%7C%7CUNIFORM_TITLE_LSU%7C%7C%7CUniform+Title+LSU&qu=" + entryElem.text().replace(' ', '+'),
+    href:
+      "/client/en_US/lsu/search/results?rt=false%7C%7C%7CUNIFORM_TITLE_LSU%7C%7C%7CUniform+Title+LSU&qu=" +
+      entryElem.text().replace(" ", "+"),
     text: entryElem.text()
   });
-  entryElem.text('')
+  entryElem.text("");
   entryElem.append(entryLink);
-}
+};
 
-var deVSeriesLink = function () {
-  var origLink = $J('.displayElementText.SERIES a').attr('href');
+var deVSeriesLink = function() {
+  var origLink = $J(".displayElementText.SERIES a").attr("href");
   if (origLink && origLink.length) {
-    var newLink = origLink.split('+%3B+')[0];
-    $J('.displayElementText.SERIES a').attr('href', newLink);
-  };
-}
+    var newLink = origLink.split("+%3B+")[0];
+    $J(".displayElementText.SERIES a").attr("href", newLink);
+  }
+};
 
 //Detail View Tasks -- ITEM_STATUS tasks
-var ILLIfCheckedOut = function () {
-  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
-    if (!itemStati.length || $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length) {
+var ILLIfCheckedOut = function() {
+  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
+    var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
+    if (
+      !itemStati.length ||
+      $J('.illiadLinkUrl:contains("Request Interlibrary Loan")').length
+    ) {
       return;
     }
     var illiadUrl = buildIlliadRequest();
-    addLinkILL(itemStati[0].id, illiadUrl)
+    addLinkILL(itemStati[0].id, illiadUrl);
   });
-}
+};
 
-var buildIlliadRequest = function () {
-  var oslFormat = $J('#detail0_FORMAT .FORMAT_value').text();
-  var oslTitle = $J('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750);
-  var oslRecordID = $J('#detail0_OCLC .OCLC_value').text();
-  var oslISBN = $J('#detail0_ISBN .ISBN_value:first-child').text();
-  var oslISSN = $J('#detail0_ISSN .ISSN_value').text();
-  var oslAuthorLastName = $J('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text().split(',')[0];
-  var oslPubDate = $J('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text();
-  var oslPublisher = $J('#detail0_PUBLISHER .PUBLISHER_value').text();
-  var oslPubPlace = $J('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').text().split(':')[0];
-  if (oslFormat == 'Continuing Resources') {
-    var requestType = 'article';
+var buildIlliadRequest = function() {
+  var oslFormat = $J("#detail0_FORMAT .FORMAT_value").text();
+  var oslTitle = $J(".TITLE_MAIN")
+    .not(".TITLE_MAIN_label")
+    .first()
+    .text()
+    .slice(0, 750);
+  var oslRecordID = $J("#detail0_OCLC .OCLC_value").text();
+  var oslISBN = $J("#detail0_ISBN .ISBN_value:first-child").text();
+  var oslISSN = $J("#detail0_ISSN .ISSN_value").text();
+  var oslAuthorLastName = $J(
+    "#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value"
+  )
+    .text()
+    .split(",")[0];
+  var oslPubDate = $J("#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value").text();
+  var oslPublisher = $J("#detail0_PUBLISHER .PUBLISHER_value").text();
+  var oslPubPlace = $J("#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value")
+    .text()
+    .split(":")[0];
+  if (oslFormat == "Continuing Resources") {
+    var requestType = "article";
     var oslISXN = oslISSN;
   } else {
-    var requestType = 'loan';
+    var requestType = "loan";
     var oslISXN = oslISBN;
   }
-  var illiadUrl = encodeURI('https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=' + requestType + '&title=' + oslTitle + '++[owned+by+LSU+' + oslRecordID + ']&ISBN=' + oslISXN + '&aulast=' + oslAuthorLastName + '&date=' + oslPubDate + '&rft.pub=' + oslPublisher + '&rft.place=' + oslPubPlace);
+  var illiadUrl = encodeURI(
+    "https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&Form=30&sid=CATALOG&genre=" +
+      requestType +
+      "&title=" +
+      oslTitle +
+      "++[owned+by+LSU+" +
+      oslRecordID +
+      "]&ISBN=" +
+      oslISXN +
+      "&aulast=" +
+      oslAuthorLastName +
+      "&date=" +
+      oslPubDate +
+      "&rft.pub=" +
+      oslPublisher +
+      "&rft.place=" +
+      oslPubPlace
+  );
   return illiadUrl;
-}
+};
 
-var addLinkILL = function (itemId, illiadUrl) {
-  var dueElem = $J('#' + itemId);
-  if (dueElem.siblings('.illiadLink').length) {
+var addLinkILL = function(itemId, illiadUrl) {
+  var dueElem = $J("#" + itemId);
+  if (dueElem.siblings(".illiadLink").length) {
     return;
   }
-  var illiadNode = $J('<div>', { class: 'illiadLink' }).appendTo(dueElem);
-  var illiadHref = $J('<a>', { href: illiadUrl, class: 'illiadLinkUrl', text: 'Request Interlibrary Loan' }).appendTo(illiadNode);
-}
+  var illiadNode = $J("<div>", { class: "illiadLink" }).appendTo(dueElem);
+  var illiadHref = $J("<a>", {
+    href: illiadUrl,
+    class: "illiadLinkUrl",
+    text: "Request Interlibrary Loan"
+  }).appendTo(illiadNode);
+};
 
-var renameDueStatus = function () {
-  $J('.asyncFieldSD_ITEM_STATUS').ajaxComplete(function () {
-    var itemStati = ($J('.asyncFieldSD_ITEM_STATUS:contains("Due")'));
+var renameDueStatus = function() {
+  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
+    var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
     if (itemStati.length && itemStati[0].childNodes.length) {
-      var newText = itemStati[0].childNodes[0].nodeValue.replace('Due ', 'Checked Out -- Due: ');
+      var newText = itemStati[0].childNodes[0].nodeValue.replace(
+        "Due ",
+        "Checked Out -- Due: "
+      );
       itemStati[0].childNodes[0].nodeValue = newText;
     }
   });
-}
+};
 
 //Detail View Tasks -- ITEM_HOLD_LINK tasks
-var aeonRequest = function () {
-  var SPEC_COLL = 'Special Collections';
-  var ALT_SPEC_COLL = 'Special Collections, Hill Memorial Library';
-  var REMOTE = 'LLMVC - Remote Storage';
-  var REQUEST_MATERIAL = 'Request Item';
-  var baseURL = 'https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20';
+var aeonRequest = function() {
+  var SPEC_COLL = "Special Collections";
+  var ALT_SPEC_COLL = "Special Collections, Hill Memorial Library";
+  var REMOTE = "LLMVC - Remote Storage";
+  var REQUEST_MATERIAL = "Request Item";
+  var baseURL =
+    "https://specialcollections.lib.lsu.edu/Logon/?Action=10&Form=20";
   var requestType;
-  var itemTitle = '&ItemTitle=' + encodeURIComponent(jQuery('.TITLE_MAIN').not('.TITLE_MAIN_label').first().text().slice(0,750));
-  var itemAuthor = '&ItemAuthor=' + encodeURIComponent(jQuery('#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value').text());
-  var itemPubDate = '&ItemDate=' + encodeURIComponent(jQuery('#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value').text());
-  var itemPub = '&ItemPublisher=' + encodeURIComponent(jQuery('#detail0_PUBLISHER .PUBLISHER_value').first().text());
-  var itemPlace = '&ItemPlace=' + encodeURIComponent(jQuery('#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value').first().text().split(':')[0]);
-  var itemRefnum = '&ReferenceNumber=' + encodeURIComponent(jQuery('#detail0_DOC_ID .DOC_ID_value').text().split(':')[1]);
-  var itemEdition = '&ItemEdition=' + encodeURIComponent(jQuery('#detail0_EDITION .EDITION_value').text());
-  var itemInfo1 = '&ItemInfo1=' + encodeURIComponent(jQuery('#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value').text());
-  setTimeout(function () {
-    jQuery('.detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow').each(function () {
-      var libr = jQuery(this).find('.asyncFieldLIBRARY').first().text();
-      var itemDocType = '&DocumentType=' + encodeURIComponent(jQuery(this).find('.detailItemsTable_ITYPE').text().replace(/\n/g, ''));
-      var itemCall = '&CallNumber=' + encodeURIComponent(jQuery(this).find('.detailItemsTable_CALLNUMBER').text().replace(/\n/g, ''));
-      var curLocation = jQuery(this).find('.asyncFieldSD_ITEM_STATUS').first().text();
-      var itemLocation = '&Location=' + encodeURIComponent(curLocation);
+  var itemTitle =
+    "&ItemTitle=" +
+    encodeURIComponent(
+      jQuery(".TITLE_MAIN")
+        .not(".TITLE_MAIN_label")
+        .first()
+        .text()
+        .slice(0, 750)
+    );
+  var itemAuthor =
+    "&ItemAuthor=" +
+    encodeURIComponent(
+      jQuery("#detail0_INITIAL_AUTHOR_SRCH .INITIAL_AUTHOR_SRCH_value").text()
+    );
+  var itemPubDate =
+    "&ItemDate=" +
+    encodeURIComponent(
+      jQuery("#detail0_PUBDATE_RANGE .PUBDATE_RANGE_value").text()
+    );
+  var itemPub =
+    "&ItemPublisher=" +
+    encodeURIComponent(
+      jQuery("#detail0_PUBLISHER .PUBLISHER_value")
+        .first()
+        .text()
+    );
+  var itemPlace =
+    "&ItemPlace=" +
+    encodeURIComponent(
+      jQuery("#detail0_PUBLICATION_INFO .PUBLICATION_INFO_value")
+        .first()
+        .text()
+        .split(":")[0]
+    );
+  var itemRefnum =
+    "&ReferenceNumber=" +
+    encodeURIComponent(
+      jQuery("#detail0_DOC_ID .DOC_ID_value")
+        .text()
+        .split(":")[1]
+    );
+  var itemEdition =
+    "&ItemEdition=" +
+    encodeURIComponent(jQuery("#detail0_EDITION .EDITION_value").text());
+  var itemInfo1 =
+    "&ItemInfo1=" +
+    encodeURIComponent(
+      jQuery("#detail0_ACCESSRESTRICTIONS .ACCESSRESTRICTIONS_value").text()
+    );
+  setTimeout(function() {
+    jQuery(
+      ".detailItemsDiv .detailItemTable > tbody > tr.detailItemsTableRow"
+    ).each(function() {
+      var libr = jQuery(this)
+        .find(".asyncFieldLIBRARY")
+        .first()
+        .text();
+      var itemDocType =
+        "&DocumentType=" +
+        encodeURIComponent(
+          jQuery(this)
+            .find(".detailItemsTable_ITYPE")
+            .text()
+            .replace(/\n/g, "")
+        );
+      var itemCall =
+        "&CallNumber=" +
+        encodeURIComponent(
+          jQuery(this)
+            .find(".detailItemsTable_CALLNUMBER")
+            .text()
+            .replace(/\n/g, "")
+        );
+      var curLocation = jQuery(this)
+        .find(".asyncFieldSD_ITEM_STATUS")
+        .first()
+        .text();
+      var itemLocation = "&Location=" + encodeURIComponent(curLocation);
       if (libr == SPEC_COLL || libr == ALT_SPEC_COLL) {
         if (curLocation == REMOTE) {
-          requestType = '&Value=GenericRequestAllIronMountain';
+          requestType = "&Value=GenericRequestAllIronMountain";
         } else {
-          requestType = '&Value=GenericRequestAll';
+          requestType = "&Value=GenericRequestAll";
         }
-        var aeonElem = $J('<td class="detailItemsAeonRequest"><a target="_blank" href="' + baseURL + requestType + itemRefnum + itemDocType + itemTitle + itemAuthor + itemEdition + itemCall + itemPub + itemPubDate + itemLocation + itemPlace + itemInfo1 + '">' + REQUEST_MATERIAL + '</a></td>');
-        var destElem = $J(this).find('.detailItemsTable_SD_ITEM_HOLD_LINK').not('.hidden');
+        var aeonElem = $J(
+          '<td class="detailItemsAeonRequest"><a target="_blank" href="' +
+            baseURL +
+            requestType +
+            itemRefnum +
+            itemDocType +
+            itemTitle +
+            itemAuthor +
+            itemEdition +
+            itemCall +
+            itemPub +
+            itemPubDate +
+            itemLocation +
+            itemPlace +
+            itemInfo1 +
+            '">' +
+            REQUEST_MATERIAL +
+            "</a></td>"
+        );
+        var destElem = $J(this)
+          .find(".detailItemsTable_SD_ITEM_HOLD_LINK")
+          .not(".hidden");
         replaceItemHoldsElem(aeonElem, destElem);
       }
     });
   }, 500);
-}
+};
 
-var replaceItemHoldsElem = function (aeonElem, destElem) {
+var replaceItemHoldsElem = function(aeonElem, destElem) {
   if (aeonElem.length) {
     $J(destElem).empty();
-    $J(destElem).addClass($J(aeonElem).attr('class'));
+    $J(destElem).addClass($J(aeonElem).attr("class"));
     $J(destElem).append($J(aeonElem).children(":first-child"));
   }
-}
+};
 
-var elecAccessIfUnavailable = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var elecLink = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER a').not('.hidden');
-      if ($J(elem).text().trim() == 'Unavailable' && elecLink.length) {
-        $J(elem)
-          .text('')
-          .append(elecLink);
-      }
-    })
-  })
-}
+var elecAccessIfUnavailable = function() {
+  $J(".asyncFieldSD_ITEM_HOLD_LINK")
+    .not(".hidden")
+    .ajaxComplete(function() {
+      $J(".asyncFieldSD_ITEM_HOLD_LINK")
+        .not(".hidden")
+        .each(function(i, elem) {
+          var elecLink = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_CALLNUMBER a")
+            .not(".hidden");
+          if (
+            $J(elem)
+              .text()
+              .trim() == "Unavailable" &&
+            elecLink.length
+          ) {
+            $J(elem)
+              .text("")
+              .append(elecLink);
+          }
+        });
+    });
+};
 
-var deUnavailablePermReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Permanent Reserve') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
+var deUnavailablePermReserve = function() {
+  $J(".asyncFieldSD_ITEM_HOLD_LINK")
+    .not(".hidden")
+    .ajaxComplete(function() {
+      $J(".asyncFieldSD_ITEM_HOLD_LINK")
+        .not(".hidden")
+        .each(function(i, elem) {
+          var materialText = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_ITYPE")
+            .not(".hidden")
+            .text();
+          var itemHoldText = $J(elem).text();
+          var isMatch =
+            materialText.trim() == "Permanent Reserve" &&
+            itemHoldText.trim() == "Unavailable";
+          if (isMatch) {
+            $J(elem).text("Available");
+          }
+        });
+    });
+};
 
-var DetaildeUnavailableWhiteReserve = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var callNumText = $J(elem).closest('tr').find('.detailItemsTable_CALLNUMBER').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (callNumText.trim() == 'WHITE RESV.') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
+var DetaildeUnavailableWhiteReserve = function() {
+  $J(".asyncFieldSD_ITEM_HOLD_LINK")
+    .not(".hidden")
+    .ajaxComplete(function() {
+      $J(".asyncFieldSD_ITEM_HOLD_LINK")
+        .not(".hidden")
+        .each(function(i, elem) {
+          var callNumText = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_CALLNUMBER")
+            .not(".hidden")
+            .text();
+          var itemHoldText = $J(elem).text();
+          var isMatch =
+            callNumText.trim() == "WHITE RESV." &&
+            itemHoldText.trim() == "Unavailable";
+          if (isMatch) {
+            $J(elem).text("Available");
+          }
+        });
+    });
+};
 
-var deUnavailableReferenceMaterial = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var materialText = $J(elem).closest('tr').find('.detailItemsTable_ITYPE').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      var isMatch = (materialText.trim() == 'Reference Material') && (itemHoldText.trim() == 'Unavailable');
-      if (isMatch) {
-        $J(elem).text('Available');
-      }
-    })
-  })
-}
+var deUnavailableReferenceMaterial = function() {
+  $J(".asyncFieldSD_ITEM_HOLD_LINK")
+    .not(".hidden")
+    .ajaxComplete(function() {
+      $J(".asyncFieldSD_ITEM_HOLD_LINK")
+        .not(".hidden")
+        .each(function(i, elem) {
+          var materialText = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_ITYPE")
+            .not(".hidden")
+            .text();
+          var itemHoldText = $J(elem).text();
+          var isMatch =
+            materialText.trim() == "Reference Material" &&
+            itemHoldText.trim() == "Unavailable";
+          if (isMatch) {
+            $J(elem).text("Available");
+          }
+        });
+    });
+};
 
-var deUnavailableReserveDesk = function () {
-  $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').ajaxComplete(function () {
-    $J('.asyncFieldSD_ITEM_HOLD_LINK').not('.hidden').each(function (i, elem) {
-      var locationText = $J(elem).closest('tr').find('.detailItemsTable_SD_ITEM_STATUS').not('.hidden').text();
-      var itemHoldText = $J(elem).text();
-      if ((itemHoldText.trim() == 'Unavailable') && (locationText.indexOf('Middleton Library Reserve Desk')) > -1) {
-        $J(elem).text('Available');
-      }
-    })
-  })   
-}
+var deUnavailableReserveDesk = function() {
+  $J(".asyncFieldSD_ITEM_HOLD_LINK")
+    .not(".hidden")
+    .ajaxComplete(function() {
+      $J(".asyncFieldSD_ITEM_HOLD_LINK")
+        .not(".hidden")
+        .each(function(i, elem) {
+          var locationText = $J(elem)
+            .closest("tr")
+            .find(".detailItemsTable_SD_ITEM_STATUS")
+            .not(".hidden")
+            .text();
+          var itemHoldText = $J(elem).text();
+          if (
+            itemHoldText.trim() == "Unavailable" &&
+            locationText.indexOf("Middleton Library Reserve Desk") > -1
+          ) {
+            $J(elem).text("Available");
+          }
+        });
+    });
+};
 
 //Results View tasks
-var friendlyizeNoResults = function () {
-  var destElem = $J('#no_results_wrapper #searchResultText');
-  destElem.text('');
-  var firstLine = $J('<p>', { text: 'Your search returned no results. Please check your spelling and try again.' });
-  var DiscLink = $J('<a>', { href: 'https://www.lib.lsu.edu', text: 'Discovery search' });
-  var ILLLink = $J('<a>', { href: 'https://louis.hosts.atlas-sys.com/remoteauth/luu/illiad.dll', text: 'Interlibrary Loan' });
-  var secondLine = $J('<p>', { text: 'If still not found, please use our ' })
+var friendlyizeNoResults = function() {
+  var destElem = $J("#no_results_wrapper #searchResultText");
+  destElem.text("");
+  var firstLine = $J("<p>", {
+    text:
+      "Your search returned no results. Please check your spelling and try again."
+  });
+  var DiscLink = $J("<a>", {
+    href: "https://www.lib.lsu.edu",
+    text: "Discovery search"
+  });
+  var ILLLink = $J("<a>", {
+    href: "https://louis.hosts.atlas-sys.com/remoteauth/luu/illiad.dll",
+    text: "Interlibrary Loan"
+  });
+  var secondLine = $J("<p>", { text: "If still not found, please use our " })
     .append(DiscLink)
-    .append(',');
-  var thirdLine = $J('<p>', { text: 'or request the material through ' })
+    .append(",");
+  var thirdLine = $J("<p>", { text: "or request the material through " })
     .append(ILLLink)
-    .append('.');
+    .append(".");
   destElem
     .append(firstLine)
     .append(secondLine)
     .append(thirdLine);
-}
+};
 
-var resultsChangeToAccessThisItem = function () {
-  $J('.ELECTRONIC_ACCESS').children()
-    .each(function (i, elem) {
-      if ($J(elem).attr('href') && $J(elem).attr('href').includes($J(elem).text())) {
-        $J(elem).text('Access This Item');
+var resultsChangeToAccessThisItem = function() {
+  $J(".ELECTRONIC_ACCESS")
+    .children()
+    .each(function(i, elem) {
+      if (
+        $J(elem).attr("href") &&
+        $J(elem)
+          .attr("href")
+          .includes($J(elem).text())
+      ) {
+        $J(elem).text("Access This Item");
       }
-    })
-}
+    });
+};
 
-var resultsViewIconReplace = function () {
-  $J('.format_container .formatType')
-    .each(function (i, elem) {
-      var iconText = $J(elem).attr('title');
-      $J(elem).text(iconText);
-    })
-}
+var resultsViewIconReplace = function() {
+  $J(".format_container .formatType").each(function(i, elem) {
+    var iconText = $J(elem).attr("title");
+    $J(elem).text(iconText);
+  });
+};
 
-var classifyElecAccessLinks = function () {
-  var accessLinks = $J('.displayElementText.ELECTRONIC_ACCESS');
-  $J(accessLinks).each(function () {
-    var acceptableFormats = ['Electronic Resources', 'Audio disc'];
+var classifyElecAccessLinks = function() {
+  var accessLinks = $J(".displayElementText.ELECTRONIC_ACCESS");
+  $J(accessLinks).each(function() {
+    var acceptableFormats = ["Electronic Resources", "Audio disc"];
     var itemFormat = findFormatForElecAccessDiv(this);
     var hasText = doesElecAccessLinkHaveText(this);
     if (!hasText) {
-      $J(this).addClass('access_button');
+      $J(this).addClass("access_button");
     }
-  })
-}
+  });
+};
 
-var findFormatForElecAccessDiv = function (elem) {
-  var grandparentDiv = $J(elem).closest('span.thumb_hidden');
-  var format = $J(grandparentDiv).siblings().find('.formatType').text();
+var findFormatForElecAccessDiv = function(elem) {
+  var grandparentDiv = $J(elem).closest("span.thumb_hidden");
+  var format = $J(grandparentDiv)
+    .siblings()
+    .find(".formatType")
+    .text();
   return format;
-}
+};
 
-var doesElecAccessLinkHaveText = function (elem) {
-  var firstChildNode = $J(elem).contents()[0]
+var doesElecAccessLinkHaveText = function(elem) {
+  var firstChildNode = $J(elem).contents()[0];
   var firstChildNodeType = firstChildNode.nodeType;
   var firstChildNodeText = firstChildNode.nodeValue;
-  if ((firstChildNodeType == '3') && (firstChildNodeText.trim().length == 0)) {
+  if (firstChildNodeType == "3" && firstChildNodeText.trim().length == 0) {
     return false;
   }
   return true;
-}
+};
 
-var replaceGovDocsLabel = function () {
-  $J('div.LIBRARY:contains(" Government Documents/Microforms")').text("Government Documents - (Currently Closed to Public - See Access Services)");
-}
+var replaceGovDocsLabel = function() {
+  $J('div.LIBRARY:contains(" Government Documents/Microforms")').text(
+    "Government Documents - (Currently Closed to Public - See Access Services)"
+  );
+};
 
-var convertResultsStackMapToLink = function () {
-  if ($J('td > .SMbutton').length) {
-    $J('td > .SMbutton').each(function (i, elem) {
-      var newHref = $J('<a />', {
-        onclick: $J(elem).attr('onclick'),
-        class: 'SMlink',
-        text: 'Find in the Library',
-        title: 'Find in the Library',
+var convertResultsStackMapToLink = function() {
+  if ($J("td > .SMbutton").length) {
+    $J("td > .SMbutton").each(function(i, elem) {
+      var newHref = $J("<a />", {
+        onclick: $J(elem).attr("onclick"),
+        class: "SMlink",
+        text: "Find in the Library",
+        title: "Find in the Library"
       });
       newHref.appendTo($J(elem).parent());
       $J(elem).remove();
     });
     clearInterval(scheduleConvertResultsStackMapToLink);
   }
-}
+};
 
-var changeAvailableAfterSpinner = function () {
-  if ($J('.smallSpinner').length == 0) {
+var changeAvailableAfterSpinner = function() {
+  if ($J(".smallSpinner").length == 0) {
     changeAvailableToZero();
     changeAvailableIfWhiteResv();
     clearInterval(schedulechangeAvailableAfterSpinner);
   }
-}
+};
 
-var changeAvailableToZero = function () {
-  $J('.availableNumber').each(function (i, elem) {
-    if ($J(elem).text() == '0') {
-      $J(elem.previous()).text('Currently Checked Out');
-      $J(elem).text('');
+var changeAvailableToZero = function() {
+  $J(".availableNumber").each(function(i, elem) {
+    if ($J(elem).text() == "0") {
+      $J(elem.previous()).text("Currently Checked Out");
+      $J(elem).text("");
     }
-  })
-}
+  });
+};
 
-var changeAvailableIfWhiteResv = function () {
-  $J('.results_bio .thumb_hidden .displayElementText.CALLNUMBER').each(function (i, elem) {
-    if ($J(elem).text().trim() == 'WHITE RESV.') {
-      $J(elem).closest('.results_bio').find('.availableLabel').text('Available: 1');
+var changeAvailableIfWhiteResv = function() {
+  $J(".results_bio .thumb_hidden .displayElementText.CALLNUMBER").each(function(
+    i,
+    elem
+  ) {
+    if (
+      $J(elem)
+        .text()
+        .trim() == "WHITE RESV."
+    ) {
+      $J(elem)
+        .closest(".results_bio")
+        .find(".availableLabel")
+        .text("Available: 1");
     }
-  })
-}
+  });
+};
 
 //Advanced Search Page tasks
-var hideBasicSearch = function () {
-  $J('#searchBoxWrapper').css('display', 'none');
-}
+var hideBasicSearch = function() {
+  $J("#searchBoxWrapper").css("display", "none");
+};
 
 //Accounts Page tasks
-var changeSMSText = function () {
-  $J('a:contains("SMS Notifications")').text('Text Notifications');
-}
+var changeSMSText = function() {
+  $J('a:contains("SMS Notifications")').text("Text Notifications");
+};
 
-var changeSMSPopupLabel = function () {
-  $J('#smsPhoneNameDiv label').text('Name This Notification');
-}
+var changeSMSPopupLabel = function() {
+  $J("#smsPhoneNameDiv label").text("Name This Notification");
+};
 
-var changeSMSPopupTitle = function () {
-  $J('#ui-dialog-title-smsPrefDialog_0').text('Add Text Notification')
-}
-
+var changeSMSPopupTitle = function() {
+  $J("#ui-dialog-title-smsPrefDialog_0").text("Add Text Notification");
+};
 
 /* Default entrypoints */
 /*
