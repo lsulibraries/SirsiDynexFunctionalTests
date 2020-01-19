@@ -87,10 +87,7 @@ var doAccountPageTasks = function() {
 // Generic Tasks
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr(
-      "href",
-      "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true"
-    )
+    .attr("href", "/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true")
     .text("More Search Options");
 };
 
