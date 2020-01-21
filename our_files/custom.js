@@ -601,6 +601,7 @@ var detailChangeToAccessThisItem = function() {
 /*
 Purpose: Replaces Column header “Status” with “Current Location”
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
+Test: test_detail_page.py > test_replaceAvailableStatus
 
 Desktop Incoming Markup: 
   <th class="detailItemsTable_SD_ITEM_STATUS">
@@ -613,15 +614,36 @@ Desktop Incoming Markup:
 Desktop Outgoing Markup: 
   <th class="detailItemsTable_SD_ITEM_STATUS">
     <div class="detailItemTable_th">Current Location</div>
-    <span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
   </th>
 
 
-Mobile Incoming Markup: TBD
+Mobile Incoming Markup:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        ...
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Status</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+            <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS2805471-3001">Louisiana and Lower Mississippi Valley Collections</div>
+            <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS2805471-3001">Unknown</div>
+          </div>
+        </div>
+      </div>
+      ...
+    </div>
+  </div>
+
 Mobile Outgoing Markup: TBD
 */
 var replaceAvailableStatus = function() {
   $J(".detailItemTable_th:contains('Status')").text("Current Location");
+  $J(
+    ".detailItemTable .detailChildRecord .detailChildField .detailItemsTable_SD_ITEM_STATUS:contains('Status')"
+  ).text("Current Location");
 };
 
 /*
