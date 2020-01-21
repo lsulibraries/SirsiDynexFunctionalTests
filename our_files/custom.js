@@ -1031,24 +1031,19 @@ Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/en
 Test: None
 
 Desktop Incoming Markup: 
+  Holdings Table:
   <div class="detailItems ">
-    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
-    ...
+    <table class="detailItemTable sortable0 sortable">
       <tbody>
         <tr class="detailItemsTableRow ">
-          <td class="detailItemsTable_LIBRARY">
-            {ON LOAD}<div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
-            {AFTER AJAX}<div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
-            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
-          </td>
+          <td class="detailItemsTable_LIBRARY">Government Documents/Microforms</td>
           ...
         </tr>
       </tbody>
-    ...
     </table>
   </div>
 
-
+  Availability Table:
   <div class="detailItems ">
     <table class="detailItemTable sortable0 sortable">
       ...
@@ -1067,6 +1062,19 @@ Desktop Incoming Markup:
 
 
 Desktop Outgoing Markup: 
+  Holdings Table:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</td>
+          ...
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Availability Table:
   <div class="detailItems ">
     <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
     ...
@@ -1084,6 +1092,20 @@ Desktop Outgoing Markup:
   </div>
 
 Mobile Incoming Markup:
+  Holdings Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents/Microforms</div>
+        </div>
+        ...
+      </div>
+    </div>
+  </div>
+
+  Availability Table:
   <div class="detailItems ">
     <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
       <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
@@ -1102,6 +1124,20 @@ Mobile Incoming Markup:
   </div>
 
 Mobile Outgoing Markup: 
+  Holdings Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</div>
+        </div>
+        ...
+      </div>
+    </div>
+  </div>
+
+  Availability Table:
   <div class="detailItems ">
     <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
       <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
@@ -1121,9 +1157,13 @@ Mobile Outgoing Markup:
 */
 var replaceDetailGovDocsLabel = function() {
   $J(document).ajaxComplete(function() {
-    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
-      "Government Documents - (Currently Closed to Public - See Access Services)"
-    );
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")')
+      .add(
+        '.detailItemsTable_LIBRARY:contains("Government Documents/Microforms")'
+      )
+      .text(
+        "Government Documents - (Currently Closed to Public - See Access Services)"
+      );
   });
 };
 
