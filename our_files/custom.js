@@ -116,12 +116,39 @@ var doAccountPageTasks = function() {
 };
 
 // Generic Tasks
+/*
+Purpose: Updates the text of the link and the location
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu
+
+Desktop Incoming Markup: 
+  <div id="searchBoxStyleDiv">
+    <div id="searchBoxesWrapper">
+      ...
+    </div>
+    <div id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/search/advanced?">Advanced Search</a>
+    </div>
+  </div>
+
+
+Desktop Outgoing Markup:   
+  <div id="searchBoxStyleDiv">
+    <div id="searchBoxesWrapper">
+      ...
+    </div>
+    <div id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true">More Search Options</a>
+    </div>
+  </div>
+
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
+
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr(
-      "href",
-      "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true"
-    )
+    .attr("href", "/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true")
     .text("More Search Options");
 };
 
