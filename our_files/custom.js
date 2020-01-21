@@ -1492,8 +1492,7 @@ var replaceItemHoldsElem = function(aeonElem, destElem) {
 };
 
 var elecAccessIfUnavailable = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
+  $J( document )
     .ajaxComplete(function() {
       $J(".asyncFieldSD_ITEM_HOLD_LINK")
         .not(".hidden")
