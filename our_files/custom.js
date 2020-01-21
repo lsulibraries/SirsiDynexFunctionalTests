@@ -168,26 +168,77 @@ var customSearchLink = function() {
 };
 
 //Detail View Tasks -- Independent
+
 /*
-Purpose: Replaces the format image with words
-Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=turtles&te=
+Purpose: Replaces an icon with text, for item format.  Deletes "Other" format 
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2805471/one
+
+Related tests:  test_detail_page.py [test_detailViewIconReplace]
 
 Desktop Incoming Markup: 
-  <div id="formatContainer0" class="format_container">
-    <div title="Book" class="formatType text-p">
-      <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-BOOK icon-p"></span>
-      <span class="formatText">Book</span>
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 FORMAT FORMAT_label">
+      Format:
+    </div>
+    <div id="formatContainer0" class="format_container">
+      <div title="Mixed materials" class="formatType text-p">
+        <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-MIXED icon-p"></span>
+        <span class="formatText">Mixed materials</span>
+      </div>
+    </div>
+    <div id="formatContainer1" class="format_container">
+      <div title="Other" class="formatType text-p">
+        <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-v icon-p"></span>
+        <span class="formatText">Other</span>
+      </div>
     </div>
   </div>
 
 Desktop Outgoing Markup:   
-  <div id="formatContainer0" class="format_container">
-    <div title="Book" class="formatType text-p">Book</div>
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 FORMAT FORMAT_label">
+      Format:
+    </div>
+    <div id="formatContainer0" class="format_container">
+      <div title="Mixed materials" class="formatType text-p">Mixed materials</div>
+    </div>
+    <div id="formatContainer1" class="format_container">
+      <div title="Other" class="formatType text-p"></div>
+    </div>
   </div>
 
-Mobile Incoming Markup: TBD
-Mobile Outgoing Markup: TBD
+Mobile Incoming Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 FORMAT FORMAT_label">
+      Format:
+    </div>
+    <div id="formatContainer0" class="format_container">
+      <div title="Mixed materials" class="formatType text-p">
+        <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-MIXED icon-p"></span>
+        <span class="formatText">Mixed materials</span>
+      </div>
+    </div>
+    <div id="formatContainer1" class="format_container">
+      <div title="Other" class="formatType text-p">
+        <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-v icon-p"></span>
+        <span class="formatText">Other</span>
+      </div>
+    </div>
+  </div>
+Mobile Outgoing Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 FORMAT FORMAT_label">
+      Format:
+    </div>
+    <div id="formatContainer0" class="format_container">
+      <div title="Mixed materials" class="formatType text-p">Mixed materials</div>
+    </div>
+    <div id="formatContainer1" class="format_container">
+      <div title="Other" class="formatType text-p"></div>
+    </div>
+  </div>
 */
+
 var detailViewIconReplace = function() {
   var format_containerDiv = document.getElementsByClassName("format_container");
   var iconTexts = Array();
@@ -273,6 +324,8 @@ Purpose: Hide the default cover image; only shows the
   image if it’s actually the book cover
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:18266/ada?qu=turtles
 
+Related tests: test_detail_page.py [test_hideMissingDetailBookImage]
+
 Desktop Incoming Markup w/ Image: 
   <div class="detail_cover_art_div">
     <img 
@@ -295,40 +348,81 @@ Desktop Outgoing Markup  w/ Image:
     <div class="facebook_like_detail"></div>
     </div>
 
-Desktop Incoming Markup  w/o Image: 
-<div class="detail_cover_art_div">
-  <img 
-    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
-    alt="Cover image for " 
-    id="detailCover0" 
-    title="Cover image for " 
-    class="detail_cover_art">
-  <div 
-    style="display:none" 
-    title="Cover image for " 
-    class="no_image_text" 
-    id="detailCover0Title"></div>
-  <div class="facebook_like_detail"></div>
-</div>
+Desktop Incoming Markup  w/o Image:
+  <div class="detail_cover_art_div">
+    <img 
+      src="/client/assets/5.523.17/ctx//client/images/no_image.png"
+      alt="Cover image for "
+      id="detailCover0"
+      title="Cover image for "
+      class="detail_cover_art">
+    <div
+      style="display:none"
+      title="Cover image for "
+      class="no_image_text"
+      id="detailCover0Title"></div>
+    <div class="facebook_like_detail"></div>
+  </div>
 
-Desktop Outgoing Markup  w/o Image:   
-<div class="detail_cover_art_div" style="display: none;">
-  <img 
-    src="/client/assets/5.523.17/ctx//client/images/no_image.png" 
-    alt="Cover image for " 
-    id="detailCover0" 
-    title="Cover image for " 
-    class="detail_cover_art">
-  <div 
-    style="display: block;" 
-    title="Cover image for " 
-    class="no_image_text" 
-    id="detailCover0Title"></div>
-  <div class="facebook_like_detail"></div>
-</div>
+Desktop Outgoing Markup  w/o Image:
+  <div class="detail_cover_art_div" style="display: none;">
+    <img
+      src="/client/assets/5.523.17/ctx//client/images/no_image.png"
+      alt="Cover image for "
+      id="detailCover0"
+      title="Cover image for "
+      class="detail_cover_art">
+    <div
+      style="display: block;"
+      title="Cover image for "
+      class="no_image_text"
+      id="detailCover0Title"></div>
+    <div class="facebook_like_detail"></div>
+  </div>
 
-Mobile Incoming Markup: TBD
-Mobile Outgoing Markup: TBD
+Mobile Incoming Markup  w/o Image:
+  <div class="detail_cover_art_div">
+    <div class="cover_wrapper">
+      <img
+        src="/client/assets/5.523.17/ctx//client/images/no_image.png"
+        alt="Cover image for The turtles"
+        id="detailCover0"
+        title="Cover image for The turtles"
+        class="detail_cover_art">
+      <div class="cover_text_wrapper">
+        <div
+          style="display: block;"
+          title="Cover image for The turtles"
+          class="no_image_text"
+          id="detailCover0Title">
+            The turtles
+        </div>
+      </div>
+    </div>
+    <div class="facebook_like_detail"></div>
+  </div>
+
+Mobile Outgoing Markup: w/o Image:
+  <div class="detail_cover_art_div">
+    <div class="cover_wrapper" style="display: none;">
+      <img
+        src="/client/assets/5.523.17/ctx//client/images/no_image.png"
+        alt="Cover image for The turtles"
+        id="detailCover0"
+        title="Cover image for The turtles"
+        class="detail_cover_art">
+      <div class="cover_text_wrapper">
+        <div
+          style="display: block;"
+          title="Cover image for The turtles"
+          class="no_image_text"
+          id="detailCover0Title">
+            The turtles
+        </div>
+      </div>
+    </div>
+    <div class="facebook_like_detail"></div>
+  </div>
 */
 var hideMissingDetailBookImage = function() {
   /* this function sets all detail cover art images hidden.
@@ -595,6 +689,8 @@ var openAccordions = function() {
 Purpose: Replaces Full path URL linke with “Access This Item”, and adds class to the A tag
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
 
+Tests: test_detail_page.py [test_detailChangeToAccessThisItem]
+
 Desktop Incoming Markup: 
   <div class="displayElementWrapper"
     <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
@@ -621,8 +717,22 @@ Desktop Outgoing Markup:
     </a>
   </div>
 
-Mobile Incoming Markup: TBD
-Mobile Outgoing Markup: TBD
+Mobile Incoming Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a target="_blank" href="http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182">http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182</a>
+  </div>
+
+Mobile Outgoing Markup:
+  <div class="displayElementWrapper">
+    <div class="displayElementLabel text-h5 ELECTRONIC_ACCESS ELECTRONIC_ACCESS_label">
+      Electronic Access:
+    </div>
+    <a target="_blank" href="http://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALU?http://purl.access.gpo.gov/GPO/LPS55182" class="detail_access_link">Access This Item</a>
+  </div>
+
 
 */
 var detailChangeToAccessThisItem = function() {
@@ -1268,7 +1378,7 @@ var deVSeriesLink = function() {
 /*
 Purpose: Add ILL Request Link to Detail table
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one
-Test: 
+Test: test_detail_page.py [test_ILLIfCheckedOut]
 
 Desktop Incoming Markup: 
   <table class="detailItemTable sortable0 sortable">
@@ -2228,6 +2338,27 @@ var resultsChangeToAccessThisItem = function() {
     });
 };
 
+/*
+Purpose: Replaces the format image with words
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/results?qu=turtles&te=
+
+Desktop Incoming Markup:
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">
+      <span aria-hidden="true" style="" class="formatTypeIcon formatTypeIcon-BOOK icon-p"></span>
+      <span class="formatText">Book</span>
+    </div>
+  </div>
+
+Desktop Outgoing Markup:
+  <div id="formatContainer0" class="format_container">
+    <div title="Book" class="formatType text-p">Book</div>
+  </div>
+
+Mobile Incoming Markup: TBD
+Mobile Outgoing Markup: TBD
+*/
+
 var resultsViewIconReplace = function() {
   $J(".format_container .formatType").each(function(i, elem) {
     var iconText = $J(elem).attr("title");
@@ -2338,6 +2469,27 @@ var changeAvailableIfWhiteResv = function() {
 };
 
 //Advanced Search Page tasks
+
+/*
+Purpose: Hides search bar on the Advanced Search page
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true
+
+Related tests:  test_advancedSearchView.py [test_hideBasicSearch]
+
+Desktop Incoming Markup:
+  <div class="searchBoxWrapper nonmobile" id="searchBoxWrapper">
+
+Desktop Outgoing Markup:
+  <div class="searchBoxWrapper nonmobile" id="searchBoxWrapper" style="display: none;">
+
+Mobile Incoming Markup:
+  <div class="searchBoxWrapper nonmobile" id="searchBoxWrapper">
+
+Mobile Outgoing Markup:
+  <div class="searchBoxWrapper nonmobile" id="searchBoxWrapper" style="display: none;">
+
+*/
+
 var hideBasicSearch = function() {
   $J("#searchBoxWrapper").css("display", "none");
 };
