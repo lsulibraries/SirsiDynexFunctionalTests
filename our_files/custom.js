@@ -1407,8 +1407,100 @@ var addLinkILL = function(itemId, illiadUrl) {
   }).appendTo(illiadNode);
 };
 
+/*
+Purpose: Updates the text to explicitly say the item is checked out
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5336286/one
+Desktop Incoming Markup:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_SD_ITEM_STATUS">
+            {ON LOAD}<div 
+              class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
+            {AFTER AJAX}<div 
+              class="asyncFieldSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Due 5/22/20</div>
+            <div 
+              class="asyncFieldSD_ITEM_STATUS hidden" 
+              id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Desktop Outgoing Markup:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_SD_ITEM_STATUS">
+            <div 
+              class="asyncFieldSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Checked Out -- Due: 5/22/20</div>
+            <div 
+              class="asyncFieldSD_ITEM_STATUS hidden" 
+              id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Mobile Incoming Markup: 
+    <div class="detailItems ">
+      <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+        <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+              {ON LOAD}<div 
+                class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
+              {AFTER AJAX}<div 
+                class="asyncFieldSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Due 5/22/20</div></div>                
+              <div 
+                class="asyncFieldSD_ITEM_STATUS hidden" 
+                id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+              </div>
+            </div>
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  Mobile Outgoing Markup: 
+    <div class="detailItems ">
+      <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+        <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+              <div 
+                class="asyncFieldSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Checked Out -- Due: 5/22/20</div>
+              <div 
+                class="asyncFieldSD_ITEM_STATUS hidden" 
+                id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+              </div>
+            </div>
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+*/
 var renameDueStatus = function() {
-  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
+  $J(document).ajaxComplete(function() {
     var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
     if (itemStati.length && itemStati[0].childNodes.length) {
       var newText = itemStati[0].childNodes[0].nodeValue.replace(
@@ -1764,43 +1856,41 @@ Mobile Outgoing Markup:
   </div>
 */
 
-
 var elecAccessIfUnavailable = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var elecLink = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden");
-          var mobileElecLink = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden")
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            elecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(elecLink);
-          }
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            mobileElecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(mobileElecLink);
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var elecLink = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_CALLNUMBER a")
+          .not(".hidden");
+        var mobileElecLink = $J(elem)
+          .closest("div .detailChildRecord.border-v")
+          .find(".detailItemsTable_CALLNUMBER a")
+          .not(".hidden");
+        if (
+          $J(elem)
+            .text()
+            .trim() == "Unavailable" &&
+          elecLink.length
+        ) {
+          $J(elem)
+            .text("")
+            .append(elecLink);
+        }
+        if (
+          $J(elem)
+            .text()
+            .trim() == "Unavailable" &&
+          mobileElecLink.length
+        ) {
+          $J(elem)
+            .text("")
+            .append(mobileElecLink);
+        }
+      });
+  });
 };
 
 var deUnavailablePermReserve = function() {
