@@ -1242,10 +1242,7 @@ Desktop Incoming Markup:
         <tr class="detailItemsTableRow ">
           ...
           <td class="detailItemsTable_SD_ITEM_STATUS">
-            {ON LOAD}<div 
-              class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
-              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
-            {AFTER AJAX}<div 
+            <div 
               class="asyncFieldSD_ITEM_STATUS" 
               id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Checked Out -- Due: 5/22/20</div>
             <div 
@@ -1257,9 +1254,51 @@ Desktop Incoming Markup:
     </table>
   </div>
 
-  Mobile Incoming Markup: TBD
+  Mobile Incoming Markup: 
+    <div class="detailItems ">
+      <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+        <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+              {ON LOAD}<div 
+                class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
+              {AFTER AJAX}<div 
+                class="asyncFieldSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Due 5/22/20</div></div>                
+              <div 
+                class="asyncFieldSD_ITEM_STATUS hidden" 
+                id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+              </div>
+            </div>
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
 
-  Mobile Outgoing Markup: TBD
+
+  Mobile Outgoing Markup: 
+    <div class="detailItems ">
+      <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+        <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+              <div 
+                class="asyncFieldSD_ITEM_STATUS" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Checked Out -- Due: 5/22/20</div>
+              <div 
+                class="asyncFieldSD_ITEM_STATUS hidden" 
+                id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+              </div>
+            </div>
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
 */
 
 var renameDueStatus = function() {
