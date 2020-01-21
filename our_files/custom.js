@@ -601,6 +601,7 @@ var detailChangeToAccessThisItem = function() {
 /*
 Purpose: Replaces Column header “Status” with “Current Location”
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1631073/ada?qu=turtles
+Test: test_detail_page.py > test_replaceAvailableStatus
 
 Desktop Incoming Markup: 
   <th class="detailItemsTable_SD_ITEM_STATUS">
@@ -613,7 +614,9 @@ Desktop Incoming Markup:
 Desktop Outgoing Markup: 
   <th class="detailItemsTable_SD_ITEM_STATUS">
     <div class="detailItemTable_th">Current Location</div>
-    <span class="sorttable_sortAnyInd"><img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort"></span>
+    <span class="sorttable_sortAnyInd">
+      <img src="/client/images/account-icons/sortable.png" class="checkoutsIcons" alt="Click to Sort">
+    </span>
   </th>
 
 
