@@ -1764,66 +1764,62 @@ Mobile Outgoing Markup:
   </div>
 */
 
-
 var elecAccessIfUnavailable = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var elecLink = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden");
-          var mobileElecLink = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden")
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            elecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(elecLink);
-          }
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            mobileElecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(mobileElecLink);
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var elecLink = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_CALLNUMBER a")
+          .not(".hidden");
+        var mobileElecLink = $J(elem)
+          .closest("div .detailChildRecord.border-v")
+          .find(".detailItemsTable_CALLNUMBER a")
+          .not(".hidden");
+        if (
+          $J(elem)
+            .text()
+            .trim() == "Unavailable" &&
+          elecLink.length
+        ) {
+          $J(elem)
+            .text("")
+            .append(elecLink);
+        }
+        if (
+          $J(elem)
+            .text()
+            .trim() == "Unavailable" &&
+          mobileElecLink.length
+        ) {
+          $J(elem)
+            .text("")
+            .append(mobileElecLink);
+        }
+      });
+  });
 };
 
 var deUnavailablePermReserve = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var materialText = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_ITYPE")
-            .not(".hidden")
-            .text();
-          var itemHoldText = $J(elem).text();
-          var isMatch =
-            materialText.trim() == "Permanent Reserve" &&
-            itemHoldText.trim() == "Unavailable";
-          if (isMatch) {
-            $J(elem).text("Available");
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var materialText = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_ITYPE")
+          .not(".hidden")
+          .text();
+        var itemHoldText = $J(elem).text();
+        var isMatch =
+          materialText.trim() == "Permanent Reserve" &&
+          itemHoldText.trim() == "Unavailable";
+        if (isMatch) {
+          $J(elem).text("Available");
+        }
+      });
+  });
 };
 
 var DetaildeUnavailableWhiteReserve = function() {
