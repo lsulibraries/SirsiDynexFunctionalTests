@@ -1849,9 +1849,69 @@ var DetaildeUnavailableWhiteReserve = function() {
     });
 };
 
+/*
+Purpose: 
+Example URL: Replaces "Unavailable" with "Available"
+  in the item's "Request Item" column
+  if the item's "Material Type" is "Reference Material" 
+
+Desktop Incoming Markup:
+  <td class="detailItemsTable_ITYPE">
+    Reference Material
+  </td>
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+  </td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_ITYPE">
+    Reference Material
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Available</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+  </td>
+
+Mobile Incoming Markup:
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">
+      Reference Material
+    </div>
+  </div>
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    </div>
+  </div>
+
+Mobile Outgoing Markup:
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">
+      Reference Material
+    </div>
+  </div>
+  ...
+  ...
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Available</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    </div>
+  </div>
+
+*/
+
 var deUnavailableReferenceMaterial = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
+  $J( document )
     .ajaxComplete(function() {
       $J(".asyncFieldSD_ITEM_HOLD_LINK")
         .not(".hidden")
@@ -1861,13 +1921,24 @@ var deUnavailableReferenceMaterial = function() {
             .find(".detailItemsTable_ITYPE")
             .not(".hidden")
             .text();
+          var mobileMaterialText = $J(elem)
+            .closest("div .detailChildRecord.border-v")
+            .find(".detailItemsTable_ITYPE.fieldValue")
+            .not(".hidden")
+            .text();
           var itemHoldText = $J(elem).text();
-          var isMatch =
+          if (
             materialText.trim() == "Reference Material" &&
-            itemHoldText.trim() == "Unavailable";
-          if (isMatch) {
+            itemHoldText.trim() == "Unavailable"
+          ) {
             $J(elem).text("Available");
-          }
+          };
+          if (
+            mobileMaterialText.trim() == "Reference Material" &&
+            itemHoldText.trim() == "Unavailable"
+          ) {
+            $J(elem).text("Available");
+          };
         });
     });
 };
