@@ -902,7 +902,8 @@ var linkAvailableOnlineCallNumber = function() {
   if (!hrefElectronicAccess) {
     return;
   }
-  $J('.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")')
+  $J('.detailItemsTable_CALLNUMBER:contains("AVAILABLE ONLINE")');
+  add('.detailItemsTable_CALLNUMBER:contains("Available Online")')
     .add('.detailItemsTable_CALLNUMBER:contains("VETERINARY MEDICINE LIBRARY")')
     .each(function(i, elem) {
       elem.innerHTML = "";
@@ -1089,145 +1090,11 @@ var fixNewBookShelf = function() {
   End Title Info Update methods
 */
 
-/*
-Purpose: Updates location text for Government Docs on detail page
-Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1237088/one
-Test: None
-
-Desktop Incoming Markup: 
-  Holdings Table:
-  <div class="detailItems ">
-    <table class="detailItemTable sortable0 sortable">
-      <tbody>
-        <tr class="detailItemsTableRow ">
-          <td class="detailItemsTable_LIBRARY">Government Documents/Microforms</td>
-          ...
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  Availability Table:
-  <div class="detailItems ">
-    <table class="detailItemTable sortable0 sortable">
-      ...
-      <tbody>
-        <tr class="detailItemsTableRow ">
-          <td class="detailItemsTable_LIBRARY">
-            {ON LOAD}<div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
-            {AFTER AJAX}<div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
-            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
-          </td>
-          ...
-        </tr>
-      </tbody>
-    ...
-    </table>
-
-
-Desktop Outgoing Markup: 
-  Holdings Table:
-  <div class="detailItems ">
-    <table class="detailItemTable sortable0 sortable">
-      <tbody>
-        <tr class="detailItemsTableRow ">
-          <td class="detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</td>
-          ...
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  Availability Table:
-  <div class="detailItems ">
-    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
-    ...
-      <tbody>
-        <tr class="detailItemsTableRow ">
-          <td class="detailItemsTable_LIBRARY">
-            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
-            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
-          </td>
-          ...
-        </tr>
-      </tbody>
-    ...
-    </table>
-  </div>
-
-Mobile Incoming Markup:
-  Holdings Table:
-  <div class="detailItems ">
-    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
-      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
-        <div class="detailChildField field">
-          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
-          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents/Microforms</div>
-        </div>
-        ...
-      </div>
-    </div>
-  </div>
-
-  Availability Table:
-  <div class="detailItems ">
-    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
-      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
-        <div class="detailChildField field">
-          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
-          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
-            <div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
-            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
-          </div>
-        </div>
-        ...
-        </div>
-      </div>
-      ...
-    </div>
-  </div>
-
-Mobile Outgoing Markup: 
-  Holdings Table:
-  <div class="detailItems ">
-    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
-      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
-        <div class="detailChildField field">
-          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
-          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</div>
-        </div>
-        ...
-      </div>
-    </div>
-  </div>
-
-  Availability Table:
-  <div class="detailItems ">
-    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
-      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
-        <div class="detailChildField field">
-          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
-          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
-            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
-            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
-          </div>
-        </div>
-        ...
-        </div>
-      </div>
-      ...
-    </div>
-  </div>
-*/
 var replaceDetailGovDocsLabel = function() {
-  $J(document).ajaxComplete(function() {
-    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")')
-      .add(
-        '.detailItemsTable_LIBRARY:contains("Government Documents/Microforms")'
-      )
-      .text(
-        "Government Documents - (Currently Closed to Public - See Access Services)"
-      );
+  $J(".asyncFieldLIBRARY").ajaxComplete(function() {
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
+      "Government Documents - (Currently Closed to Public - See Access Services)"
+    );
   });
 };
 
@@ -1265,75 +1132,8 @@ var deVSeriesLink = function() {
 };
 
 //Detail View Tasks -- ITEM_STATUS tasks
-/*
-Purpose: Add ILL Request Link to Detail table
-Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one
-Test: 
-
-Desktop Incoming Markup: 
-  <table class="detailItemTable sortable0 sortable">
-    ...
-    <tbody>
-      ...
-      <tr class="detailItemsTableRow ">
-        ...
-        <td class="detailItemsTable_SD_ITEM_STATUS">
-          {ON LOAD}<div class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Searching...</div><div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518086206046">Unknown</div></td><td class="detailItemsTable_SD_ITEM_HOLD_LINK"><div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Searching...</div>
-          {UPDATED}<div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Due 5/22/20</div>
-          <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Unavailable</div>
-        </td>
-      </tr>
-      ...
-    </tbody>
-    ...
-  </table>
-
-Desktop Outgoing Markup: TBD
-  <table class="detailItemTable sortable0 sortable">
-    ...
-    <tbody>
-      ...
-      <tr class="detailItemsTableRow ">
-        ...
-        <td class="detailItemsTable_SD_ITEM_STATUS">
-          <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">
-            Due 5/22/20
-            <div class="illiadLink">
-              <a href="https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&amp;Form=30&amp;sid=CATALOG&amp;genre=loan&amp;title=Popeye,%20the%20first%20fifty%20years%20/%20by%20Bud%20Sagendorf.++%5Bowned+by+LSU+AAL56324956612%5D&amp;ISBN=9780894800665&amp;aulast=Sagendorf&amp;date=1979&amp;rft.pub=Workman%20Pub.%20Co.,&amp;rft.place=New%20York%20" class="illiadLinkUrl">Request Interlibrary Loan</a>
-            </div>
-          </div>
-          <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Unavailable</div>
-        </td>
-      </tr>
-      ...
-    </tbody>
-    ...
-
-
-
-
-Mobile Incoming Markup: 
-  <div class="detailItems ">
-    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
-      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
-        ...
-        <div class="detailChildField field">
-          <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
-          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
-            <div class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Searching...</div>
-            <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518086206046">Unknown</div>
-          </div>
-        </div>
-        ...
-      </div>
-    </div>
-  </div>
-
-Mobile Outgoing Markup: TBD
-*/
-
 var ILLIfCheckedOut = function() {
-  $J(document).ajaxComplete(function() {
+  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
     var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
     if (
       !itemStati.length ||
@@ -1407,8 +1207,63 @@ var addLinkILL = function(itemId, illiadUrl) {
   }).appendTo(illiadNode);
 };
 
+/*
+/*
+Purpose: Updates the text to explicitly say the item is checked out
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5336286/one
+Desktop Incoming Markup:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_SD_ITEM_STATUS">
+            {ON LOAD}<div 
+              class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
+            {AFTER AJAX}<div 
+              class="asyncFieldSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Due 5/22/20</div>
+            <div 
+              class="asyncFieldSD_ITEM_STATUS hidden" 
+              id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Desktop Outgoing Markup:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_SD_ITEM_STATUS">
+            {ON LOAD}<div 
+              class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Searching...</div>
+            {AFTER AJAX}<div 
+              class="asyncFieldSD_ITEM_STATUS" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518102338997">Checked Out -- Due: 5/22/20</div>
+            <div 
+              class="asyncFieldSD_ITEM_STATUS hidden" 
+              id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518102338997">Unknown</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Mobile Incoming Markup: TBD
+
+  Mobile Outgoing Markup: TBD
+*/
+
 var renameDueStatus = function() {
-  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
+  $J(document).ajaxComplete(function() {
     var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
     if (itemStati.length && itemStati[0].childNodes.length) {
       var newText = itemStati[0].childNodes[0].nodeValue.replace(
@@ -1692,115 +1547,27 @@ var replaceItemHoldsElem = function(aeonElem, destElem) {
   }
 };
 
-/*
-Purpose: Moves the elec access link
-  from the Call Number column to the Item Hold column
-  when the Item Hold column reads "Unavailable"
-Example URL: https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/one
-
-Desktop Incoming Markup: 
-  <td class="detailItemsTable_CALLNUMBER">
-    <div>
-      <p>Available Online</p>
-      <a title="Access this item" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182">Access this item</a>
-    </div>
-  </td>
-  ...
-  ...
-  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
-    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-  </td>
-  //
-  //
-  <td class="detailItemsTable_CALLNUMBER">
-    <div>
-      <p>Available Online</p>
-    </div>
-  </td>
-
-Desktop Outgoing Markup:
-  <td class="detailItemsTable_CALLNUMBER">
-    <div>
-      <p>Available Online</p>
-    </div>
-  </td>
-  ...
-  ...
-  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
-    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">
-      <a title="Access this item" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182">Access this item</a>
-    </div>
-    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-  </td>
-
-Mobile Incoming Markup:
-  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
-    <div>
-      <p>Available Online</p>
-      <a title="Access this item" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030">Access this item</a>
-    </div>
-  </div>
-  ...
-  ...
-  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
-    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-  </div>
-
-Mobile Outgoing Markup: 
-  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
-    <div>
-      <p>Available Online</p>
-    </div>
-  </div>
-  ...
-  ...
-  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
-    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">
-      <a title="Access this item" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030">Access this item</a>
-    </div>
-    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
-  </div>
-*/
-
-
 var elecAccessIfUnavailable = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var elecLink = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden");
-          var mobileElecLink = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".detailItemsTable_CALLNUMBER a")
-            .not(".hidden")
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            elecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(elecLink);
-          }
-          if (
-            $J(elem)
-              .text()
-              .trim() == "Unavailable" &&
-            mobileElecLink.length
-          ) {
-            $J(elem)
-              .text("")
-              .append(mobileElecLink);
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var elecLink = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_CALLNUMBER a")
+          .not(".hidden");
+        if (
+          $J(elem)
+            .text()
+            .trim() == "Unavailable" &&
+          elecLink.length
+        ) {
+          $J(elem)
+            .text("")
+            .append(elecLink);
+        }
+      });
+  });
 };
 
 var deUnavailablePermReserve = function() {
@@ -1976,20 +1743,6 @@ var doesElecAccessLinkHaveText = function(elem) {
   return true;
 };
 
-/*
-Purpose: Updates location text for Government Docs in search results 
-Example URL: TBD
-Test: test_main_search.py > test_for_government_location
-
-Desktop Incoming Markup: TBD
-
-
-Desktop Outgoing Markup: TBD
-
-Mobile Incoming Markup: TBD
-
-Mobile Outgoing Markup: TBD
-*/
 var replaceGovDocsLabel = function() {
   $J('div.LIBRARY:contains(" Government Documents/Microforms")').text(
     "Government Documents - (Currently Closed to Public - See Access Services)"
