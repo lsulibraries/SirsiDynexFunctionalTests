@@ -1826,9 +1826,57 @@ var deUnavailablePermReserve = function() {
     });
 };
 
+/*
+Purpose: Replaces "Unavailable" with "Available"
+  in the item's "Request Item" column
+  if the item's "Call Number" is "WHITE RESV." 
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:3345005/one
+
+Desktop Incoming Markup:
+  <td class="detailItemsTable_CALLNUMBER">
+    WHITE RESV.
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Unavailable</div>
+  </td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_CALLNUMBER">
+    WHITE RESV.
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Available</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Unavailable</div>
+  </td>
+
+Mobile Incoming Markup:
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_CALLNUMBER">Call Number</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+      WHITE RESV.
+    </div>
+  </div>
+  ...
+  ...
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Unavailable</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518010554370">Unavailable</div>
+    </div>
+  </div>
+
+Mobile Outgoing Markup:
+
+*/
+
 var DetaildeUnavailableWhiteReserve = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
+  $J( document )
     .ajaxComplete(function() {
       $J(".asyncFieldSD_ITEM_HOLD_LINK")
         .not(".hidden")
@@ -1838,20 +1886,91 @@ var DetaildeUnavailableWhiteReserve = function() {
             .find(".detailItemsTable_CALLNUMBER")
             .not(".hidden")
             .text();
+          var mobileCallNumText = $J(elem)
+            .closest("div .detailChildRecord.border-v")
+            .find(".detailItemsTable_CALLNUMBER.fieldValue")
+            .not(".hidden")
+            .text();
           var itemHoldText = $J(elem).text();
-          var isMatch =
+          if (
             callNumText.trim() == "WHITE RESV." &&
-            itemHoldText.trim() == "Unavailable";
-          if (isMatch) {
+            itemHoldText.trim() == "Unavailable"
+          ) {
+            $J(elem).text("Available");
+          }
+          if (
+            mobileCallNumText.trim() == "WHITE RESV." &&
+            itemHoldText.trim() == "Unavailable"
+          ) {
             $J(elem).text("Available");
           }
         });
     });
 };
 
+/*
+Purpose: Replaces "Unavailable" with "Available"
+  in the item's "Request Item" column
+  if the item's "Material Type" is "Reference Material" 
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:132419/one
+
+Desktop Incoming Markup:
+  <td class="detailItemsTable_ITYPE">
+    Reference Material
+  </td>
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+  </td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_ITYPE">
+    Reference Material
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Available</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+  </td>
+
+Mobile Incoming Markup:
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">
+      Reference Material
+    </div>
+  </div>
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    </div>
+  </div>
+
+Mobile Outgoing Markup:
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">
+      Reference Material
+    </div>
+  </div>
+  ...
+  ...
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Available</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518025664487">Unavailable</div>
+    </div>
+  </div>
+
+*/
+
 var deUnavailableReferenceMaterial = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
+  $J( document )
     .ajaxComplete(function() {
       $J(".asyncFieldSD_ITEM_HOLD_LINK")
         .not(".hidden")
@@ -1861,20 +1980,90 @@ var deUnavailableReferenceMaterial = function() {
             .find(".detailItemsTable_ITYPE")
             .not(".hidden")
             .text();
+          var mobileMaterialText = $J(elem)
+            .closest("div .detailChildRecord.border-v")
+            .find(".detailItemsTable_ITYPE.fieldValue")
+            .not(".hidden")
+            .text();
           var itemHoldText = $J(elem).text();
-          var isMatch =
+          if (
             materialText.trim() == "Reference Material" &&
-            itemHoldText.trim() == "Unavailable";
-          if (isMatch) {
+            itemHoldText.trim() == "Unavailable"
+          ) {
             $J(elem).text("Available");
-          }
+          };
+          if (
+            mobileMaterialText.trim() == "Reference Material" &&
+            itemHoldText.trim() == "Unavailable"
+          ) {
+            $J(elem).text("Available");
+          };
         });
     });
 };
 
+/*
+Purpose: Replaces "Unavailable" with "Available"
+  in the item's "Request Item" column
+  if the item's "Current Location" is "Middleton Library Reserve Desk" 
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:4071531/one
+
+Desktop Incoming Markup: 
+  <td class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518093556516">Middleton Library Reserve Desk</div>
+    <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518093556516">Unknown</div>
+  </td>
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+  </td>
+
+Desktop Outgoing Markup: 
+  <td class="detailItemsTable_SD_ITEM_STATUS">
+    <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518093556516">Middleton Library Reserve Desk</div>
+    <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518093556516">Unknown</div>
+  </td>
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Available</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+  </td>
+
+Mobile Incoming Markup: 
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+      <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518093556516">Middleton Library Reserve Desk</div>
+      <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518093556516">Unknown</div>
+    </div>
+  </div>
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+    </div>
+  </div>
+
+Mobile Outgoing Markup: 
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+      <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518093556516">Middleton Library Reserve Desk</div>
+      <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518093556516">Unknown</div>
+    </div>
+  </div>
+  <div class="detailChildField field">
+    <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+    <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+      <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Available</div>
+      <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518093556516">Unavailable</div>
+    </div>
+  </div>
+
+*/
+
 var deUnavailableReserveDesk = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
+  $J( document )
     .ajaxComplete(function() {
       $J(".asyncFieldSD_ITEM_HOLD_LINK")
         .not(".hidden")
@@ -1884,13 +2073,24 @@ var deUnavailableReserveDesk = function() {
             .find(".detailItemsTable_SD_ITEM_STATUS")
             .not(".hidden")
             .text();
+          var mobileLocationText = $J(elem)
+            .closest("div .detailChildRecord.border-v")
+            .find(".asyncFieldSD_ITEM_STATUS")
+            .not(".hidden")
+            .text();
           var itemHoldText = $J(elem).text();
           if (
             itemHoldText.trim() == "Unavailable" &&
             locationText.indexOf("Middleton Library Reserve Desk") > -1
           ) {
             $J(elem).text("Available");
-          }
+          };
+          if (
+            itemHoldText.trim() == "Unavailable" &&
+            mobileLocationText.indexOf("Middleton Library Reserve Desk") > -1
+          ) {
+            $J(elem).text("Available");
+          };
         });
     });
 };
