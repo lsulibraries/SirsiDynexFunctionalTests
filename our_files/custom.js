@@ -1037,7 +1037,8 @@ Desktop Incoming Markup:
       <tbody>
         <tr class="detailItemsTableRow ">
           <td class="detailItemsTable_LIBRARY">
-            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+            {ON LOAD}<div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
+            {AFTER AJAX}<div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
             <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
           </td>
           ...
@@ -1046,6 +1047,23 @@ Desktop Incoming Markup:
     ...
     </table>
   </div>
+
+
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">
+            {ON LOAD}<div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
+            {AFTER AJAX}<div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+    ...
+    </table>
 
 
 Desktop Outgoing Markup: 
@@ -1065,13 +1083,44 @@ Desktop Outgoing Markup:
     </table>
   </div>
 
-Mobile Incoming Markup: TBD
+Mobile Incoming Markup:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+          </div>
+        </div>
+        ...
+        </div>
+      </div>
+      ...
+    </div>
+  </div>
 
-Mobile Outgoing Markup: TBD
+Mobile Outgoing Markup: 
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
+          </div>
+        </div>
+        ...
+        </div>
+      </div>
+      ...
+    </div>
+  </div>
 */
-
 var replaceDetailGovDocsLabel = function() {
-  $J(".asyncFieldLIBRARY").ajaxComplete(function() {
+  $J(document).ajaxComplete(function() {
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
       "Government Documents - (Currently Closed to Public - See Access Services)"
     );
