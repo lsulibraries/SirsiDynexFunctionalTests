@@ -1067,8 +1067,75 @@ var deVSeriesLink = function() {
 };
 
 //Detail View Tasks -- ITEM_STATUS tasks
+/*
+Purpose: Add ILL Request Link to Detail table
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one
+Test: 
+
+Desktop Incoming Markup: 
+  <table class="detailItemTable sortable0 sortable">
+    ...
+    <tbody>
+      ...
+      <tr class="detailItemsTableRow ">
+        ...
+        <td class="detailItemsTable_SD_ITEM_STATUS">
+          {ON LOAD}<div class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Searching...</div><div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518086206046">Unknown</div></td><td class="detailItemsTable_SD_ITEM_HOLD_LINK"><div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Searching...</div>
+          {UPDATED}<div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Due 5/22/20</div>
+          <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Unavailable</div>
+        </td>
+      </tr>
+      ...
+    </tbody>
+    ...
+  </table>
+
+Desktop Outgoing Markup: TBD
+  <table class="detailItemTable sortable0 sortable">
+    ...
+    <tbody>
+      ...
+      <tr class="detailItemsTableRow ">
+        ...
+        <td class="detailItemsTable_SD_ITEM_STATUS">
+          <div class="asyncFieldSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">
+            Due 5/22/20
+            <div class="illiadLink">
+              <a href="https://louis.hosts.atlas-sys.com/remoteauth/LUU/illiad.dll?Action=10&amp;Form=30&amp;sid=CATALOG&amp;genre=loan&amp;title=Popeye,%20the%20first%20fifty%20years%20/%20by%20Bud%20Sagendorf.++%5Bowned+by+LSU+AAL56324956612%5D&amp;ISBN=9780894800665&amp;aulast=Sagendorf&amp;date=1979&amp;rft.pub=Workman%20Pub.%20Co.,&amp;rft.place=New%20York%20" class="illiadLinkUrl">Request Interlibrary Loan</a>
+            </div>
+          </div>
+          <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK31518086206046">Unavailable</div>
+        </td>
+      </tr>
+      ...
+    </tbody>
+    ...
+
+
+
+
+Mobile Incoming Markup: 
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        ...
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS">Current Location</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_STATUS">
+            <div class="asyncFieldSD_ITEM_STATUS asyncInProgressSD_ITEM_STATUS" id="asyncFielddetailItemsDiv0SD_ITEM_STATUS31518086206046">Searching...</div>
+            <div class="asyncFieldSD_ITEM_STATUS hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_STATUS31518086206046">Unknown</div>
+          </div>
+        </div>
+        ...
+      </div>
+    </div>
+  </div>
+
+Mobile Outgoing Markup: TBD
+*/
+
 var ILLIfCheckedOut = function() {
-  $J(".asyncFieldSD_ITEM_STATUS").ajaxComplete(function() {
+  $J(document).ajaxComplete(function() {
     var itemStati = $J('.asyncFieldSD_ITEM_STATUS:contains("Due")');
     if (
       !itemStati.length ||
