@@ -1491,6 +1491,79 @@ var replaceItemHoldsElem = function(aeonElem, destElem) {
   }
 };
 
+/*
+Purpose: Moves the elec access link
+  from the Call Number column to the Item Hold column
+  when the Item Hold column reads "Unavailable"
+Example URL: https://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/one
+
+Desktop Incoming Markup: 
+  <td class="detailItemsTable_CALLNUMBER">
+    <div>
+      <p>Available Online</p>
+      <a title="Access this item" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182">Access this item</a>
+    </div>
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+  </td>
+  //
+  //
+  <td class="detailItemsTable_CALLNUMBER">
+    <div>
+      <p>Available Online</p>
+    </div>
+  </td>
+
+Desktop Outgoing Markup:
+  <td class="detailItemsTable_CALLNUMBER">
+    <div>
+      <p>Available Online</p>
+    </div>
+  </td>
+  ...
+  ...
+  <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">
+      <a title="Access this item" href="https://utils.louislibraries.org/cgi-bin/lz0050.x?sitecode=LALUelib?http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030?catkey=2795182">Access this item</a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+  </td>
+
+Mobile Incoming Markup:
+  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+    <div>
+      <p>Available Online</p>
+      <a title="Access this item" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030">Access this item</a>
+    </div>
+  </div>
+  ...
+  ...
+  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+  </div>
+
+Mobile Outgoing Markup: 
+  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_CALLNUMBER">
+    <div>
+      <p>Available Online</p>
+    </div>
+  </div>
+  ...
+  ...
+  <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+    <div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">
+      <a title="Access this item" href="http://libezp.lib.lsu.edu/login?url=http://LSU.NaxosMusicLibrary.com/streamcat.asp?s=98938%2fLSUNML01&amp;item%5Fcode=8.880030">Access this item</a>
+    </div>
+    <div class="asyncFieldSD_ITEM_HOLD_LINK hidden" id="asyncFieldDefaultdetailItemsDiv0SD_ITEM_HOLD_LINK2795182-1001">Unavailable</div>
+  </div>
+*/
+
+
 var elecAccessIfUnavailable = function() {
   $J( document )
     .ajaxComplete(function() {
@@ -1501,6 +1574,10 @@ var elecAccessIfUnavailable = function() {
             .closest("tr")
             .find(".detailItemsTable_CALLNUMBER a")
             .not(".hidden");
+          var mobileElecLink = $J(elem)
+            .closest("div .detailChildRecord.border-v")
+            .find(".detailItemsTable_CALLNUMBER a")
+            .not(".hidden")
           if (
             $J(elem)
               .text()
@@ -1510,6 +1587,16 @@ var elecAccessIfUnavailable = function() {
             $J(elem)
               .text("")
               .append(elecLink);
+          }
+          if (
+            $J(elem)
+              .text()
+              .trim() == "Unavailable" &&
+            mobileElecLink.length
+          ) {
+            $J(elem)
+              .text("")
+              .append(mobileElecLink);
           }
         });
     });
