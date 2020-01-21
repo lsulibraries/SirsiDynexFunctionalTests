@@ -116,12 +116,54 @@ var doAccountPageTasks = function() {
 };
 
 // Generic Tasks
+/*
+Purpose: Updates the text of the link and the location
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu
+Test: test_generic_tasks.py > test_customSearchLinkText
+      test_generic_tasks.py > test_customSearchLinkWorks
+
+Desktop Incoming Markup: 
+  <div id="searchBoxStyleDiv">
+    <div id="searchBoxesWrapper">
+      ...
+    </div>
+    <div id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/search/advanced?">Advanced Search</a>
+    </div>
+  </div>
+
+
+Desktop Outgoing Markup:   
+  <div id="searchBoxStyleDiv">
+    <div id="searchBoxesWrapper">
+      ...
+    </div>
+    <div id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true">More Search Options</a>
+    </div>
+  </div>
+
+
+Mobile Incoming Markup:
+  <div class="searchBoxLinkRow">
+    <div class="show-expanded" id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/search/advanced?">Advanced Search</a>
+    </div>
+    ...
+  </div>
+
+Mobile Outgoing Markup: 
+  <div class="searchBoxLinkRow">
+    <div class="show-expanded" id="searchBoxAdvancedLink">
+      <a title="Advanced Search" href="/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true">More Search Options</a>
+    </div>
+    ...
+  </div>
+*/
+
 var customSearchLink = function() {
   $J("#searchBoxAdvancedLink a")
-    .attr(
-      "href",
-      "https://lsu.ent.sirsi.net/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true"
-    )
+    .attr("href", "/client/en_US/lsu/?rm=MORE+SEARCH+OP0|||1|||0|||true")
     .text("More Search Options");
 };
 
