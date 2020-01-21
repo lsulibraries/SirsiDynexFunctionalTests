@@ -1089,11 +1089,145 @@ var fixNewBookShelf = function() {
   End Title Info Update methods
 */
 
+/*
+Purpose: Updates location text for Government Docs on detail page
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1237088/one
+Test: None
+
+Desktop Incoming Markup: 
+  Holdings Table:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">Government Documents/Microforms</td>
+          ...
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Availability Table:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">
+            {ON LOAD}<div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
+            {AFTER AJAX}<div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+    ...
+    </table>
+
+
+Desktop Outgoing Markup: 
+  Holdings Table:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable">
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</td>
+          ...
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  Availability Table:
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+    ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+    ...
+    </table>
+  </div>
+
+Mobile Incoming Markup:
+  Holdings Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents/Microforms</div>
+        </div>
+        ...
+      </div>
+    </div>
+  </div>
+
+  Availability Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY asyncInProgressLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Searching...</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+          </div>
+        </div>
+        ...
+        </div>
+      </div>
+      ...
+    </div>
+  </div>
+
+Mobile Outgoing Markup: 
+  Holdings Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailHoldingsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailHoldingsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">Government Documents - (Currently Closed to Public - See Access Services)</div>
+        </div>
+        ...
+      </div>
+    </div>
+  </div>
+
+  Availability Table:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+        <div class="detailChildField field">
+          <div class="detailChildFieldLabel label text-h5 detailItemsTable_LIBRARY">Library</div>
+          <div class="detailChildFieldValue fieldValue text-p detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents - (Currently Closed to Public - See Access Services)</div>
+          </div>
+        </div>
+        ...
+        </div>
+      </div>
+      ...
+    </div>
+  </div>
+*/
 var replaceDetailGovDocsLabel = function() {
-  $J(".asyncFieldLIBRARY").ajaxComplete(function() {
-    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
-      "Government Documents - (Currently Closed to Public - See Access Services)"
-    );
+  $J(document).ajaxComplete(function() {
+    $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")')
+      .add(
+        '.detailItemsTable_LIBRARY:contains("Government Documents/Microforms")'
+      )
+      .text(
+        "Government Documents - (Currently Closed to Public - See Access Services)"
+      );
   });
 };
 
@@ -1842,6 +1976,20 @@ var doesElecAccessLinkHaveText = function(elem) {
   return true;
 };
 
+/*
+Purpose: Updates location text for Government Docs in search results 
+Example URL: TBD
+Test: test_main_search.py > test_for_government_location
+
+Desktop Incoming Markup: TBD
+
+
+Desktop Outgoing Markup: TBD
+
+Mobile Incoming Markup: TBD
+
+Mobile Outgoing Markup: TBD
+*/
 var replaceGovDocsLabel = function() {
   $J('div.LIBRARY:contains(" Government Documents/Microforms")').text(
     "Government Documents - (Currently Closed to Public - See Access Services)"
