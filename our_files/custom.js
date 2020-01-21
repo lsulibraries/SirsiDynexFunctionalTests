@@ -1025,6 +1025,51 @@ var fixNewBookShelf = function() {
   End Title Info Update methods
 */
 
+/*
+Purpose: Updates location text for Government Docs on detail page
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1237088/one
+Test: None
+
+Desktop Incoming Markup: 
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+    ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518024900072">Government Documents/Microforms</div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+    ...
+    </table>
+  </div>
+
+
+Desktop Outgoing Markup: 
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+    ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          <td class="detailItemsTable_LIBRARY">
+            <div class="asyncFieldLIBRARY" id="asyncFielddetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
+            <div class="asyncFieldLIBRARY hidden" id="asyncFieldDefaultdetailItemsDiv0LIBRARY31518025086939">Government Documents - (Currently Closed to Public - See Access Services)</div>
+          </td>
+          ...
+        </tr>
+      </tbody>
+    ...
+    </table>
+  </div>
+
+Mobile Incoming Markup: TBD
+
+Mobile Outgoing Markup: TBD
+*/
+
 var replaceDetailGovDocsLabel = function() {
   $J(".asyncFieldLIBRARY").ajaxComplete(function() {
     $J('.asyncFieldLIBRARY:contains("Government Documents/Microforms")').text(
@@ -1625,6 +1670,20 @@ var doesElecAccessLinkHaveText = function(elem) {
   return true;
 };
 
+/*
+Purpose: Updates location text for Government Docs in search results 
+Example URL: TBD
+Test: test_main_search.py > test_for_government_location
+
+Desktop Incoming Markup: TBD
+
+
+Desktop Outgoing Markup: TBD
+
+Mobile Incoming Markup: TBD
+
+Mobile Outgoing Markup: TBD
+*/
 var replaceGovDocsLabel = function() {
   $J('div.LIBRARY:contains(" Government Documents/Microforms")').text(
     "Government Documents - (Currently Closed to Public - See Access Services)"
