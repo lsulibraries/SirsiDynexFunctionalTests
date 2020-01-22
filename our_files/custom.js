@@ -434,7 +434,8 @@ var hideMissingDetailBookImage = function() {
     $J(".detail_cover_art")
       .parent()
       .css("display", "none");
-    $J(".detail_biblio").css("width", "550px");
+    //Only perform on Desktop
+    $J(".nonmobile .detail_biblio").css("width", "550px");
     var mutationObserver = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         if (
@@ -2173,36 +2174,35 @@ Mobile Outgoing Markup:
 */
 
 var DetaildeUnavailableWhiteReserve = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var callNumText = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_CALLNUMBER")
-            .not(".hidden")
-            .text();
-          var mobileCallNumText = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".detailItemsTable_CALLNUMBER.fieldValue")
-            .not(".hidden")
-            .text();
-          var itemHoldText = $J(elem).text();
-          if (
-            callNumText.trim() == "WHITE RESV." &&
-            itemHoldText.trim() == "Unavailable"
-          ) {
-            $J(elem).text("Available");
-          }
-          if (
-            mobileCallNumText.trim() == "WHITE RESV." &&
-            itemHoldText.trim() == "Unavailable"
-          ) {
-            $J(elem).text("Available");
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var callNumText = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_CALLNUMBER")
+          .not(".hidden")
+          .text();
+        var mobileCallNumText = $J(elem)
+          .closest("div .detailChildRecord.border-v")
+          .find(".detailItemsTable_CALLNUMBER.fieldValue")
+          .not(".hidden")
+          .text();
+        var itemHoldText = $J(elem).text();
+        if (
+          callNumText.trim() == "WHITE RESV." &&
+          itemHoldText.trim() == "Unavailable"
+        ) {
+          $J(elem).text("Available");
+        }
+        if (
+          mobileCallNumText.trim() == "WHITE RESV." &&
+          itemHoldText.trim() == "Unavailable"
+        ) {
+          $J(elem).text("Available");
+        }
+      });
+  });
 };
 
 /*
@@ -2267,36 +2267,35 @@ Mobile Outgoing Markup:
 */
 
 var deUnavailableReferenceMaterial = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var materialText = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_ITYPE")
-            .not(".hidden")
-            .text();
-          var mobileMaterialText = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".detailItemsTable_ITYPE.fieldValue")
-            .not(".hidden")
-            .text();
-          var itemHoldText = $J(elem).text();
-          if (
-            materialText.trim() == "Reference Material" &&
-            itemHoldText.trim() == "Unavailable"
-          ) {
-            $J(elem).text("Available");
-          };
-          if (
-            mobileMaterialText.trim() == "Reference Material" &&
-            itemHoldText.trim() == "Unavailable"
-          ) {
-            $J(elem).text("Available");
-          };
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var materialText = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_ITYPE")
+          .not(".hidden")
+          .text();
+        var mobileMaterialText = $J(elem)
+          .closest("div .detailChildRecord.border-v")
+          .find(".detailItemsTable_ITYPE.fieldValue")
+          .not(".hidden")
+          .text();
+        var itemHoldText = $J(elem).text();
+        if (
+          materialText.trim() == "Reference Material" &&
+          itemHoldText.trim() == "Unavailable"
+        ) {
+          $J(elem).text("Available");
+        }
+        if (
+          mobileMaterialText.trim() == "Reference Material" &&
+          itemHoldText.trim() == "Unavailable"
+        ) {
+          $J(elem).text("Available");
+        }
+      });
+  });
 };
 
 /*
@@ -2360,36 +2359,35 @@ Mobile Outgoing Markup:
 */
 
 var deUnavailableReserveDesk = function() {
-  $J( document )
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var locationText = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_SD_ITEM_STATUS")
-            .not(".hidden")
-            .text();
-          var mobileLocationText = $J(elem)
-            .closest("div .detailChildRecord.border-v")
-            .find(".asyncFieldSD_ITEM_STATUS")
-            .not(".hidden")
-            .text();
-          var itemHoldText = $J(elem).text();
-          if (
-            itemHoldText.trim() == "Unavailable" &&
-            locationText.indexOf("Middleton Library Reserve Desk") > -1
-          ) {
-            $J(elem).text("Available");
-          };
-          if (
-            itemHoldText.trim() == "Unavailable" &&
-            mobileLocationText.indexOf("Middleton Library Reserve Desk") > -1
-          ) {
-            $J(elem).text("Available");
-          };
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".asyncFieldSD_ITEM_HOLD_LINK")
+      .not(".hidden")
+      .each(function(i, elem) {
+        var locationText = $J(elem)
+          .closest("tr")
+          .find(".detailItemsTable_SD_ITEM_STATUS")
+          .not(".hidden")
+          .text();
+        var mobileLocationText = $J(elem)
+          .closest("div .detailChildRecord.border-v")
+          .find(".asyncFieldSD_ITEM_STATUS")
+          .not(".hidden")
+          .text();
+        var itemHoldText = $J(elem).text();
+        if (
+          itemHoldText.trim() == "Unavailable" &&
+          locationText.indexOf("Middleton Library Reserve Desk") > -1
+        ) {
+          $J(elem).text("Available");
+        }
+        if (
+          itemHoldText.trim() == "Unavailable" &&
+          mobileLocationText.indexOf("Middleton Library Reserve Desk") > -1
+        ) {
+          $J(elem).text("Available");
+        }
+      });
+  });
 };
 
 //Results View tasks
