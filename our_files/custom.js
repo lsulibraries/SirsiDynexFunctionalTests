@@ -2600,7 +2600,6 @@ Desktop Outgoing Markup: <a href="#">Text Notifications</a>
 var changeSMSText = function() {
   $J('a:contains("SMS Notifications")').text("Text Notifications");
 };
-
 /*
 Desktop Incoming Markup: 
   <span class="smsFields" id="smsFieldsDiv">
@@ -2628,36 +2627,37 @@ var changeSMSPopupLabel = function() {
   $J("#smsPhoneNameDiv label").text("Name This Notification");
 };
 /*
-Desktop Incoming Markup: 
-  <div 
-    class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable" 
-    tabindex="-1" 
-    role="dialog" 
-    aria-labelledby="ui-dialog-title-smsPrefDialog_0" 
-    style="display: none; z-index: 1000; outline: 0px;">
-      <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-          <span class="ui-dialog-title" id="ui-dialog-title-smsPrefDialog_0">Add SMS Notification</span>
-          ...
-      </div>
-  </div>
+Desktop Incoming Markup:  
+    <input 
+      onclick="$J(this).focus();openSmsPrefDialog('0', 'Add SMS Notification');return false;" 
+      id="addSmsPref" 
+      type="button" 
+      class="button fullwidth" 
+      value="Add SMS Notification">
+
 Desktop Outgoing Markup:
-    <div 
-    class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable" 
-    tabindex="-1" 
-    role="dialog" 
-    aria-labelledby="ui-dialog-title-smsPrefDialog_0" 
-    style="display: none; z-index: 1000; outline: 0px;">
-      <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-          <span class="ui-dialog-title" id="ui-dialog-title-smsPrefDialog_0">Add Text Notification</span>
-          ...
-      </div>
-  </div>
+      <input 
+      onclick="$J(this).focus();openSmsPrefDialog('0', 'Add Text Notification');return false;" 
+      id="addSmsPref" 
+      type="button" 
+      class="button fullwidth" 
+      value="Add Text Notification">
 
 */
-var changeSMSPopupTitle = function() {
-  $J("#ui-dialog-title-smsPrefDialog_0").text("Add Text Notification");
+var changeSMSTextButton = function() {
+  $J("input#addSmsPref[value='Add SMS Notification']").attr(
+    "value",
+    "Add Text Notification"
+  );
+  const onClick = $J("input#addSmsPref").attr("onclick");
+  if (onClick.indexOf("Add SMS Notification") > 1) {
+    const newString = onClick.replace(
+      "Add SMS Notification",
+      "Add Text Notification"
+    );
+    $J("input#addSmsPref").attr("onclick", newString);
+  }
 };
-
 /* Default entrypoints */
 /*
 Use these two functions to call your custom functions.
