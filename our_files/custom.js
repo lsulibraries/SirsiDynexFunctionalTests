@@ -2003,27 +2003,124 @@ var elecAccessIfUnavailable = function() {
   });
 };
 
+/*
+Purpose: Moved the items in Permanent Reserce to be Available since they can not be checked out
+Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5185726/one
+
+Desktop Incoming Markup: 
+  <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_ITYPE">Permanent Reserve</td>
+          ...
+          <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+            <div 
+              class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518200027229">Unavailable</div>
+            ...
+          </td>
+        </tr>
+      </tbody>
+      ...
+    </table>
+  </div>
+
+
+Desktop Outgoing Markup: TBD
+    <div class="detailItems ">
+    <table class="detailItemTable sortable0 sortable" id="detailItemTable0">
+      ...
+      <tbody>
+        <tr class="detailItemsTableRow ">
+          ...
+          <td class="detailItemsTable_ITYPE">Permanent Reserve</td>
+          ...
+          <td class="detailItemsTable_SD_ITEM_HOLD_LINK">
+            <div 
+              class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+              id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518200027229">Available</div>
+            ...
+          </td>
+        </tr>
+      </tbody>
+      ...
+    </table>
+  </div>
+
+Mobile Incoming Markup:
+  <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          ...
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">Permanent Reserve</div>
+          </div>
+          ...
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+              <div 
+                class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518200027229">Unavailable</div>
+              ...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+Mobile Outgoing Markup: 
+    <div class="detailItems ">
+    <div class="detailItemTable borderSection bcolor-s4 bcolor" id="detailItemTabledetailItemsDiv00">
+      <div class="detailChildRecord border-v" id="childRecorddetailItemsDiv00_0">
+          ...
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_ITYPE">Material Type</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_ITYPE">Permanent Reserve</div>
+          </div>
+          ...
+          <div class="detailChildField field">
+            <div class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK">Request Item</div>
+            <div class="detailChildFieldValue fieldValue text-p detailItemsTable_SD_ITEM_HOLD_LINK">
+              <div 
+                class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK" 
+                id="asyncFielddetailItemsDiv0SD_ITEM_HOLD_LINK31518200027229">Available</div>
+              ...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+*/
 var deUnavailablePermReserve = function() {
-  $J(".asyncFieldSD_ITEM_HOLD_LINK")
-    .not(".hidden")
-    .ajaxComplete(function() {
-      $J(".asyncFieldSD_ITEM_HOLD_LINK")
-        .not(".hidden")
-        .each(function(i, elem) {
-          var materialText = $J(elem)
-            .closest("tr")
-            .find(".detailItemsTable_ITYPE")
-            .not(".hidden")
-            .text();
-          var itemHoldText = $J(elem).text();
-          var isMatch =
-            materialText.trim() == "Permanent Reserve" &&
-            itemHoldText.trim() == "Unavailable";
-          if (isMatch) {
-            $J(elem).text("Available");
-          }
-        });
-    });
+  $J(document).ajaxComplete(function() {
+    $J(".detailItems .detailItemTable .detailItemsTableRow")
+      .add(".detailItems .detailItemTable .detailChildRecord")
+      .each(function(i, elem) {
+        const materialText = $J(elem)
+          .find(".detailItemsTable_ITYPE")
+          .not(".label")
+          .text();
+
+        const itemStatusElement = $J(elem)
+          .find(".asyncFieldSD_ITEM_HOLD_LINK")
+          .not(".hidden");
+
+        const itemHoldText = itemStatusElement.text();
+
+        var isMatch =
+          materialText.trim() == "Permanent Reserve" &&
+          itemHoldText.trim() == "Unavailable";
+        if (isMatch) {
+          itemStatusElement.text("Available");
+        }
+      });
+  });
 };
 
 /*
