@@ -1,7 +1,7 @@
 var BASEWSURL = "https://lalu.sirsi.net/lalu_ilsws/";
 var CLIENTID = "DS_CLIENT";
-document.writeln("<script type='text/javscript' src='/custom/web/bento/bento50.js'>");
-
+//Commented out due to breaking the Place Holds IFrame as it obliterated the content
+//document.writeln("<script type='text/javscript' src='/custom/web/bento/bento50.js'>");
 
 $J(document).ready(function() {
   doGenericTasks();
