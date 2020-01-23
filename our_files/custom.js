@@ -434,7 +434,8 @@ var hideMissingDetailBookImage = function() {
     $J(".detail_cover_art")
       .parent()
       .css("display", "none");
-    $J(".detail_biblio").css("width", "550px");
+    //Only perform on Desktop
+    $J(".nonmobile .detail_biblio").css("width", "550px");
     var mutationObserver = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         if (
