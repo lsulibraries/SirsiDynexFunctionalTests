@@ -40,7 +40,7 @@ $J(document).ready(function() {
     doResultsViewTasks();
   } else if ($J(".customAdvancedSearch").length) {
     doAdvancedSearchViewTasks();
-  } else if ($J("#myAccount").length) {
+  } else if ($J("#myAccount").length || $J(".mobile .accountPanel").length) {
     doAccountPageTasks();
   } else if (jQuery(".framedPage").length) {
     //pass
@@ -112,7 +112,7 @@ var doAdvancedSearchViewTasks = function() {
 var doAccountPageTasks = function() {
   changeSMSText();
   changeSMSPopupLabel();
-  changeSMSPopupTitle();
+  changeSMSTextButton();
 };
 
 // Generic Tasks
@@ -2597,6 +2597,10 @@ Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/account?
 /*
 Desktop Incoming Markup: <a href="#">SMS Notifications</a>
 Desktop Outgoing Markup: <a href="#">Text Notifications</a>
+
+Mobile Incoming Markup: <a href="#">SMS Notifications</a></h3>
+
+Mobile Outgoing Markup: <a href="#">Text Notifications</a>
 */
 var changeSMSText = function() {
   $J('a:contains("SMS Notifications")').text("Text Notifications");
@@ -2623,6 +2627,25 @@ Desktop Outgoing Markup:
     </div>
     ...
   </span>
+
+Mobile Incoming Markup: 
+  <div class="fieldSection" id="smsPhoneNameDiv">
+    <div class="label text-p">
+      <label for="smsPhoneName" class="smsLabel">Label</label>
+      <img alt="Required Field" class="required-field" src="/client/images/required_field.png">
+    </div>
+    <input class="smsField textbox fullwidth" required="required" id="smsPhoneName" name="smsPhoneName" type="text">
+  </div>
+
+Mobile Outgoing Markup:
+  <div class="fieldSection" id="smsPhoneNameDiv">
+    <div class="label text-p">
+      <label for="smsPhoneName" class="smsLabel">Name This Notification</label>
+      <img alt="Required Field" class="required-field" src="/client/images/required_field.png">
+    </div>
+    <input class="smsField textbox fullwidth" required="required" id="smsPhoneName" name="smsPhoneName" type="text">
+  </div>
+
 */
 var changeSMSPopupLabel = function() {
   $J("#smsPhoneNameDiv label").text("Name This Notification");
@@ -2643,6 +2666,24 @@ Desktop Outgoing Markup:
       type="button" 
       class="button fullwidth" 
       value="Add Text Notification">
+
+Mobile Incoming Markup: 
+  <input 
+    onclick="$J(this).focus();openSmsPrefDialog('0', 'Add SMS Notification');return false;" 
+    id="addSmsPref" 
+    type="button" 
+    class="button 
+    fullwidth 
+    bgcolor-a4" 
+    value="Add SMS Notification">
+
+Mobile Outgoing Markup: TBD
+  <input 
+    onclick="$J(this).focus();openSmsPrefDialog('0', 'Add Text Notification');return false;" 
+    id="addSmsPref" 
+    type="button" 
+    class="button fullwidth bgcolor-a4" 
+    value="Add Text Notification">
 
 */
 var changeSMSTextButton = function() {
