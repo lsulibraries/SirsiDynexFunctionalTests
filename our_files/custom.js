@@ -255,6 +255,19 @@ var detailViewIconReplace = function() {
     }
   }
 };
+/*
+Purpose: Creates a green "Citation" button
+Example URL: hhttps://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:656599/one
+
+Related tests: test_detail_page.py [test_citationbuttonarrives]
+
+Desktop Incoming Markup: 
+Desktop Outgoing Markup: 
+Mobile Incoming Markup: 
+Mobile Outgoing Markup: 
+
+
+*/
 
 var createCitationButton = function() {
   // shortcircuit if "Cite As" field in object body
@@ -461,6 +474,8 @@ var prepOpenAccordions = function() {
 /*
 Purpose: Opens both the Holdings and Available table
 Example URL: https://lsu.ent.sirsi.net/client/en_US/lsu/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:3568569/ada?qu=turtles&qf=FORMAT%09Format%09CR%09Print+Journal
+
+Related tests:  test_detail_page.py [test_prepOpenAccordions]
 
 Desktop Incoming Markup: 
   <div class="accordionHolder 
