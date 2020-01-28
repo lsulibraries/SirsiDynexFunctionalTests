@@ -138,6 +138,7 @@ def test_prepOpenAccordions(load_checkedout_driver):
 
 def test_linkAvailableOnlineCallNumber(load_hello_driver):
     driver = load_hello_driver
+    time.sleep(3)
     avaiable_access_link = driver.find_elements_by_xpath(
         "//*[@title='Access this item']"
     )
@@ -145,6 +146,7 @@ def test_linkAvailableOnlineCallNumber(load_hello_driver):
 
 
 def test_replaceAvailableStatus(load_hello_driver):
+    time.sleep(3)
     driver = load_hello_driver
     available_header = driver.find_element_by_xpath(
         "//*[@class='detailItemsTable_SD_ITEM_STATUS']"
