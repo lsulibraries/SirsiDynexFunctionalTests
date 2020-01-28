@@ -77,7 +77,6 @@ def load_book_driver(request):
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
-    driver = webdriver.Firefox()
     driver = webdriver.Firefox(firefox_profile=profile)
     driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/one")
 
@@ -191,15 +190,27 @@ def test_citationbuttonarrives(load_book_driver):
 
 def test_availableheaderscallnumberrename(load_book_driver):
     driver = load_book_driver
-    call_number_header = driver.find_element_by_xpath(
-        '//th[@class="detailItemsTable_CALLNUMBER"]/div'
-    )
-    assert call_number_header.text == "Call Number"
+    time.sleep(3)
+    try:
+        callnumber_header = driver.find_element_by_xpath(
+            '//th[@class="detailItemsTable_CALLNUMBER"]/div'
+        )
+    except NoSuchElementException:
+        callnumber_header = driver.find_element_by_xpath(
+           '//*[@class="detailChildFieldLabel label text-h5 detailItemsTable_CALLNUMBER"]'
+        )
+    assert callnumber_header.text == "Call Number"
 
 
 def test_availableheadersrequestitemrename(load_book_driver):
     driver = load_book_driver
-    call_number_header = driver.find_element_by_xpath(
-        '//th[@class="detailItemsTable_SD_ITEM_HOLD_LINK"]/div'
-    )
-    assert call_number_header.text == "Request Item"
+    time.sleep(3)
+    try:
+        holds_header = driver.find_element_by_xpath(
+            '//th[@class="detailItemsTable_SD_ITEM_HOLD_LINK"]/div'
+        )
+    except NoSuchElementException:
+        holds_header = driver.find_element_by_xpath(
+            '//*[@class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK"]'
+        )
+    assert holds_header.text == "Request Item"
