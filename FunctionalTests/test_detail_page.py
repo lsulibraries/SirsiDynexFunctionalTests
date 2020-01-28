@@ -40,8 +40,8 @@ def load_checkedout_driver(request):
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
-    driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
     driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one")
 
     def fin():
@@ -58,8 +58,8 @@ def load_specials_driver(request):
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
-    driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
     driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1556136/one")
 
     def fin():
@@ -76,8 +76,9 @@ def load_book_driver(request):
     profile.set_preference("browser.cache.disk.enable", False)
     profile.set_preference("browser.cache.memory.enable", False)
     profile.set_preference("browser.http.user-cache", False)
+    profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox()
-    # driver.delete_all_cookies()
+    driver = webdriver.Firefox(firefox_profile=profile)
     driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/one")
 
     def fin():
