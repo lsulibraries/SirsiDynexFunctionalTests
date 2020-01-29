@@ -310,8 +310,6 @@ var createCitationButton = function() {
     });
     var newDiv = $J("<div>", { id: "CitationButton" });
     $J("#detailActionsdetail0").append(newDiv.append(newButton));
-  }
-  if (oclcNUM || oclcISBN || oclcISSN) {
     var newButton = $J("<a>", {
       class: "ajaxLink",
       text: "Citation"
@@ -321,7 +319,6 @@ var createCitationButton = function() {
     var newDiv = $J("<div>", { id: "detail0_action77", class: "resultAction mobileMenuLink text-h4 CITATION" });
     $J(".resultActions.detail").append(newDiv.append(newButton));
   }
-
 };
 
 var citationPopup = function(oclcNUM, oclcISBN, oclcISSN) {
