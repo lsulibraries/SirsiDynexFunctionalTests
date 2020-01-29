@@ -36,6 +36,10 @@ def load_driver(request):
 
 
 def test_customSearchLinkText(load_driver):
+    for i in ('Android', 'iPhone'):
+        if i in USER_AGENT:
+            assert True
+            return
     driver = load_driver
     more_search_options_link = driver.find_element_by_xpath(
         '//*[@title="Advanced Search"]'
@@ -44,6 +48,10 @@ def test_customSearchLinkText(load_driver):
 
 
 def test_customSearchLinkWorks(load_driver):
+    for i in ('Android', 'iPhone'):
+        if i in USER_AGENT:
+            assert True
+            return
     driver = load_driver
     more_search_options_link = driver.find_element_by_xpath(
         '//*[@title="Advanced Search"]'
@@ -55,6 +63,10 @@ def test_customSearchLinkWorks(load_driver):
 
 
 def test_tempChangeHeaderHref(load_driver):
+    for i in ('Android', 'iPhone'):
+        if i in USER_AGENT:
+            assert True
+            return
     driver = load_driver
     lsu_logo = driver.find_element_by_class_name("header-mid")
     lsu_logo.click()
