@@ -148,9 +148,16 @@ def test_linkAvailableOnlineCallNumber(load_hello_driver):
 def test_replaceAvailableStatus(load_hello_driver):
     time.sleep(3)
     driver = load_hello_driver
-    available_header = driver.find_element_by_xpath(
-        "//*[@class='detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS']"
-    )
+    try:
+        # mobile version
+        available_header = driver.find_element_by_xpath(
+            "//*[@class='detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_STATUS']"
+        )
+    except NoSuchElementException:
+        #desktop version
+        available_header = driver.find_element_by_xpath(
+            "//*[@class='detailItemsTable_SD_ITEM_STATUS']"
+        )
     assert available_header.text == "Current Location"
 
 
