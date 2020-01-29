@@ -1870,7 +1870,7 @@ var aeonRequest = function() {
             replaceItemHoldsElem(aeonElem, destElem);
           } else if (jQuery(this).hasClass("detailChildRecord")) {
             var aeonElem = $J(
-              '<div class="asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK"><a target="_blank" href="' +
+              '<div class="detailItemsAeonRequest asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK"><a target="_blank" href="' +
                 baseURL +
                 requestType +
                 itemRefnum +
