@@ -261,9 +261,7 @@ Example URL: hhttps://lalutest.ent.sirsi.net/client/en_US/lsu/search/detailnonmo
 
 Related tests: test_detail_page.py [test_citationbuttonarrives]
 
-Desktop Incoming Markup: 
 Desktop Outgoing Markup: 
-Mobile Incoming Markup: 
 Mobile Outgoing Markup: 
 
 
@@ -312,6 +310,14 @@ var createCitationButton = function() {
     });
     var newDiv = $J("<div>", { id: "CitationButton" });
     $J("#detailActionsdetail0").append(newDiv.append(newButton));
+    var newButton = $J("<a>", {
+      class: "ajaxLink",
+      text: "Citation"
+    }).click(function() {
+      citationPopup(oclcNUM, oclcISBN, oclcISSN);
+    });
+    var newDiv = $J("<div>", { id: "detail0_action77", class: "resultAction mobileMenuLink text-h4 CITATION" });
+    $J(".resultActions.detail").append(newDiv.append(newButton));
   }
 };
 
