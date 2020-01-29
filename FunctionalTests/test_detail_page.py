@@ -184,8 +184,14 @@ def test_stackmap(load_book_driver):
 
 def test_citationbuttonarrives(load_book_driver):
     driver = load_book_driver
-    citation_button = driver.find_element_by_xpath('//div[@id="CitationButton"]/input')
-    assert citation_button.get_attribute("value") == "Citation"
+    try:
+        # desktop view
+        citation_button = driver.find_element_by_xpath('//div[@id="CitationButton"]/input')
+        assert citation_button.get_attribute("value") == "Citation"
+    except NoSuchElementException:
+        # mobile view
+        citation_button = driver.find_element_by_xpath('//*[@id="detail0_action77"]/a')
+        assert citation_button.get_attribute('text') == "Citation"
 
 
 def test_availableheaderscallnumberrename(load_book_driver):
