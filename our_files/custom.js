@@ -317,7 +317,7 @@ var createCitationButton = function() {
       citationPopup(oclcNUM, oclcISBN, oclcISSN);
     });
     var newDiv = $J("<div>", { id: "detail0_action77", class: "resultAction mobileMenuLink text-h4 CITATION" });
-    $J(".resultActions.detail").append(newDiv.append(newButton));
+    $J(newDiv.append(newButton).insertAfter("#detail0_action1"));
   }
 };
 
