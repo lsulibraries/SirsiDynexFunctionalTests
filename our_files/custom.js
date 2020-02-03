@@ -1131,18 +1131,18 @@ var parseDueDate = function(reportedDate) {
 };
 
 var replacePubNoteCells = function() {
-  if (
-    Object.keys(titleInfoDict).length &&
-    titleInfoDict.constructor === Object
-  ) {
-    var hasValues = false;
+  if ($J("tr.detailItemsTableRow").length == 0){
+    var mobile = true;
+  }
+
+  if (mobile){
     //  loop through the Available Table rows & replace PublicNote cell text
-    $J("tr.detailItemsTableRow").each(function(index, elem) {
-      var isAvailTable = $J(elem).closest("#detailItemsDiv0").length;
+    $J(".detailChildFieldValue").each(function(index, elem) {
+      var isAvailTable = $J(".availableLabel.availableCountLabel");
       if (!isAvailTable) {
         return;
       }
-      var callNoElem = $J(elem).find(".detailItemsTable_CALLNUMBER");
+      var callNoElem = $J(".detailItemsTable_CALLNUMBER");
       if (callNoElem.length) {
         var callNo = $J(callNoElem)
           .text()
@@ -1150,20 +1150,24 @@ var replacePubNoteCells = function() {
       } else {
         var callNo = "";
       }
+      //Call number contained newline, not found elsewhere. 
+      callNo = callNo.replace('Call Number\n', '');
       var correctItemDict = titleInfoDict[callNo];
       if (correctItemDict === undefined) {
         return;
       }
       if (Object.keys(correctItemDict).length) {
         var correctItemPubNote = correctItemDict["publicNote"] || "";
-        // check if any elems have any value for this key, else we later delete the whole column.
+          // check if any elems have any value for this key, else we later delete the whole column.
         if (correctItemPubNote) {
-          hasValues = true;
+            hasValues = true;
         }
-      } else {
+      } 
+      else {
         var correctItemPubNote = "";
       }
-      var currentPubNote = $J(elem).find(".detailItemsTable_ITEMNOTE");
+      var currentPubNote = $J(".detailChildFieldValue.fieldValue.text-p.detailItemsTable_ITEMNOTE");
+      console.log(currentPubNote);
       currentPubNote.text(correctItemPubNote);
     });
     if (!hasValues) {
@@ -1171,13 +1175,55 @@ var replacePubNoteCells = function() {
     }
     clearInterval(scheduleReplacePubNoteCells);
   }
+  else {
+    if (
+    Object.keys(titleInfoDict).length &&
+    titleInfoDict.constructor === Object
+  ) {
+      var hasValues = false;
+      //  loop through the Available Table rows & replace PublicNote cell text
+      $J("tr.detailItemsTableRow").each(function(index, elem) {
+        var isAvailTable = $J(elem).closest("#detailItemsDiv0").length;
+        if (!isAvailTable) {
+          return;
+        }
+        var callNoElem = $J(elem).find(".detailItemsTable_CALLNUMBER");
+        if (callNoElem.length) {
+          var callNo = $J(callNoElem)
+            .text()
+            .trim();
+        } else {
+          var callNo = "";
+        }
+        var correctItemDict = titleInfoDict[callNo];
+        if (correctItemDict === undefined) {
+          return;
+        }
+        if (Object.keys(correctItemDict).length) {
+          var correctItemPubNote = correctItemDict["publicNote"] || "";
+          // check if any elems have any value for this key, else we later delete the whole column.
+          if (correctItemPubNote) {
+            hasValues = true;
+          }
+        } else {
+          var correctItemPubNote = "";
+        }
+        var currentPubNote = $J(elem).find(".detailItemsTable_ITEMNOTE");
+        currentPubNote.text(correctItemPubNote);
+      });
+      if (!hasValues) {
+        $J(".detailItemsTable_ITEMNOTE").remove();
+      }
+      clearInterval(scheduleReplacePubNoteCells);
+    }  
+  }
+
 };
 
 var fixNewBookShelf = function() {
   if ($J("tr.detailItemsTableRow").length == 0){
     var mobile = true;
   }
-  console.log(mobile);
   if (
     Object.keys(titleInfoDict).length &&
     titleInfoDict.constructor === Object
