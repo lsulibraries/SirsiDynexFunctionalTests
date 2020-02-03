@@ -239,9 +239,24 @@ def test_availableheadersrequestitemrename(load_book_driver):
     assert holds_header.text == "Request Item"
 
 
-def test_newBookDisplayReplace(load_newbooksdisplay_driver):
+#working on desktop
+def test_newBookDisplayShelf(load_newbooksdisplay_driver):
     driver = load_newbooksdisplay_driver
     time.sleep(1)
     location = driver.find_elements_by_xpath("//td[@class='detailItemsTable_SD_ITEM_STATUS']")[0].text
     assert location == "New Books Display"
+
+def test_newBookDisplayShelfMobile(load_newbooksdisplay_driver):
+    driver = load_newbooksdisplay_driver
+    time.sleep(1)
+    location = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_STATUS']")[0].text
+    assert location == "New Books Display"
+
+
+#working on desktop
+def test_newBookDisplayRequest(load_newbooksdisplay_driver):
+    driver = load_newbooksdisplay_driver
+    time.sleep(1)
+    request = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK']")[0].text
+    assert request == "Available"
 
