@@ -1200,6 +1200,7 @@ var fixNewBookShelf = function() {
         var correctLocation = correctItemDict["currentLocationID"];
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctLocation == "NEWBOOKS") {
+          //desktop (working)
           var locationCell = $J(elem)
             .closest("tr")
             .find(".detailItemsTable_SD_ITEM_STATUS");
