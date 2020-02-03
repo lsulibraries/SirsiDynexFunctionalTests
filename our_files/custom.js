@@ -1174,11 +1174,57 @@ var replacePubNoteCells = function() {
 };
 
 var fixNewBookShelf = function() {
+  if ($J("tr.detailItemsTableRow").length == 0){
+    var mobile = true;
+  }
+  console.log(mobile);
   if (
     Object.keys(titleInfoDict).length &&
     titleInfoDict.constructor === Object
   ) {
-    //  loop through the Available Table rows & replace PublicNote cell text
+    
+    if (mobile){
+      //  loop through the Available Table rows & replace PublicNote cell text
+    $J(".detailChildFieldValue").each(function(index, elem) {
+      var isAvailTable = $J(".availableLabel.availableCountLabel");
+      if (!isAvailTable) {
+        return;
+      }
+      var callNoElem = $J(".detailItemsTable_CALLNUMBER");
+      if (callNoElem.length) {
+        var callNo = $J(callNoElem)
+          .text()
+          .trim();
+      } else {
+        var callNo = "";
+      }
+      //Call number contained newline, not found elsewhere. 
+      callNo = callNo.replace('Call Number\n', '');
+      var correctItemDict = titleInfoDict[callNo];
+      if (correctItemDict === undefined) {
+        return;
+      }
+      if (Object.keys(correctItemDict).length) {
+        var correctLocation = correctItemDict["currentLocationID"];
+        // check if any elems have any value for this key, else we later delete the whole column.
+        if (correctLocation == "NEWBOOKS") {
+          //desktop (working)
+          var locationCell = $J(elem)
+            .closest("div")
+            .find(".asyncFieldSD_ITEM_STATUS");
+          locationCell.empty().text("New Books Display");
+          var holdsCell = $J(elem)
+            .closest("div")
+            .find(".asyncFieldSD_ITEM_HOLD_LINK.asyncInProgressSD_ITEM_HOLD_LINK")
+            .not(".hidden");
+          holdsCell.empty().text("Available");
+          clearInterval(scheduleNewBookShelf);
+        }
+      }
+    });
+    }
+    else {
+      //  loop through the Available Table rows & replace PublicNote cell text
     $J("tr.detailItemsTableRow").each(function(index, elem) {
       var isAvailTable = $J(elem).closest("#detailItemsDiv0").length;
       if (!isAvailTable) {
@@ -1200,6 +1246,7 @@ var fixNewBookShelf = function() {
         var correctLocation = correctItemDict["currentLocationID"];
         // check if any elems have any value for this key, else we later delete the whole column.
         if (correctLocation == "NEWBOOKS") {
+          //desktop (working)
           var locationCell = $J(elem)
             .closest("tr")
             .find(".detailItemsTable_SD_ITEM_STATUS");
@@ -1213,9 +1260,12 @@ var fixNewBookShelf = function() {
         }
       }
     });
+    }
     clearInterval(scheduleNewBookShelf);
   }
 };
+
+
 
 /*
   End Title Info Update methods

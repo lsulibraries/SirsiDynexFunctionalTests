@@ -88,8 +88,25 @@ def load_book_driver(request):
     return driver
 
 
-###############################################################################
+@pytest.fixture
+def load_newbooksdisplay_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5789379/ada?qu=Kurds+and+politics+of+Turkey&d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5789379~SD_LSU~0&te=SD_LSU")
 
+    def fin():
+        print("teardown driver")
+        driver.close()
+
+    request.addfinalizer(fin)
+    return driver
+
+
+###############################################################################
 
 def test_detailViewIconReplace(load_hello_driver):
     driver = load_hello_driver
@@ -227,3 +244,26 @@ def test_availableheadersrequestitemrename(load_book_driver):
             '//*[@class="detailChildFieldLabel label text-h5 detailItemsTable_SD_ITEM_HOLD_LINK"]'
         )
     assert holds_header.text == "Request Item"
+
+
+#working on desktop
+def test_newBookDisplayShelf(load_newbooksdisplay_driver):
+    driver = load_newbooksdisplay_driver
+    time.sleep(1)
+    location = driver.find_elements_by_xpath("//td[@class='detailItemsTable_SD_ITEM_STATUS']")[0].text
+    assert location == "New Books Display"
+
+def test_newBookDisplayShelfMobile(load_newbooksdisplay_driver):
+    driver = load_newbooksdisplay_driver
+    time.sleep(1)
+    location = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_STATUS']")[0].text
+    assert location == "New Books Display"
+
+
+#working on desktop
+def test_newBookDisplayRequest(load_newbooksdisplay_driver):
+    driver = load_newbooksdisplay_driver
+    time.sleep(1)
+    request = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK']")[0].text
+    assert request == "Available"
+
