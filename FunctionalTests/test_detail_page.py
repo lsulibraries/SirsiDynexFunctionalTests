@@ -104,6 +104,24 @@ def load_newbooksdisplay_driver(request):
 
     request.addfinalizer(fin)
     return driver
+@pytest.fixture
+
+
+def load_pubnote_driver(request):
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.cache.disk.enable", False)
+    profile.set_preference("browser.cache.memory.enable", False)
+    profile.set_preference("browser.http.user-cache", False)
+    profile.set_preference("general.useragent.override", USER_AGENT)
+    driver = webdriver.Firefox(firefox_profile=profile)
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:4627075/one?qu=Saunders+Vetrinary+Flash+Cards&te=SD_LSU")
+
+    def fin():
+        print("teardown driver")
+        driver.close()
+
+    request.addfinalizer(fin)
+    return driver
 
 
 ###############################################################################
@@ -261,4 +279,14 @@ def test_newBookDisplayRequest(load_newbooksdisplay_driver):
     time.sleep(1)
     request = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_HOLD_LINK asyncInProgressSD_ITEM_HOLD_LINK']")[0].text
     assert request == "Available"
+
+
+def test_publicNote(load_pubnote_driver):
+    driver = load_pubnote_driver
+    time.sleep(1)
+    try:
+        request = driver.find_element_by_xpath("//div[@class='detailChildFieldValue fieldValue text-p detailItemsTable_ITEMNOTE']")
+    except NoSuchElementException:
+        request = driver.find_element_by_xpath("//td[@class='detailItemsTable_ITEMNOTE']")
+    assert request.text == "CIRCULATES FOR 2 DAYS ONLY!! 400 Flash Cards - ask at Circulation desk"
 
