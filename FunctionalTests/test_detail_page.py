@@ -246,7 +246,6 @@ def test_availableheadersrequestitemrename(load_book_driver):
     assert holds_header.text == "Request Item"
 
 
-#working on desktop
 def test_newBookDisplayShelf(load_newbooksdisplay_driver):
     driver = load_newbooksdisplay_driver
     time.sleep(1)
@@ -257,7 +256,6 @@ def test_newBookDisplayShelf(load_newbooksdisplay_driver):
     assert location == "New Books Display"
 
 
-#working on desktop
 def test_newBookDisplayRequest(load_newbooksdisplay_driver):
     driver = load_newbooksdisplay_driver
     time.sleep(1)
