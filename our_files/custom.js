@@ -1167,7 +1167,6 @@ var replacePubNoteCells = function() {
         var correctItemPubNote = "";
       }
       var currentPubNote = $J(".detailChildFieldValue.fieldValue.text-p.detailItemsTable_ITEMNOTE");
-      console.log(currentPubNote);
       currentPubNote.text(correctItemPubNote);
     });
     if (!hasValues) {
