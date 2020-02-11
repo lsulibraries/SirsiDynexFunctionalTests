@@ -104,9 +104,6 @@ def test_page_loads(load_driver):
     assert "LSU Libraries" in driver.title
 
 
-##################################################################################################################
-
-
 def test_author_dropdown(load_driver):
     driver = load_driver
     fieldname, searchstring = "Author", "hello"
@@ -121,7 +118,7 @@ def test_author_dropdown(load_driver):
 
 def test_title_dropdown(load_driver):
     driver = load_driver
-    fieldname, searchstring = "Title", "hello"
+    fieldname, searchstring = "Title", "Hello, Dolly."
     first_result_title = "Hello, Dolly."
     run_search_query(
         driver,
@@ -131,6 +128,7 @@ def test_title_dropdown(load_driver):
     )
 
 
+#issue with split titles on ':'
 def test_subject_dropdown(load_driver):
     driver = load_driver
     fieldname, searchstring = "Subject", "hello"
@@ -176,6 +174,7 @@ def test_for_special_collections_location(load_driver):
     )
 
 
+# Location Header is missing, causing this test to fail. The expected_results_location is correct, just not the header we expect (confirm with dave)
 def test_for_government_location(load_driver):
     driver = load_driver
     location = "Government Documents/Microforms"

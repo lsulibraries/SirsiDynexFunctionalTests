@@ -66,14 +66,15 @@ def run_search_query(
         assert results_1.get_attribute("title") == first_result_title
 
 
+########################################################################################
+
+
 def test_page_loads(load_driver):
     driver = load_driver
     assert "LSU Libraries" in driver.title
 
 
-########################################################################################
-
-
+#length of title in results has been reduced. Also its super annoying to have a test with a title this long. Jesus.
 def test_author_dropdown(load_driver):
     fieldname, searchstring = "Author", "a"
     first_result_title = "A defence of true Protestants abused for the service of popery under the name of Presbyterians in a dialogue between A. and L., two sons of the church : where it is debated whether Presbyterians be as bad or worse than Papists and other Popish assertions are detected."
@@ -85,8 +86,9 @@ def test_author_dropdown(load_driver):
     )
 
 
+#upgrade appears to split titles at ':' test may fail until corrected
 def test_title_dropdown(load_driver):
-    fieldname, searchstring = "Title", "hello"
+    fieldname, searchstring = "Title", "Hello world!"
     first_result_title = "Hello world!"
     run_search_query(
         load_driver,
@@ -96,6 +98,7 @@ def test_title_dropdown(load_driver):
     )
 
 
+#upgrade appears to split titles at ':' test may fail until corrected
 def test_subject_dropdown(load_driver):
     fieldname, searchstring = "Subject", "a"
     first_result_title = "The A-stars : problems and perspectives"
@@ -211,7 +214,7 @@ def test_audio_disc_dropdown(load_driver):
 
 #########################################################################################
 
-
+#title issue as above
 def test_author_plus_music_score_dropdown(load_driver):
     fieldname, formatname, searchstring = "Author", "Videocassette", "walker"
     first_result_title = (

@@ -66,12 +66,12 @@ def run_search_query(
         assert results_1.get_attribute("title") == first_result_title
 
 
+########################################################################################
+
+
 def test_page_loads(load_driver):
     driver = load_driver
     assert "Music Resources" in driver.title
-
-
-########################################################################################
 
 
 def test_author_dropdown(load_driver):
@@ -85,8 +85,9 @@ def test_author_dropdown(load_driver):
     )
 
 
+# Same bad test as before, to broad. change from 'hello' to more specific string
 def test_title_dropdown(load_driver):
-    fieldname, searchstring = "Title", "hello"
+    fieldname, searchstring = "Title", "Hello, Dolly."
     first_result_title = "Hello, Dolly."
     run_search_query(
         load_driver,
@@ -95,7 +96,7 @@ def test_title_dropdown(load_driver):
         first_result_title=first_result_title,
     )
 
-
+# Same as above but with issue of split on ':'
 def test_subject_dropdown(load_driver):
     fieldname, searchstring = "Subject", "hello"
     first_result_title = "Pink globalization : Hello Kitty's trek across the Pacific"
@@ -212,6 +213,7 @@ def test_dvd_dropdown(load_driver):
 # #########################################################################################
 
 
+# same issue with ':' split
 def test_author_plus_music_score_dropdown(load_driver):
     fieldname, formatname, searchstring = "Author", "Music Score", "Devienne"
     first_result_title = "Les visitandines : comédie mêlée d'ariettes"
