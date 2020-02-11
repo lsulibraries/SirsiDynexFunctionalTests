@@ -1575,8 +1575,8 @@ var ILLIfCheckedOut = function() {
 
 var buildIlliadRequest = function() {
   var oslFormat = $J("#detail0_FORMAT .FORMAT_value").text();
-  var oslTitle = $J(".TITLE_MAIN")
-    .not(".TITLE_MAIN_label")
+  var oslTitle = $J(".INITIAL_TITLE_SRCH")
+    .not(".INITIAL_TITLE_SRCH_label")
     .first()
     .text()
     .slice(0, 750);
@@ -1857,8 +1857,8 @@ var aeonRequest = function() {
   var itemTitle =
     "&ItemTitle=" +
     encodeURIComponent(
-      jQuery(".TITLE_MAIN")
-        .not(".TITLE_MAIN_label")
+      jQuery(".INITIAL_TITLE_SRCH")
+        .not(".INITIAL_TITLE_SRCH_label")
         .first()
         .text()
         .slice(0, 750)
