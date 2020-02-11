@@ -8,6 +8,7 @@ from . import _conf_settings
 
 URL = _conf_settings.URL
 USER_AGENT = _conf_settings.USER_AGENT
+PROFILE = _conf_settings.PROFILE
 
 
 @pytest.fixture
@@ -29,7 +30,7 @@ def load_driver(request):
 
 def test_VariantTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5182858/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:5182858/one")
     divs_OtherTitle = driver.find_elements_by_class_name("VARIANTTITLE")
     for div in divs_OtherTitle:
         if (
@@ -44,7 +45,7 @@ def test_VariantTitle(load_driver):
 
 def test_PortionOfTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5182858/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:5182858/one")
     divs_OtherTitle = driver.find_elements_by_class_name("PORTION_OF_TITLE")
     for div in divs_OtherTitle:
         if (div.text == "Natural history of the rarest curiosities of the seas of the Indies"):
@@ -56,7 +57,7 @@ def test_PortionOfTitle(load_driver):
 
 def test_ParallelTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:989237/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:989237/one")
     divs_OtherTitle = driver.find_elements_by_class_name("PARALLELTITLE")
     for div in divs_OtherTitle:
         if (
@@ -71,7 +72,7 @@ def test_ParallelTitle(load_driver):
 
 def test_DistinctiveTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1759311/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:1759311/one")
     divs_OtherTitle = driver.find_elements_by_class_name("DISTINCTIVETITLE")
     for div in divs_OtherTitle:
         if "Free the genitals, cage the generals" in div.text:
@@ -83,7 +84,7 @@ def test_DistinctiveTitle(load_driver):
 
 def test_OtherTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:85598/ada?qu=Fraternities+at+LSU&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:85598/ada?qu=Fraternities+at+LSU&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("OTHERTITLE")
     for div in divs_OtherTitle:
         if div.text == "Introduction to fraternities at LSU":
@@ -95,7 +96,7 @@ def test_OtherTitle(load_driver):
 
 def test_CoverTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:85598/ada?qu=Fraternities+at+LSU&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:85598/ada?qu=Fraternities+at+LSU&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("COVERTITLE")
     for div in divs_OtherTitle:
         if div.text == "LSU fraternities":
@@ -107,7 +108,7 @@ def test_CoverTitle(load_driver):
 
 def test_AddedTitlePageTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1021811/ada?qu=Lykophronos+tou+Chalkide%C5%8Ds+Kassandra&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:1021811/ada?qu=Lykophronos+tou+Chalkide%C5%8Ds+Kassandra&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("ADDEDTITLEPAGETITLE")
     for div in divs_OtherTitle:
         if div.text == "Lycophronis Chalcidensis Cassandra":
@@ -119,7 +120,7 @@ def test_AddedTitlePageTitle(load_driver):
 
 def test_CaptionTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1073000/ada?qu=A+sermon+preach%27d+in+St.+Paul%27s+Cathedral%2C+before+the+Lord-Mayor%2C+aldermen%2C+%26c.+on+Sunday%2C+October+23%2C+1698&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:1073000/ada?qu=A+sermon+preach%27d+in+St.+Paul%27s+Cathedral%2C+before+the+Lord-Mayor%2C+aldermen%2C+%26c.+on+Sunday%2C+October+23%2C+1698&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("CAPTIONTITLE")
     for div in divs_OtherTitle:
         if div.text == "Sermon preach'd before the Lord-Mayor":
@@ -131,7 +132,7 @@ def test_CaptionTitle(load_driver):
 
 def test_RunningTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:428561/one?qu=F352+.H75+1698B&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:428561/one?qu=F352+.H75+1698B&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("RUNNINGTITLE")
     for div in divs_OtherTitle:
         if (
@@ -146,7 +147,7 @@ def test_RunningTitle(load_driver):
 
 def test_SpineTitle(load_driver):
     driver = load_driver
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1365113/one?qu=ND34+.P5+1798&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:1365113/one?qu=ND34+.P5+1798&te={PROFILE}")
     divs_OtherTitle = driver.find_elements_by_class_name("SPINETITLE")
     for div in divs_OtherTitle:
         if div.text == "Pilkington's dictionary of painters":

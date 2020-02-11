@@ -14,7 +14,7 @@ from . import _conf_settings
 
 URL = _conf_settings.URL
 USER_AGENT = _conf_settings.USER_AGENT
-
+PROFILE = _conf_settings.PROFILE
 
 @pytest.fixture
 def load_hello_driver(request):
@@ -24,7 +24,7 @@ def load_hello_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2795182/ada?qu=hello")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:2795182/ada?qu=hello")
 
     def fin():
         print("teardown driver")
@@ -42,7 +42,7 @@ def load_checkedout_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:104644/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:104644/one")
 
     def fin():
         print("teardown driver")
@@ -60,7 +60,7 @@ def load_specials_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:1556136/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:1556136/one")
 
     def fin():
         print("teardown driver")
@@ -78,7 +78,7 @@ def load_book_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:2125167/one")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:2125167/one")
 
     def fin():
         print("teardown driver")
@@ -96,7 +96,7 @@ def load_newbooksdisplay_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:5789379/ada?qu=Kurds+and+politics+of+Turkey&d=ent%3A%2F%2FSD_LSU%2F0%2FSD_LSU%3A5789379~SD_LSU~0&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:5789379/ada?qu=Kurds+and+politics+of+Turkey&d=ent%3A%2F%2F{PROFILE}%2F0%2F{PROFILE}%3A5789379~{PROFILE}~0&te={PROFILE}")
 
     def fin():
         print("teardown driver")
@@ -114,7 +114,7 @@ def load_pubnote_driver(request):
     profile.set_preference("browser.http.user-cache", False)
     profile.set_preference("general.useragent.override", USER_AGENT)
     driver = webdriver.Firefox(firefox_profile=profile)
-    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002fSD_LSU$002f0$002fSD_LSU:4627075/one?qu=Saunders+Vetrinary+Flash+Cards&te=SD_LSU")
+    driver.get(f"{URL}/search/detailnonmodal/ent:$002f$002f{PROFILE}$002f0$002f{PROFILE}:4627075/one?qu=Saunders+Vetrinary+Flash+Cards&te={PROFILE}")
 
     def fin():
         print("teardown driver")
@@ -211,16 +211,17 @@ def test_aeonLink(load_specials_driver):
 
 
 def test_stackmap(load_book_driver):
+    print("STACK MAP EXPECTED TO FAIL on Mobile")
     driver = load_book_driver
+    print(driver.current_url)
+    stackmap_a = driver.find_element_by_class_name("SMlink")
     retries = 10
     while retries > 0:
         try:
-            stackmap_a = driver.find_element_by_class_name("SMlink")
             if stackmap_a:
                 break
         except NoSuchElementException:
             retries = retries - 1
-            time.sleep(3)
     assert stackmap_a.text == "Find in the Library"
 
 
@@ -238,6 +239,7 @@ def test_citationbuttonarrives(load_book_driver):
 
 def test_availableheaderscallnumberrename(load_book_driver):
     driver = load_book_driver
+    print(driver.current_url)
     time.sleep(3)
     try:
         callnumber_header = driver.find_element_by_xpath(
