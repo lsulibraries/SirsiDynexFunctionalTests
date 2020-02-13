@@ -74,10 +74,10 @@ def test_page_loads(load_driver):
     assert "LSU Libraries" in driver.title
 
 
-#length of title in results has been reduced. Also its super annoying to have a test with a title this long. Jesus.
+#relying on this author and this title with colon are not reliable long term...
 def test_author_dropdown(load_driver):
-    fieldname, searchstring = "Author", "a"
-    first_result_title = "A defence of true Protestants abused for the service of popery under the name of Presbyterians in a dialogue between A. and L., two sons of the church : where it is debated whether Presbyterians be as bad or worse than Papists and other Popish assertions are detected."
+    fieldname, searchstring = "Author", "Joyce, James"
+    first_result_title = "Fluidics :"
     run_search_query(
         load_driver,
         fieldname=fieldname,
@@ -86,10 +86,9 @@ def test_author_dropdown(load_driver):
     )
 
 
-#upgrade appears to split titles at ':' test may fail until corrected
 def test_title_dropdown(load_driver):
-    fieldname, searchstring = "Title", "Hello world!"
-    first_result_title = "Hello world!"
+    fieldname, searchstring = "Title", "Supreme Court Nominations."
+    first_result_title = "Supreme Court Nominations"
     run_search_query(
         load_driver,
         fieldname=fieldname,
@@ -100,8 +99,8 @@ def test_title_dropdown(load_driver):
 
 #upgrade appears to split titles at ':' test may fail until corrected
 def test_subject_dropdown(load_driver):
-    fieldname, searchstring = "Subject", "a"
-    first_result_title = "The A-stars : problems and perspectives"
+    fieldname, searchstring = "Subject", "City"
+    first_result_title = "The Division of St. John :"
     run_search_query(
         load_driver,
         fieldname=fieldname,
@@ -214,11 +213,12 @@ def test_audio_disc_dropdown(load_driver):
 
 #########################################################################################
 
-#title issue as above
+#why is this test named music score when it uses videocassette. :/ 
+#issue with split title but no colon
 def test_author_plus_music_score_dropdown(load_driver):
     fieldname, formatname, searchstring = "Author", "Videocassette", "walker"
     first_result_title = (
-        "After the storm a citizen's video guide to understanding stormwater"
+        "After the storm"
     )
     run_search_query(
         load_driver,

@@ -79,7 +79,6 @@ def get_first_page_results_locations(
     location_divs = wait.until(
         EC.presence_of_element_located((By.CLASS_NAME, "LIBRARY"))
     )
-    # pdb.set_trace()
     location_divs = driver.find_elements_by_class_name("LIBRARY")
     filtered_location_divs = [
         i for i in location_divs if "displayElementText" in i.get_property("classList")
@@ -132,7 +131,7 @@ def test_title_dropdown(load_driver):
 def test_subject_dropdown(load_driver):
     driver = load_driver
     fieldname, searchstring = "Subject", "hello"
-    first_result_title = "Pink globalization : Hello Kitty's trek across the Pacific"
+    first_result_title = "Pink globalization :" # Hello Kitty's trek across the Pacific"
     run_search_query(
         driver,
         fieldname=fieldname,
@@ -195,6 +194,7 @@ def test_for_music_location(load_driver):
     )
 
 
+# wow the site is such broken. www.cic.lsu.edu
 def test_for_cartographic_location(load_driver):
     driver = load_driver
     location = "Cartographic Information Center"

@@ -148,12 +148,15 @@ def test_hideMissingDetailBookImage(load_hello_driver):
     )
 
 
+#this item will be checked out until may 22, can we establish a test item or something that will always be checked out.
 def test_ILLIfCheckedOut(load_checkedout_driver):
     driver = load_checkedout_driver
+    print(driver.current_url)
     wait = WebDriverWait(driver, 10)
     wait.until(
         EC.presence_of_element_located((By.CLASS_NAME, "asyncFieldSD_ITEM_STATUS"))
     )
+    time.sleep(1)
     item_status_div = driver.find_element_by_class_name("asyncFieldSD_ITEM_STATUS")
     illiad_link = driver.find_element_by_xpath(
         '//*[@class="illiadLinkUrl"]'
@@ -268,12 +271,21 @@ def test_availableheadersrequestitemrename(load_book_driver):
 
 def test_newBookDisplayShelf(load_newbooksdisplay_driver):
     driver = load_newbooksdisplay_driver
+    print(driver.current_url)
     time.sleep(1)
-    try:
-        location = driver.find_elements_by_xpath("//td[@class='detailItemsTable_SD_ITEM_STATUS']")[0].text
-    except NoSuchElementException:
-        location = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_STATUS']")[0].text
-    assert location == "New Books Display"
+    location = driver.find_elements_by_xpath("//*[text()='New Books Display']")
+    assert location[0].text == 'New Books Display'
+# old and obsolete
+#    try:
+#        location = driver.find_elements_by_xpath("//td[@class='detailItemsTable_SD_ITEM_STATUS']")
+#        if location:
+#            location = location[0].text
+#    except NoSuchElementException:
+#        location = driver.find_elements_by_xpath("//div[@class='asyncFieldSD_ITEM_STATUS']")
+#        print(location)
+#        location = location[0].text
+#        print(location)
+#    assert location == "New Books Display"
 
 
 def test_newBookDisplayRequest(load_newbooksdisplay_driver):
@@ -285,10 +297,12 @@ def test_newBookDisplayRequest(load_newbooksdisplay_driver):
 
 def test_publicNote(load_pubnote_driver):
     driver = load_pubnote_driver
+    print(driver.current_url)
     time.sleep(1)
-    try:
-        request = driver.find_element_by_xpath("//div[@class='detailChildFieldValue fieldValue text-p detailItemsTable_ITEMNOTE']")
-    except NoSuchElementException:
-        request = driver.find_element_by_xpath("//td[@class='detailItemsTable_ITEMNOTE']")
+    request = driver.find_element_by_xpath("//*[text()='CIRCULATES FOR 2 DAYS ONLY!! 400 Flash Cards - ask at Circulation desk']")
+#    try:
+#        request = driver.find_element_by_xpath("//div[@class='detailChildFieldValue fieldValue text-p detailItemsTable_ITEMNOTE']")
+#    except NoSuchElementException:
+#        request = driver.find_element_by_xpath("//td[@class='detailItemsTable_ITEMNOTE']")
     assert request.text == "CIRCULATES FOR 2 DAYS ONLY!! 400 Flash Cards - ask at Circulation desk"
 
